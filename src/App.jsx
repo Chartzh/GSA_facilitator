@@ -167,12 +167,12 @@ export default function App() {
   const [mutualsSearch, setMutualsSearch] = useState('');
   const [activeMutualTab, setActiveMutualTab] = useState('instagram');
   const [submittedMutuals, setSubmittedMutuals] = useState([
-    { platform: 'instagram', username: '@rajif_raditya', role: 'Fasilitator (Admin)', link: 'https://instagram.com' },
+    { platform: 'instagram', username: '@rajif_raditya', role: 'Fasilitator (Admin)', link: 'https://www.instagram.com/rajif_raditya/' },
     { platform: 'instagram', username: '@ahmad_cloud', role: 'Peserta', link: '#' },
     { platform: 'instagram', username: '@siti_dev', role: 'Peserta', link: '#' },
-    { platform: 'linkedin', username: 'Muhammad Rajif Raditya', role: 'Fasilitator (Admin)', link: 'https://linkedin.com' },
+    { platform: 'linkedin', username: 'Muhammad Rajif Raditya', role: 'Fasilitator (Admin)', link: 'https://www.linkedin.com/in/rajifraditya' },
     { platform: 'linkedin', username: 'Budi Santoso', role: 'Peserta', link: '#' },
-    { platform: 'github', username: 'rajif-raditya', role: 'Fasilitator (Admin)', link: 'https://github.com' },
+    { platform: 'github', username: 'Chartzh', role: 'Fasilitator (Admin)', link: 'https://github.com/Chartzh/' },
     { platform: 'github', username: 'dewi-codes', role: 'Peserta', link: '#' }
   ]);
 
@@ -400,7 +400,87 @@ export default function App() {
 
             </div>
 
+            {/* Milestone Strategy Card */}
+            <div className="card" style={{ marginTop: '32px', marginBottom: '32px' }}>
+              <h3 className="card-title" style={{ fontSize: '1.35rem', marginBottom: '20px' }}>
+                <Award size={22} className="text-yellow" style={{ display: 'inline', fill: 'var(--color-warning)' }} /> Estimasi Strategi Penyelesaian (Berdasarkan Aturan Resmi)
+              </h3>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '28px' }}>
+                
+                {/* Left Side: Conversion Rules */}
+                <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '20px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <h4 style={{ fontSize: '1rem', color: 'var(--color-primary-light)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Sparkles size={16} /> Konversi Lencana ke Poin
+                  </h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+                      <span><strong>1 Game Badge</strong></span>
+                      <span className="text-yellow" style={{ fontWeight: 600 }}>1 Poin</span>
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, paddingLeft: '8px', borderLeft: '2px solid var(--color-secondary)', lineHeight: 1.45 }}>
+                      Selesaikan ~4-6 Labs (Senilai 1 Poin).
+                    </p>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px', marginTop: '8px' }}>
+                      <span><strong>2 Skill Badges</strong> (Keahlian)</span>
+                      <span className="text-yellow" style={{ fontWeight: 600 }}>1 Poin</span>
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, paddingLeft: '8px', borderLeft: '2px solid var(--color-secondary)', lineHeight: 1.45 }}>
+                      Selesaikan 2 Challenge Labs (Senilai 1 Poin).
+                    </p>
+                  </div>
+                </div>
 
+                {/* Right Side: Milestone Goals */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <h4 style={{ fontSize: '1rem', color: 'var(--color-success)', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Award size={16} /> Target Milestone Swag
+                  </h4>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.15)', padding: '10px 14px', borderRadius: 'var(--radius-sm)' }}>
+                    <div>
+                      <strong style={{ fontSize: '0.9rem' }}>Milestone 1 (Minimal)</strong>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>6 Game Badges + 14 Skill Badges</div>
+                    </div>
+                    <span className="badge green-badge" style={{ fontSize: '0.85rem' }}>30 Poin*</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.15)', padding: '10px 14px', borderRadius: 'var(--radius-sm)' }}>
+                    <div>
+                      <strong style={{ fontSize: '0.9rem' }}>Milestone 2</strong>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>8 Game Badges + 28 Skill Badges</div>
+                    </div>
+                    <span className="badge" style={{ fontSize: '0.85rem', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--color-primary-light)' }}>50 Poin*</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', padding: '10px 14px', borderRadius: 'var(--radius-sm)' }}>
+                    <div>
+                      <strong style={{ fontSize: '0.9rem' }}>Milestone 3</strong>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>10 Game Badges + 42 Skill Badges</div>
+                    </div>
+                    <span className="badge" style={{ fontSize: '0.85rem', background: 'rgba(6, 182, 212, 0.2)', color: 'var(--color-secondary)' }}>70 Poin*</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.15)', padding: '10px 14px', borderRadius: 'var(--radius-sm)' }}>
+                    <div>
+                      <strong style={{ fontSize: '0.9rem' }}>Ultimate Milestone</strong>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>12 Game Badges + 56 Skill Badges</div>
+                    </div>
+                    <span className="badge yellow-badge" style={{ fontSize: '0.85rem' }}>90 Poin*</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Footnote */}
+              <div style={{ marginTop: '20px', paddingTop: '14px', borderTop: '1px solid var(--border-color)', fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'flex-start', gap: '6px', lineHeight: '1.45' }}>
+                <span style={{ fontSize: '1.1rem' }}>💡</span>
+                <div>
+                  * Poin di atas sudah termasuk bonus otomatis 10 poin kelayakan pendaftaran. Lencana hanya dihitung jika diselesaikan dari tanggal <strong>13 Juli 2026 hingga 14 September 2026</strong>.
+                </div>
+              </div>
+            </div>
 
             {/* Quick Teasers */}
             <div className="dashboard-grid">
@@ -995,9 +1075,9 @@ export default function App() {
           <p className="footer-tagline">Portal Bimbingan oleh Fasilitator Muhammad Rajif Raditya</p>
 
           <div className="footer-socials">
-            <a href="https://linkedin.com" target="_blank" className="social-link"><Linkedin size={16} /></a>
-            <a href="https://instagram.com" target="_blank" className="social-link"><Instagram size={16} /></a>
-            <a href="https://github.com" target="_blank" className="social-link"><Github size={16} /></a>
+            <a href="https://www.linkedin.com/in/rajifraditya" target="_blank" rel="noopener noreferrer" className="social-link"><Linkedin size={16} /></a>
+            <a href="https://www.instagram.com/rajif_raditya/" target="_blank" rel="noopener noreferrer" className="social-link"><Instagram size={16} /></a>
+            <a href="https://github.com/Chartzh/" target="_blank" rel="noopener noreferrer" className="social-link"><Github size={16} /></a>
           </div>
 
           <div className="footer-divider"></div>
