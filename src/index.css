@@ -1351,3 +1351,156 @@ a {
     padding: 16px;
   }
 }
+
+/* --- Navigation Dropdown --- */
+.nav-dropdown-item {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: 8px 0;
+  min-width: 210px;
+  list-style: none;
+  z-index: 10;
+  margin-top: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: transparent;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.dropdown-menu li {
+  padding: 0;
+}
+
+.dropdown-link {
+  display: block;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: left;
+  border-radius: 4px;
+  margin: 0 6px;
+}
+
+.dropdown-link:hover,
+.dropdown-link.active {
+  color: var(--text-main);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Guidelines Text & container highlights --- */
+.guide-container-card {
+  padding: 40px !important;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.guide-highlight-box {
+  padding: 24px;
+  border-radius: var(--radius-sm);
+  border-left: 4px solid transparent;
+  transition: var(--transition);
+}
+
+.guide-highlight-danger {
+  border-left-color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.02);
+}
+.guide-highlight-danger:hover {
+  background: rgba(239, 68, 68, 0.04);
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.guide-highlight-warning {
+  border-left-color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.02);
+}
+.guide-highlight-warning:hover {
+  background: rgba(245, 158, 11, 0.04);
+  border-color: rgba(245, 158, 11, 0.15);
+}
+
+.guide-highlight-success {
+  border-left-color: var(--color-success);
+  background: rgba(16, 185, 129, 0.02);
+}
+.guide-highlight-success:hover {
+  background: rgba(16, 185, 129, 0.04);
+  border-color: rgba(16, 185, 129, 0.15);
+}
+
+.guide-highlight-primary {
+  border-left-color: var(--color-primary);
+  background: rgba(99, 102, 241, 0.02);
+}
+.guide-highlight-primary:hover {
+  background: rgba(99, 102, 241, 0.04);
+  border-color: rgba(99, 102, 241, 0.15);
+}
+
+.guide-highlight-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-text {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.guide-text strong {
+  color: var(--text-main);
+}
+
+.guide-list {
+  padding-left: 20px;
+  font-size: 0.96rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guide-list li strong {
+  color: var(--text-main);
+}

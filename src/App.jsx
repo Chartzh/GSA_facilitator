@@ -26,7 +26,8 @@ import {
   Volume2,
   Backpack,
   Gift,
-  AlertTriangle
+  AlertTriangle,
+  ChevronDown
 } from 'lucide-react';
 
 // Custom inline SVG icons for brands (not exported in newer Lucide versions)
@@ -58,7 +59,7 @@ const CONFIG = {
   FACIL_NAME: "Muhammad Rajif Raditya",
   REFERRAL_CODE: "GCAF26-ID-UAQ-MFC",
   WA_LINK: "https://chat.whatsapp.com/IEDhYSI9EpYDI9LEdT95h1",
-  REGISTRATION_LINK: "https://docs.google.com/forms/d/e/1FAIpQLSfvBy0GqZPZpzC3aa6TKB5q3CMV9124cbsX4Ytv95O_plxN5w/viewform?resourcekey=0-zGX30xoG2JuARKgKrOztow",
+  REGISTRATION_LINK: "https://docs.google.com/forms/d/e/1FAIpQLSfvBy0GqZPZpzC3aa6TKB5q3CMV9124cbsX4Ytv95O_plxN5w/closedform?resourcekey=0-zGX30xoG2JuARKgKrOztow",
   TARGET_DATE: new Date("2026-07-13T09:00:00+07:00"),
   ANONYMOUS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdjykb5NiyW57GowHRhFOyuE9GvjwcVsF8smy7dGq77vGreIw/formResponse",
   ANONYMOUS_ENTRY_ID: "entry.1958733736",
@@ -72,6 +73,7 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [countdown, setCountdown] = useState({ days: '--', hours: '--', minutes: '--', seconds: '--' });
   const [isRegOpen, setIsRegOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Theme Controller
   const toggleTheme = () => {
@@ -120,42 +122,7 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // Points Calculator State
-  const [calcGameBadges, setCalcGameBadges] = useState(6);
-  const [calcSkillBadges, setCalcSkillBadges] = useState(14);
-  const [calcResult, setCalcResult] = useState({ points: 30, tier: '', desc: '' });
 
-  useEffect(() => {
-    let games = Math.max(0, calcGameBadges);
-    let skills = Math.max(0, calcSkillBadges);
-    let points = games + Math.floor(skills / 2);
-    let tier = "Belum Lolos Milestone";
-    let desc = "Kumpulkan minimal 6 Game Badges & 14 Skill Badges untuk meraih Milestone 1 (Novice Tier - 30 Poin).";
-
-    if (games >= 12 && skills >= 56) {
-      points = 90;
-      tier = "🏆 Ultimate Milestone (90 Poin)";
-      desc = "Luar biasa! Kamu berhak menukarkan swag Tier Tertinggi (Ultimate) seperti Jaket Hoodie premium, Ransel eksklusif, dll.";
-    } else if (games >= 10 && skills >= 42) {
-      points = 70;
-      tier = "🥇 Milestone 3 (70 Poin)";
-      desc = "Hebat! Kamu berhak mengklaim swag Tier 3 (Champion Tier) seperti Hoodie, Deskmat besar Google, dll.";
-    } else if (games >= 8 && skills >= 28) {
-      points = 50;
-      tier = "🥈 Milestone 2 (50 Poin)";
-      desc = "Keren! Kamu masuk Milestone 2. Berhak mengklaim swag Tier 2 seperti Tumbler, Speaker Kapsul, dan Kaos.";
-    } else if (games >= 6 && skills >= 14) {
-      points = 30;
-      tier = "🥉 Milestone 1 (30 Poin)";
-      desc = "Selamat! Kamu lolos Milestone minimal kelayakan. Berhak mengklaim swag Tier 1 (Novice Tier) seperti Kaos Google Cloud.";
-    } else {
-      points = games + Math.floor(skills / 2);
-      tier = "Belum Lolos Milestone";
-      desc = `Butuh ${Math.max(0, 6 - games)} Game Badges dan ${Math.max(0, 14 - skills)} Skill Badges lagi untuk lolos Milestone 1.`;
-    }
-
-    setCalcResult({ points, tier, desc });
-  }, [calcGameBadges, calcSkillBadges]);
 
   // FAQ Accordion State
   const [faqSearch, setFaqSearch] = useState('');
@@ -194,17 +161,7 @@ export default function App() {
     }
   ];
 
-  // Swag Gallery Modal state
-  const [selectedSwag, setSelectedSwag] = useState(null);
 
-  const swagData = [
-    { id: 1, name: "Hoodie Premium", tier: "Champion Tier", icon: Laptop, color: "#a855f7", desc: "Hoodie hitam tebal premium dengan detail jahitan rapi dan print logo minimalis Google Cloud di bagian dada." },
-    { id: 2, name: "Ergonomic Backpack", tier: "Champion Tier", icon: Backpack, color: "#3b82f6", desc: "Tas ransel laptop anti-air dengan desain minimalis, kompartemen aman, dan gantungan khusus aksesoris Google." },
-    { id: 3, name: "Bluetooth Speaker", tier: "Milestone 2 Tier", icon: Volume2, color: "#10b981", desc: "Speaker nirkabel berbentuk kapsul portabel berkualitas suara jernih dengan logo branding warna-warni Google." },
-    { id: 4, name: "Collapsible Tumbler", tier: "Milestone 1 Tier", icon: Gift, color: "#f59e0b", desc: "Botol minum ramah lingkungan yang dapat dilipat terbuat dari silikon premium bebas BPA." },
-    { id: 5, name: "JuaraGCP T-Shirt", tier: "Novice Tier", icon: Heart, color: "#ef4444", desc: "Kaos katun premium berkualitas tinggi bertema JuaraGCP dengan cutting modern yang nyaman dipakai." },
-    { id: 6, name: "Logo Bricks Set", tier: "Milestone 2 Tier", icon: Sparkles, color: "#06b6d4", desc: "Mainan bongkar pasang (Bricks Set) edisi khusus berdesain logo utama Google Cloud untuk pajangan meja belajar." }
-  ];
 
   // Social Mutuals State
   const [mutualsSearch, setMutualsSearch] = useState('');
@@ -243,28 +200,7 @@ export default function App() {
     setTimeout(() => setMutualSuccess(false), 5000);
   };
 
-  // Feedback Form State
-  const [feedbackMsg, setFeedbackMsg] = useState('');
-  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
 
-  const handleFeedbackSubmit = (e) => {
-    e.preventDefault();
-    if (!feedbackMsg.trim()) return;
-
-    const formData = new URLSearchParams();
-    formData.append(CONFIG.ANONYMOUS_ENTRY_ID, feedbackMsg);
-
-    fetch(CONFIG.ANONYMOUS_FORM_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
-    }).catch(err => console.warn('Background submission error ignored'));
-
-    setFeedbackSuccess(true);
-    setFeedbackMsg('');
-    setTimeout(() => setFeedbackSuccess(false), 5000);
-  };
 
   // Chatbot State
   const [chatOpen, setChatOpen] = useState(false);
@@ -306,12 +242,12 @@ export default function App() {
       } else if (query.includes('gratis') || query.includes('bayar') || query.includes('biaya')) {
         reply = `Bimbingan ini **100% gratis**. Akses modul belajar, token kredit Google Cloud, hingga pengiriman merchandise swag ke alamat rumahmu ditanggung penuh oleh Google.`;
       } else if (query.includes('swag') || query.includes('hadiah') || query.includes('kaos') || query.includes('jaket') || query.includes('ransel') || query.includes('tumbler')) {
-        reply = `Swag premium seperti Jaket Hoodie, Ransel laptop, Speaker bluetooth, Collapsible Tumbler, dan Bricks Set bisa ditukarkan dengan poin hasil pengumpulan lencana praktikum lab. Cek tab **Galeri Swag** di atas untuk melihat preview!`;
+        reply = `Swag premium seperti Jaket Hoodie, Ransel laptop, Speaker bluetooth, Collapsible Tumbler, dan Bricks Set bisa ditukarkan dengan poin hasil pengumpulan lencana praktikum lab resmi Google Cloud. Kumpulkan poin sebanyak-banyaknya untuk menukarkannya!`;
       } else if (query.includes('poin') || query.includes('point') || query.includes('hitung') || query.includes('badge')) {
         reply = `Sistem poin resmi:<br>
         • <strong>1 Arcade Game Badge</strong> = 1 Poin.<br>
         • <strong>2 Skill Badges</strong> = 1 Poin.<br><br>
-        Gunakan kalkulator poin di beranda untuk mensimulasikan pencapaian Milestone kamu!`;
+        Kumpulkan poin sebanyak-banyaknya untuk mencapai target Milestone swag!`;
       } else {
         reply = `Maaf, saya belum memahami pertanyaan Anda 😅<br><br>Cobalah tanyakan:<br>
         • "cara daftar"<br>
@@ -327,33 +263,43 @@ export default function App() {
 
   return (
     <>
-      {/* Disclaimer bar */}
-      <div className="disclaimer-bar" id="disclaimer-bar">
-        <div className="container">
-          <span className="badge red-badge" style={{ marginRight: '8px' }}>Info Fasilitator</span>
-          Situs bimbingan mandiri oleh <strong>Muhammad Rajif Raditya</strong>. Website ini <strong>BUKAN</strong> portal resmi Google / Dicoding.
-        </div>
-      </div>
-
       {/* Header */}
       <header className="header" id="main-header">
         <div className="container nav-container">
           <div className="logo-link" id="logo-brand">
-            <span className="g-blue">G</span><span className="g-red">o</span><span class="g-yellow">o</span><span
+            <span className="g-blue">G</span><span className="g-red">o</span><span className="g-yellow">o</span><span
               className="g-blue">g</span><span className="g-green">l</span><span className="g-red">e</span>
             <span className="logo-arcade" id="logo-arcade-txt">Arcade</span>
           </div>
 
           <nav id="desktop-navigation">
             <ul className="nav-menu">
-              <li><span className={`nav-item-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>Home</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'tentang' ? 'active' : ''}`} onClick={() => setActiveTab('tentang')}>Tentang</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'cara' ? 'active' : ''}`} onClick={() => setActiveTab('cara')}>Cara Bermain</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'swag' ? 'active' : ''}`} onClick={() => setActiveTab('swag')}>Swag</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'qna' ? 'active' : ''}`} onClick={() => setActiveTab('qna')}>QnA</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'komunitas' ? 'active' : ''}`} onClick={() => setActiveTab('komunitas')}>Komunitas</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'skills' ? 'active' : ''}`} onClick={() => setActiveTab('skills')}>Panduan Skills</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'gear' ? 'active' : ''}`} onClick={() => setActiveTab('gear')}>Panduan GEAR</span></li>
+              <li><span className={`nav-item-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => { setActiveTab('home'); setIsDropdownOpen(false); }}>Home</span></li>
+              <li><span className={`nav-item-link ${activeTab === 'tentang' ? 'active' : ''}`} onClick={() => { setActiveTab('tentang'); setIsDropdownOpen(false); }}>Tentang</span></li>
+              <li><span className={`nav-item-link ${activeTab === 'cara' ? 'active' : ''}`} onClick={() => { setActiveTab('cara'); setIsDropdownOpen(false); }}>Cara Bermain</span></li>
+              <li><span className={`nav-item-link ${activeTab === 'qna' ? 'active' : ''}`} onClick={() => { setActiveTab('qna'); setIsDropdownOpen(false); }}>QnA</span></li>
+              <li><span className={`nav-item-link ${activeTab === 'komunitas' ? 'active' : ''}`} onClick={() => { setActiveTab('komunitas'); setIsDropdownOpen(false); }}>Komunitas</span></li>
+              <li 
+                className="nav-dropdown-item" 
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{ position: 'relative' }}
+              >
+                <span className={`nav-item-link ${(activeTab === 'skills' || activeTab === 'gear') ? 'active' : ''}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  Panduan <ChevronDown size={14} style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                </span>
+                {isDropdownOpen && (
+                  <ul className="dropdown-menu">
+                    <li onClick={() => { setActiveTab('skills'); setIsDropdownOpen(false); }}>
+                      <span className={`dropdown-link ${activeTab === 'skills' ? 'active' : ''}`}>Panduan Google Skills</span>
+                    </li>
+                    <li onClick={() => { setActiveTab('gear'); setIsDropdownOpen(false); }}>
+                      <span className={`dropdown-link ${activeTab === 'gear' ? 'active' : ''}`}>Panduan GEAR</span>
+                    </li>
+                  </ul>
+                )}
+              </li>
             </ul>
           </nav>
 
@@ -380,9 +326,6 @@ export default function App() {
             <div className="hero-box">
               
               <div>
-                <div className="hero-tag">
-                  <Sparkles size={14} /> Halo! Selamat Datang di Portal Kak Rajif
-                </div>
                 <h1 className="hero-title">
                   Kuasai Skill Cloud & Dapatkan <span className="gradient-text">Swag Resmi Google!</span>
                 </h1>
@@ -457,44 +400,7 @@ export default function App() {
 
             </div>
 
-            {/* In-page Point Calculator Card */}
-            <div className="card" style={{ marginTop: '48px' }}>
-              <div className="calc-widget">
-                
-                <div className="calc-sliders">
-                  <h3 className="card-title"><Calculator size={20} className="text-blue" /> Kalkulator Target Poin Swag</h3>
-                  <div className="slider-group">
-                    <label className="slider-label">
-                      Game Badges (Trivia / Bulanan) <span>{calcGameBadges} Lencana</span>
-                    </label>
-                    <div className="calc-input-row">
-                      <button onClick={() => setCalcGameBadges(prev => Math.max(0, prev - 1))} aria-label="Kurang"><Minus size={14} /></button>
-                      <input type="number" value={calcGameBadges} onChange={(e) => setCalcGameBadges(Math.max(0, parseInt(e.target.value) || 0))} aria-label="Game badges count" />
-                      <button onClick={() => setCalcGameBadges(prev => prev + 1)} aria-label="Tambah"><Plus size={14} /></button>
-                    </div>
-                  </div>
 
-                  <div className="slider-group">
-                    <label className="slider-label">
-                      Skill Badges (Challenge Labs) <span>{calcSkillBadges} Lencana</span>
-                    </label>
-                    <div className="calc-input-row">
-                      <button onClick={() => setCalcSkillBadges(prev => Math.max(0, prev - 1))} aria-label="Kurang"><Minus size={14} /></button>
-                      <input type="number" value={calcSkillBadges} onChange={(e) => setCalcSkillBadges(Math.max(0, parseInt(e.target.value) || 0))} aria-label="Skill badges count" />
-                      <button onClick={() => setCalcSkillBadges(prev => prev + 1)} aria-label="Tambah"><Plus size={14} /></button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="calc-scorecard">
-                  <span style={{ fontSize: '0.76rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>Total Estimasi Poin</span>
-                  <div className="calc-points text-yellow">{calcResult.points}</div>
-                  <div className="calc-tier-title text-blue">{calcResult.tier}</div>
-                  <p className="calc-tier-desc">{calcResult.desc}</p>
-                </div>
-
-              </div>
-            </div>
 
             {/* Quick Teasers */}
             <div className="dashboard-grid">
@@ -567,21 +473,32 @@ export default function App() {
 
         {activeTab === 'cara' && (
           <div style={{ padding: '40px 0' }}>
-            <div className="section-header text-center">
+            <div className="section-header text-center" style={{ marginBottom: '32px' }}>
               <span className="hero-tag"><Laptop size={14} /> Panduan Pengerjaan</span>
-              <h1 className="hero-title" style={{ fontSize: '2.5rem', marginTop: '10px' }}>Cara Memulai & Mengerjakan</h1>
-              <p className="section-subtitle">Ikuti timeline pengerjaan praktikum di bawah ini agar pencapaianmu sah.</p>
+              <h1 className="hero-title" style={{ fontSize: '2.5rem', marginTop: '10px' }}>Langkah Mudah <span className="text-yellow">Mulai Petualanganmu</span></h1>
+              <p className="section-subtitle">Ikuti panduan langkah demi langkah ini untuk memastikan kamu mengumpulkan poin dengan benar!</p>
+              <div style={{ marginTop: '24px' }}>
+                <a 
+                  href="https://rsvp.withgoogle.com/events/arcade-fasilitator-id/silabus" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn btn-primary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 28px', fontSize: '0.95rem' }}
+                >
+                  <Award size={18} /> Akses Silabus Program
+                </a>
+              </div>
             </div>
 
-            <div className="guide-timeline">
+            <div className="guide-timeline" style={{ marginBottom: '60px' }}>
               <div className="timeline-step">
                 <div className="timeline-marker">
                   <div className="marker-num">1</div>
                   <div className="marker-line"></div>
                 </div>
                 <div className="timeline-content-card">
-                  <h4>Daftarkan Akun & Public Profile</h4>
-                  <p>Buat akun di platform Google Cloud Skills Boost. Buka profil and setel menjadi **Public Profile** agar lencana yang kamu peroleh bisa di-track fasilitator.</p>
+                  <h4>Daftar & Gabung Grup</h4>
+                  <p>Daftarkan dirimu melalui link registrasi resmi (saat pendaftaran dibuka) dan pastikan langsung bergabung ke grup WhatsApp Kak Rajif untuk koordinasi.</p>
                 </div>
               </div>
 
@@ -591,8 +508,11 @@ export default function App() {
                   <div className="marker-line"></div>
                 </div>
                 <div className="timeline-content-card">
-                  <h4>Klaim Token Promo Code</h4>
-                  <p>Gunakan kode token promo kredit gratis yang Kak Rajif bagikan berkala di grup WA, masukkan di menu klaim kredit agar saldo Console-mu terisi.</p>
+                  <h4>Klaim Token & Mulai Lab</h4>
+                  <p>Kamu akan mendapatkan token akses gratis. Gunakan token ini untuk meluncurkan Google Cloud Console dan mulai menyelesaikan quest/lab bulanan yang ditentukan.</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px', borderTop: '1px solid var(--border-color)', paddingTop: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Info size={12} className="text-blue" /> Cara ini baru akan digunakan setelah kalian mendapatkan email konfirmasi pendaftaran program nanti.
+                  </p>
                 </div>
               </div>
 
@@ -602,8 +522,8 @@ export default function App() {
                   <div className="marker-line"></div>
                 </div>
                 <div className="timeline-content-card">
-                  <h4>Selesaikan Tantangan Lab (Skor 100)</h4>
-                  <p>Buka instruksi lab, tekan **Start Lab**, masuk ke Google Console memakai detail akun sementara dari sistem, selesaikan tugas hingga skor 100/100, lalu klik **End Lab**.</p>
+                  <h4>Kumpulkan Badges & Poin</h4>
+                  <p>Selesaikan lab untuk meraih lencana. Ada 2 tipe lencana: <strong>Arcade Game Badge</strong> (1 Poin) dan <strong>Skills Badge</strong> (2 Lencana = 1 Poin). Kumpulkan sebanyak-banyaknya!</p>
                 </div>
               </div>
 
@@ -613,19 +533,59 @@ export default function App() {
                   <div className="marker-line"></div>
                 </div>
                 <div className="timeline-content-card">
-                  <h4>Redeem Poin Swag Store</h4>
-                  <p>Tukarkan total poin yang dikumpulkan dari lencana di Swag Store resmi Google Cloud di akhir periode musim bimbingan.</p>
+                  <h4>Redeem Swag Impian</h4>
+                  <p>Ketika masa "Swag Drop" dibuka, tukarkan akumulasi poinmu di website resmi Arcade Google Cloud dengan merchandise eksklusif pilihanmu.</p>
                 </div>
               </div>
             </div>
 
-            {/* Video tutorial */}
-            <div className="card" style={{ marginTop: '40px', textAlign: 'center' }}>
-              <h3 className="card-title" style={{ justifyContent: 'center' }}><Volume2 size={20} className="text-blue" /> Video Demo Klaim Kredit & Lab</h3>
-              <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', marginBottom: '24px', maxWidth: '600px', margin: '0 auto 24px auto' }}>
-                Tonton video unboxing kredit promo dan langkah pengerjaan lab di Google Cloud Console berikut untuk gambaran belajarmu.
+            {/* Badges Rule Details */}
+            <div className="dashboard-grid" style={{ marginTop: '40px' }}>
+              <div className="card" style={{ gridColumn: 'span 6', padding: '32px' }}>
+                <h3 className="card-title text-blue" style={{ fontSize: '1.25rem', marginBottom: '16px' }}><Laptop size={20} /> 1. Arcade Game Badges (1 Poin)</h3>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '16px' }}>
+                  Setiap bulannya, Google Cloud merilis game bertema spesifik (seperti Trivia, Level 1, Level 2, dll.).
+                </p>
+                <ul style={{ paddingLeft: '20px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                  <li>Satu game biasanya memuat 4 hingga 8 lab praktik.</li>
+                  <li>Tidak ada pengerjaan kuis berulang; Anda cukup menyelesaikan lab hingga mendapat centang hijau.</li>
+                  <li>Begitu game terselesaikan 100%, badge digital akan otomatis masuk ke profil Anda dalam waktu 24 jam.</li>
+                  <li>Nilai penukaran: <strong>1 Badge = 1 Arcade Point</strong>.</li>
+                </ul>
+              </div>
+
+              <div className="card" style={{ gridColumn: 'span 6', padding: '32px' }}>
+                <h3 className="card-title text-green" style={{ fontSize: '1.25rem', marginBottom: '16px' }}><Award size={20} /> 2. Skill Badges (2 Badges = 1 Poin)</h3>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '16px' }}>
+                  Merupakan lencana yang didapat dengan menyelesaikan rangkaian lab terstruktur yang diakhiri dengan <strong>Challenge Lab</strong>.
+                </p>
+                <ul style={{ paddingLeft: '20px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                  <li>Challenge Lab menguji kemampuan mandiri Anda (tanpa ada instruksi langkah-langkah di dalam lab).</li>
+                  <li>Kak Rajif akan memandu tips mengerjakan Challenge Lab ini lewat video panduan di grup.</li>
+                  <li>Skill badge memiliki kredensial resmi yang bisa dipajang di LinkedIn.</li>
+                  <li>Nilai penukaran: <strong>2 Badges = 1 Arcade Point</strong>.</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Date Validation Banner */}
+            <div className="card" style={{ marginTop: '24px', padding: '24px', border: '1px solid rgba(245, 158, 11, 0.2)', background: 'rgba(245, 158, 11, 0.03)' }}>
+              <p style={{ color: 'var(--color-warning)', fontSize: '0.92rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <AlertTriangle size={16} /> Syarat Validitas Penyelesaian Lencana (Badge):
               </p>
-              <div className="video-container" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 'var(--radius-md)', maxWidth: '650px', margin: '0 auto' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', lineHeight: 1.6 }}>
+                Lencana (baik Game Badge maupun Skill Badge) hanya akan dihitung masuk ke dalam akumulasi poin program jika diselesaikan <strong>pada atau setelah tanggal 13 Juli 2026 pukul 09:00 WIB</strong> hingga program pendaftaran resmi ditutup pada <strong>14 September 2026 pukul 23:59 WIB</strong>. Lencana yang diselesaikan sebelum tanggal pembukaan tidak akan dihitung oleh sistem otomatis Google Cloud.
+              </p>
+            </div>
+
+            {/* Video Tutorial Section */}
+            <div className="card" style={{ display: 'block', padding: '40px', marginTop: '40px' }}>
+              <h3 className="card-title text-blue" style={{ justifyContent: 'center', marginBottom: '16px' }}><Volume2 size={22} /> Panduan Klaim Kredit & Gambaran Pengerjaan Lab</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidt: '700px', margin: '0 auto 24px auto', lineHeight: 1.6, textAlign: 'center' }}>
+                Sebelum mulai belajar, tonton video singkat dari YouTube berikut untuk melihat cara melakukan klaim token/kredit gratis serta demo singkat pengerjaan lab di Google Cloud Skills Boost.
+              </p>
+
+              <div className="video-container" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '700px', margin: '0 auto 24px auto', boxShadow: 'var(--shadow-lg)' }}>
                 <iframe 
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }} 
                   src="https://www.youtube.com/embed/3fjIsJTeWfk" 
@@ -634,43 +594,68 @@ export default function App() {
                   allowFullScreen>
                 </iframe>
               </div>
-            </div>
-          </div>
-        )}
 
-        {activeTab === 'swag' && (
-          <div style={{ padding: '40px 0' }}>
-            <div className="section-header text-center">
-              <span className="hero-tag"><Gift size={14} /> Swag Shop Showcase</span>
-              <h1 className="hero-title" style={{ fontSize: '2.5rem', marginTop: '10px' }}>Inspirasi Hadiah Swag</h1>
-              <p className="section-subtitle">Daftar item merchandise premium dari musim terdahulu untuk memacumu belajar.</p>
-            </div>
-
-            <div className="glass" style={{ padding: '20px', borderLeft: '4px solid var(--color-warning)', background: 'rgba(245, 158, 11, 0.01)', marginBottom: '32px' }}>
-              <div style={{ display: 'flex', gap: '10px', color: 'var(--text-main)', fontWeight: 700, fontSize: '0.9rem' }}>
-                <AlertTriangle size={16} className="text-yellow" /> Syarat & Ketentuan Swag
+              <div style={{ maxWidth: '700px', margin: '0 auto', background: 'rgba(0, 0, 0, 0.2)', border: '1px solid var(--border-color)', padding: '24px', borderRadius: 'var(--radius-sm)' }}>
+                <h4 style={{ color: 'var(--text-main)', marginBottom: '12px', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}><Info size={16} /> Ringkasan Cara Pengerjaan Lab:</h4>
+                <ol style={{ paddingLeft: '20px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                  <li>
+                    <strong>Login ke Akun Kalian:</strong> Masuk ke platform <a href="https://www.cloudskillsboost.google/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary-light)', textDecoration: 'underline' }}>Google Cloud Skills Boost</a>.
+                    <div style={{ marginTop: '6px', paddingLeft: '15px', borderLeft: '2px solid var(--color-primary)', fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span>• <em>Belum punya akun?</em> Silakan klik tombol <strong>Join</strong> di kanan atas. Untuk pendaftaran instan, disarankan memilih opsi <strong>Sign in with Google</strong>.</span>
+                      <span>• <em>Notes Batas Usia:</em> Jika umur kalian belum 17 tahun, sesuaikan/tambahkan saja tahun lahir kalian saat mendaftar agar akun bisa sukses dibuat.</span>
+                      <span>• <em>Pengaturan Profil Publik (Penting!):</em> Setelah masuk, buka menu Profil kalian (klik foto lingkaran di pojok kanan atas) &rarr; klik <strong>Profile</strong> &rarr; klik tombol <strong>Make Profile Public</strong> (atau <strong>Share Profile</strong> &rarr; <strong>Make Profile Public</strong>) agar lencana kalian tercatat.</span>
+                    </div>
+                  </li>
+                  <li>
+                    <strong>Klaim Kredit:</strong> Masukkan kode token gratis yang dibagikan Kak Rajif di menu promo/claim credit.
+                    <div style={{ marginTop: '6px', paddingLeft: '15px', borderLeft: '2px solid var(--color-danger)', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                      <span>• <em>Notes Penting:</em> Cara klaim kredit ini baru akan kalian gunakan <strong>setelah kalian mendapatkan email konfirmasi pendaftaran program</strong> resmi nanti.</span>
+                    </div>
+                  </li>
+                  <li><strong>Mulai Lab (Start Lab):</strong> Buka lab yang ditargetkan, lalu klik tombol <strong>"Start Lab"</strong> untuk membuat kredensial Google Cloud Console sementara.</li>
+                  <li><strong>Masuk ke Google Cloud Console:</strong> Gunakan username & password sementara yang disediakan di sisi kiri layar (jangan gunakan akun Gmail pribadi kalian).</li>
+                  <li><strong>Selesaikan Instruksi:</strong> Ikuti petunjuk praktikum di instruksi lab secara perlahan dan pastikan untuk menekan tombol <strong>"Check my progress"</strong> untuk menyimpan kemajuan kalian hingga meraih skor 100/100.</li>
+                  <li><strong>Akhiri Lab:</strong> Klik <strong>"End Lab"</strong> setelah selesai, and pastikan lencana atau status lab berubah menjadi centang hijau/selesai.</li>
+                </ol>
               </div>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '6px', lineHeight: 1.5 }}>
-                Seluruh item di bawah adalah hadiah dari **musim event sebelumnya**. Daftar swag resmi untuk musim kali ini belum di-reveal secara resmi oleh tim Google Cloud Global. Halaman ini akan diperbarui instan begitu informasi ter-update dirilis!
-              </p>
-            </div>
 
-            <div className="swag-grid">
-              {swagData.map(swag => {
-                const IconComponent = swag.icon;
-                return (
-                  <div key={swag.id} className="swag-card" onClick={() => setSelectedSwag(swag)}>
-                    <div className="swag-img-placeholder" style={{ background: `linear-gradient(135deg, ${swag.color}15, ${swag.color}05)` }}>
-                      <IconComponent size={44} style={{ color: swag.color }} />
-                      <span className="badge" style={{ background: `${swag.color}18`, color: swag.color, fontSize: '0.62rem' }}>{swag.tier}</span>
+              {/* Rekomendasi Video Tutorial */}
+              <div className="card" style={{ padding: '30px', marginTop: '30px', border: '1px solid var(--border-color)', background: 'rgba(0, 0, 0, 0.1)' }}>
+                <h4 style={{ color: 'var(--text-main)', marginBottom: '16px', fontSize: '1.05rem', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Laptop size={18} /> Rekomendasi Video Tutorial Pengerjaan Lab Populer</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', textAlign: 'center', marginBottom: '20px', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>
+                  Berikut adalah beberapa video panduan pengerjaan lab dasar Google Cloud Skills Boost dari komunitas yang bisa kalian tonton agar memiliki gambaran saat menyelesaikan tantangan:
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', maxWidth: '700px', margin: '0 auto' }}>
+                  {/* Lab Video 1 */}
+                  <a href="https://www.youtube.com/watch?v=NQPJlZkenrY" target="_blank" rel="noopener noreferrer" style={{ display: 'block', textDecoration: 'none', borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--border-color)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', background: 'rgba(255,255,255,0.01)' }} className="video-card-hover">
+                    <div style={{ backgroundImage: "linear-gradient(135deg, rgba(66, 133, 244, 0.15), rgba(244, 180, 0, 0.15)), url('https://img.youtube.com/vi/NQPJlZkenrY/hqdefault.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', height: '160px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(9, 13, 22, 0.45)', zIndex: 1 }}></div>
+                      <div style={{ width: '48px', height: '48px', background: 'var(--color-danger)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, boxShadow: '0 0 15px rgba(239, 68, 68, 0.5)' }}>
+                        <ArrowRight size={18} style={{ color: '#ffffff' }} />
+                      </div>
                     </div>
-                    <div className="swag-details">
-                      <h4>{swag.name}</h4>
-                      <p>Klik untuk cek detail unboxing</p>
+                    <div style={{ padding: '12px' }}>
+                      <h5 style={{ color: '#ffffff', fontSize: '0.85rem', margin: '0 0 4px 0', fontWeight: 600, lineHieght: 1.3 }}>Build Infrastructure with Terraform on Google Cloud: Challenge Lab #GSP345</h5>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', margin: 0, lineHeight: 1.4 }}>Kurang lebih ini gambaran cara menyelesaikan Challenge Lab menggunakan Terraform.</p>
                     </div>
-                  </div>
-                );
-              })}
+                  </a>
+
+                  {/* Lab Video 2 */}
+                  <a href="https://www.youtube.com/watch?v=M-VF9yVx8LU" target="_blank" rel="noopener noreferrer" style={{ display: 'block', textDecoration: 'none', borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--border-color)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', background: 'rgba(255,255,255,0.01)' }} className="video-card-hover">
+                    <div style={{ backgroundImage: "linear-gradient(135deg, rgba(66, 133, 244, 0.15), rgba(244, 180, 0, 0.15)), url('https://img.youtube.com/vi/M-VF9yVx8LU/hqdefault.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', height: '160px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(9, 13, 22, 0.45)', zIndex: 1 }}></div>
+                      <div style={{ width: '48px', height: '48px', background: 'var(--color-danger)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, boxShadow: '0 0 15px rgba(239, 68, 68, 0.5)' }}>
+                        <ArrowRight size={18} style={{ color: '#ffffff' }} />
+                      </div>
+                    </div>
+                    <div style={{ padding: '12px' }}>
+                      <h5 style={{ color: '#ffffff', fontSize: '0.85rem', margin: '0 0 4px 0', fontWeight: 600, lineHeight: 1.3 }}>Get Started with Security Command Center #GSP1124</h5>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', margin: 0, lineHeight: 1.4 }}>Kurang lebih ini gambaran cara mengaktifkan dan mengonfigurasi Security Command Center.</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -731,19 +716,23 @@ export default function App() {
             <div className="dashboard-grid">
               
               {/* WhatsApp card */}
-              <div className="card" style={{ gridColumn: 'span 6' }}>
-                <h3 className="card-title"><Users size={20} className="text-green" /> Hub Diskusi WhatsApp</h3>
-                <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '20px' }}>
-                  Diskusi eror modul lab, tukar lencana, and info Swag Drop akan dibagikan berkala di grup WA Kak Rajif. Masuk ke grup bimbingan sekarang:
-                </p>
-                <a href={CONFIG.WA_LINK} target="_blank" className="btn btn-success">
-                  Gabung Grup WhatsApp
-                </a>
+              <div className="card" style={{ gridColumn: 'span 12', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '20px', padding: '28px 36px', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.03) 100%)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                <div style={{ flex: '1', minWidth: '280px' }}>
+                  <h3 className="card-title" style={{ fontSize: '1.4rem', margin: 0, color: 'var(--color-success)' }}><Users size={24} className="text-green" /> Hub Diskusi WhatsApp</h3>
+                  <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.6, marginTop: '8px', marginBottom: 0 }}>
+                    Diskusi eror modul lab, tukar lencana, and info Swag Drop akan dibagikan berkala di grup WA Kak Rajif. Masuk ke grup bimbingan sekarang:
+                  </p>
+                </div>
+                <div>
+                  <a href={CONFIG.WA_LINK} target="_blank" rel="noopener noreferrer" className="btn btn-success" style={{ padding: '14px 28px', fontSize: '1rem' }}>
+                    Gabung Grup WhatsApp
+                  </a>
+                </div>
               </div>
 
               {/* Social Mutuals */}
-              <div className="card" style={{ gridColumn: 'span 6' }}>
-                <h3 className="card-title"><Share2 size={20} className="text-blue" /> Mutualan Sosial Media</h3>
+              <div className="card" style={{ gridColumn: 'span 12' }}>
+                <h3 className="card-title" style={{ fontSize: '1.4rem', marginBottom: '24px' }}><Share2 size={24} className="text-blue" /> Mutualan Sosial Media</h3>
                 <div className="mutuals-layout">
                   
                   <div className="mutuals-tabs-row">
@@ -778,7 +767,7 @@ export default function App() {
                               <span>{user.role}</span>
                             </div>
                           </div>
-                          <a href={user.link} target="_blank" className="user-follow-link"><Plus size={12} /></a>
+                          <a href={user.link} target="_blank" rel="noopener noreferrer" className="user-follow-link"><Plus size={12} /></a>
                         </div>
                       ))
                     }
@@ -838,58 +827,48 @@ export default function App() {
             </div>
 
             <div className="dashboard-grid">
-              <div className="card" style={{ gridColumn: 'span 8' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                  <div style={{ borderLeft: '4px solid var(--color-danger)', paddingLeft: '16px' }}>
-                    <h4 style={{ color: 'var(--color-danger)', marginBottom: '8px' }}>⚠️ Ketentuan Umur Minimum</h4>
-                    <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <div className="card guide-container-card" style={{ gridColumn: 'span 12' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+                  <div className="guide-highlight-box guide-highlight-danger">
+                    <h4 className="guide-highlight-title" style={{ color: 'var(--color-danger)' }}>⚠️ Ketentuan Umur Minimum</h4>
+                    <p className="guide-text">
                       Saat meregistrasikan akun di portal Skills Boost, pastikan pengaturan tahun lahirmu dikonfigurasikan agar umurmu <strong>di atas 17 tahun</strong>. Jika data umur dideteksi di bawah 17 tahun, sistem Google akan otomatis menolak pembuatan akun baru demi mematuhi regulasi privasi anak.
                     </p>
                   </div>
 
-                  <div style={{ borderLeft: '4px solid var(--color-warning)', paddingLeft: '16px' }}>
-                    <h4 style={{ color: 'var(--color-warning)', marginBottom: '8px' }}>🤖 Mengatasi Masalah Captcha Gagal</h4>
-                    <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '8px' }}>
+                  <div className="guide-highlight-box guide-highlight-warning">
+                    <h4 className="guide-highlight-title" style={{ color: 'var(--color-warning)' }}>🤖 Mengatasi Masalah Captcha Gagal</h4>
+                    <p className="guide-text" style={{ marginBottom: '12px' }}>
                       Banyak peserta menemui kendala di mana verifikasi captcha terus-menerus gagal atau tombol daftar membeku. Berikut langkah alternatif penyelesaiannya:
                     </p>
-                    <ul style={{ paddingLeft: '20px', fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                    <ul className="guide-list">
                       <li><strong>Beralih Jaringan Internet:</strong> Beralihlah dari Wi-Fi ke data seluler (atau sebaliknya) untuk mereset reputasi IP koneksimu.</li>
                       <li><strong>Mode Incognito:</strong> Buka jendela penyamaran browser untuk menghindari cookie/cache lama yang rusak.</li>
                       <li><strong>Gunakan HP:</strong> Seringkali pengisian captcha melalui browser handphone memiliki tingkat keberhasilan lebih tinggi.</li>
                     </ul>
                   </div>
 
-                  <div style={{ borderLeft: '4px solid var(--color-success)', paddingLeft: '16px' }}>
-                    <h4 style={{ color: 'var(--color-success)', marginBottom: '8px' }}>📝 Prosedur Pembuatan Profil</h4>
-                    <ol style={{ paddingLeft: '20px', fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                      <li>Kunjungi halaman resmi Google Cloud Skills Boost di <a href="https://www.cloudskillsboost.google/" target="_blank" style={{ color: 'var(--color-primary-light)', textDecoration: 'underline' }}>skills.google</a>.</li>
+                  <div className="guide-highlight-box guide-highlight-success">
+                    <h4 className="guide-highlight-title" style={{ color: 'var(--color-success)' }}>📝 Prosedur Pembuatan Profil</h4>
+                    <ol className="guide-list">
+                      <li>Kunjungi halaman resmi Google Cloud Skills Boost di <a href="https://www.cloudskillsboost.google/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary-light)', textDecoration: 'underline' }}>skills.google</a>.</li>
                       <li>Pilih menu <strong>"Join"</strong> di bagian kanan atas layar.</li>
                       <li>Pilihlah metode pendaftaran instan <strong>"Sign in with Google"</strong> agar sinkronisasi email lebih aman.</li>
                       <li>Atur tahun lahir agar terbaca di atas 17 tahun.</li>
-                      <li>Setelah berhasil login, masuk ke <strong>Profile</strong> &rarr; klik tombol <strong>Share Profile</strong> &rarr; klik <strong>Make Profile Public</strong>. Ini wajib dilakukan agar lencana dapat diverifikasi oleh admin.</li>
+                      <li>Setelah berhasil login, masuk ke <strong>Profile</strong> &rarr; klik tombol <strong>Share Profile</strong> &rarr; klik <strong>Make Profile Public</strong>. Ini wajib dilakukan agar lencana dapat diverifikasi oleh admin. Silahkan klik <a href="https://drive.google.com/file/d/1x9MZkZ3Pv456832fVidcLAlgtYVMWtw-/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary-light)', textDecoration: 'underline', fontWeight: 600 }}>panduan</a> untuk panduan visual lengkap.</li>
                     </ol>
                   </div>
                 </div>
               </div>
 
-              <div className="card text-center" style={{ gridColumn: 'span 4' }}>
-                <h3 className="card-title" style={{ justifyContent: 'center' }}><CheckCircle size={18} className="text-green" /> Simulasi Profil Terverifikasi</h3>
-                <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', padding: '20px', textAlign: 'left', marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div className="avatar" style={{ width: '32px', height: '32px' }}><Award size={14} /></div>
-                    <div>
-                      <h5 style={{ fontSize: '0.8rem', fontWeight: 700 }}>Rajif Peserta</h5>
-                      <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>ID: 109848-GCSB</span>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    <span>Lencana Diperoleh:</span>
-                    <strong style={{ color: 'var(--text-main)' }}>12 Badges</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    <span>Status Profil URL:</span>
-                    <strong style={{ color: 'var(--color-success)' }}><Check size={12} style={{ display: 'inline' }} /> Valid & Public</strong>
-                  </div>
+              <div className="card text-center" style={{ gridColumn: 'span 12', maxWidth: '900px', margin: '0 auto' }}>
+                <h3 className="card-title" style={{ justifyContent: 'center' }}><CheckCircle size={18} className="text-green" /> Contoh Profil Terverifikasi</h3>
+                <div style={{ marginTop: '16px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                  <img 
+                    src="/google_skill.png" 
+                    alt="Contoh Google Skill Public Profile" 
+                    style={{ width: '100%', height: 'auto', display: 'block' }} 
+                  />
                 </div>
                 <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '16px', lineHeight: 1.45 }}>
                   Pastikan status lencana dan URL profilmu diatur menjadi <strong>Public</strong> seperti contoh visual di atas agar poinmu sah dihitung di leaderboard bimbingan.
@@ -908,24 +887,24 @@ export default function App() {
             </div>
 
             <div className="dashboard-grid">
-              <div className="card" style={{ gridColumn: 'span 8' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                  <div style={{ borderLeft: '4px solid var(--color-primary)', paddingLeft: '16px' }}>
-                    <h4 style={{ color: 'var(--color-primary)', marginBottom: '8px' }}>🏢 Mengisi Kolom Institusi / Komunitas</h4>
-                    <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '12px' }}>
+              <div className="card guide-container-card" style={{ gridColumn: 'span 12' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+                  <div className="guide-highlight-box guide-highlight-primary">
+                    <h4 className="guide-highlight-title" style={{ color: 'var(--color-primary)' }}>🏢 Mengisi Kolom Institusi / Komunitas</h4>
+                    <p className="guide-text" style={{ marginBottom: '12px' }}>
                       Banyak pendaftar bingung mengisi kolom <strong>Institusi</strong> atau <strong>Komunitas</strong> di form pendaftaran program developer Google. Silakan isi sesuai statusmu saat ini:
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>• <strong>Sekolah (SD/SMP/SMA):</strong> Isilah kolom institusi dengan <strong>Nama Sekolah Lengkap</strong> (contoh: SMAN 8 Jakarta).</p>
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>• <strong>Mahasiswa Kuliah:</strong> Isilah dengan <strong>Nama Kampus/Universitas</strong> (contoh: Universitas Indonesia).</p>
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>• <strong>Sudah Bekerja / Lainnya:</strong> Isilah dengan <strong>Nama Perusahaan</strong> atau nama <strong>Pendidikan Terakhir</strong> kalian.</p>
+                      <p className="guide-text">• <strong>Sekolah (SD/SMP/SMA):</strong> Isilah kolom institusi dengan <strong>Nama Sekolah Lengkap</strong> (contoh: SMAN 8 Jakarta).</p>
+                      <p className="guide-text">• <strong>Mahasiswa Kuliah:</strong> Isilah dengan <strong>Nama Kampus/Universitas</strong> (contoh: Universitas Indonesia).</p>
+                      <p className="guide-text">• <strong>Sudah Bekerja / Lainnya:</strong> Isilah dengan <strong>Nama Perusahaan</strong> atau nama <strong>Pendidikan Terakhir</strong> kalian.</p>
                     </div>
                   </div>
 
-                  <div style={{ borderLeft: '4px solid var(--color-success)', paddingLeft: '16px' }}>
-                    <h4 style={{ color: 'var(--color-success)', marginBottom: '8px' }}>📝 Alur Pendaftaran GEAR</h4>
-                    <ol style={{ paddingLeft: '20px', fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                      <li>Buka halaman pendaftaran Google GEAR di <a href="https://developers.google.com/program/gear" target="_blank" style={{ color: 'var(--color-primary-light)', textDecoration: 'underline' }}>developers.google.com/program/gear</a>.</li>
+                  <div className="guide-highlight-box guide-highlight-success">
+                    <h4 className="guide-highlight-title" style={{ color: 'var(--color-success)' }}>📝 Alur Pendaftaran GEAR</h4>
+                    <ol className="guide-list">
+                      <li>Buka halaman pendaftaran Google GEAR di <a href="https://developers.google.com/program/gear" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary-light)', textDecoration: 'underline' }}>developers.google.com/program/gear</a>.</li>
                       <li>Klik tombol hijau <strong>"Join Google Developer Program"</strong>.</li>
                       <li>Lakukan login menggunakan akun Google/Gmail kalian.</li>
                       <li>Lengkapi form isian data diri, isi kolom institusi sesuai panduan di atas.</li>
@@ -935,24 +914,14 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="card text-center" style={{ gridColumn: 'span 4' }}>
-                <h3 className="card-title" style={{ justifyContent: 'center' }}><CheckCircle size={18} className="text-green" /> Dasbor Pendaftaran Sukses</h3>
-                <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', padding: '20px', textAlign: 'left', marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div className="avatar" style={{ width: '32px', height: '32px', background: 'var(--grad-green)' }}><CheckCircle size={14} /></div>
-                    <div>
-                      <h5 style={{ fontSize: '0.8rem', fontWeight: 700 }}>Google Developers</h5>
-                      <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>GEAR Member Account</span>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    <span>Developer Level:</span>
-                    <strong style={{ color: 'var(--text-main)' }}>Member</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    <span>GEAR Badge status:</span>
-                    <strong style={{ color: 'var(--color-success)' }}><Check size={12} style={{ display: 'inline' }} /> Activated</strong>
-                  </div>
+              <div className="card text-center" style={{ gridColumn: 'span 12', maxWidth: '900px', margin: '0 auto' }}>
+                <h3 className="card-title" style={{ justifyContent: 'center' }}><CheckCircle size={18} className="text-green" /> Contoh Dasbor Sukses</h3>
+                <div style={{ marginTop: '16px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                  <img 
+                    src="/Gear.png" 
+                    alt="Contoh Google GEAR Dashboard" 
+                    style={{ width: '100%', height: 'auto', display: 'block' }} 
+                  />
                 </div>
                 <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '16px', lineHeight: 1.45 }}>
                   Visual di atas merepresentasikan tampilan lencana dasbor Google Developer Program setelah pendaftaran GEAR kamu sukses disetujui.
@@ -963,62 +932,7 @@ export default function App() {
         )}
 
         {/* Anonymous Feedback Section */}
-        <section className="card" style={{ marginTop: '64px', maxWidth: '650px', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-          <h3 className="card-title" style={{ justifyContent: 'center' }}><MessageSquare size={18} className="text-blue" /> Masukan & Saran Anonim</h3>
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '20px', lineHeight: 1.5 }}>
-            Ada keluhan, kritik, atau usulan fitur untuk website bimbingan ini? Kirim masukanmu di bawah secara anonim (identitas dijamin aman).
-          </p>
-          <form onSubmit={handleFeedbackSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
-            <div className="input-group">
-              <textarea 
-                rows="3" 
-                placeholder="Tulis kritik, saran, atau ide fitur di sini..." 
-                value={feedbackMsg}
-                onChange={(e) => setFeedbackMsg(e.target.value)}
-                required
-                style={{ 
-                  width: '100%', 
-                  padding: '12px', 
-                  background: 'rgba(0,0,0,0.2)', 
-                  border: '1px solid var(--border-color)', 
-                  borderRadius: '6px', 
-                  color: 'var(--text-main)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.85rem',
-                  outline: 'none',
-                  resize: 'vertical'
-                }}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary" style={{ padding: '12px' }}>Kirim Masukan Anonim</button>
-          </form>
-          {feedbackSuccess && (
-            <div className="copy-status-tip" style={{ color: 'var(--color-success)', marginTop: '10px' }}>
-              Masukan anonim berhasil terkirim! Terima kasih.
-            </div>
-          )}
-        </section>
-
       </main>
-
-      {/* Swag Inspect Modal Lightbox */}
-      {selectedSwag && (
-        <div className="modal-overlay" onClick={() => setSelectedSwag(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setSelectedSwag(null)} aria-label="Close modal"><Plus style={{ transform: 'rotate(45deg)' }} size={16} /></button>
-            <div className="modal-img-area">
-              <div style={{ textAlign: 'center' }}>
-                {React.createElement(selectedSwag.icon, { size: 64, style: { color: selectedSwag.color, filter: 'drop-shadow(0 0 15px rgba(99,102,241,0.3))' } })}
-                <span className="badge" style={{ background: `${selectedSwag.color}15`, color: selectedSwag.color, display: 'block', width: 'fit-content', margin: '12px auto 0 auto' }}>{selectedSwag.tier}</span>
-              </div>
-            </div>
-            <div className="modal-caption">
-              <h3>{selectedSwag.name}</h3>
-              <p>{selectedSwag.desc}</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Floating Chatbot assistant widget */}
       <div className="chat-container">
