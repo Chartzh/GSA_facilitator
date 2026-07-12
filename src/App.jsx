@@ -68,12 +68,37 @@ const CONFIG = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('home');
+  // Hash Routing Helpers
+  const getInitialTab = () => {
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    const validTabs = ['home', 'tentang', 'cara', 'qna', 'komunitas', 'skills', 'gear'];
+    return validTabs.includes(hash) ? hash : 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab);
   const [theme, setTheme] = useState('dark');
   const [copied, setCopied] = useState(false);
   const [countdown, setCountdown] = useState({ days: '--', hours: '--', minutes: '--', seconds: '--' });
   const [isRegOpen, setIsRegOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Synchronize Tab with URL hash
+  useEffect(() => {
+    window.location.hash = activeTab;
+  }, [activeTab]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      const validTabs = ['home', 'tentang', 'cara', 'qna', 'komunitas', 'skills', 'gear'];
+      if (validTabs.includes(hash)) {
+        setActiveTab(hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   // Theme Controller
   const toggleTheme = () => {
