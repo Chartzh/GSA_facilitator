@@ -27,7 +27,9 @@ import {
   Backpack,
   Gift,
   AlertTriangle,
-  ChevronDown
+  ChevronDown,
+  Menu,
+  X
 } from 'lucide-react';
 
 // Custom inline SVG icons for brands (not exported in newer Lucide versions)
@@ -81,6 +83,7 @@ export default function App() {
   const [countdown, setCountdown] = useState({ days: '--', hours: '--', minutes: '--', seconds: '--' });
   const [isRegOpen, setIsRegOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Synchronize Tab with URL hash
   useEffect(() => {
@@ -337,12 +340,46 @@ export default function App() {
               target={isRegOpen ? "_blank" : undefined} 
               onClick={(e) => !isRegOpen && e.preventDefault()}
               className={`btn btn-primary ${!isRegOpen ? 'btn-coming-soon' : ''}`}
+              style={{ fontSize: '0.82rem', padding: '8px 16px' }}
             >
-              {isRegOpen ? 'Daftar Sekarang' : 'Coming Soon'}
+              {isRegOpen ? 'Daftar' : 'Soon'}
             </a>
+            
+            {/* Mobile Menu Burger Toggle */}
+            <button 
+              className="mobile-menu-btn" 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu Drawer Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobile-drawer-overlay" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-drawer-header">
+              <span className="mobile-drawer-logo">Menu Navigasi</span>
+              <button className="mobile-drawer-close" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
+                <X size={20} />
+              </button>
+            </div>
+            <ul className="mobile-drawer-menu">
+              <li onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }} className={activeTab === 'home' ? 'active' : ''}>Home</li>
+              <li onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }} className={activeTab === 'tentang' ? 'active' : ''}>Tentang</li>
+              <li onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }} className={activeTab === 'cara' ? 'active' : ''}>Cara Bermain</li>
+              <li onClick={() => { setActiveTab('qna'); setIsMobileMenuOpen(false); }} className={activeTab === 'qna' ? 'active' : ''}>QnA</li>
+              <li onClick={() => { setActiveTab('komunitas'); setIsMobileMenuOpen(false); }} className={activeTab === 'komunitas' ? 'active' : ''}>Komunitas</li>
+              <li className="mobile-drawer-divider"></li>
+              <li onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }} className={activeTab === 'skills' ? 'active' : ''}>Panduan Google Skills</li>
+              <li onClick={() => { setActiveTab('gear'); setIsMobileMenuOpen(false); }} className={activeTab === 'gear' ? 'active' : ''}>Panduan GEAR</li>
+            </ul>
+          </div>
+        </div>
+      )}
 
       {/* Render active tabs */}
       <main className="container" id="main-content-area">
