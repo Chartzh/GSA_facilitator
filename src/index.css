@@ -11,7 +11,9 @@
 
   /* Theme: Dark Mode (Default) */
   --bg-main: #060913;
-  --header-bg: rgba(6, 9, 19, 0.75);
+  --header-bg: rgba(6, 9, 19, 0.93);
+  --header-border: rgba(255, 255, 255, 0.15);
+  --header-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   --bg-card: #0d1222;
   --bg-card-hover: #121930;
   --border-color: rgba(255, 255, 255, 0.08);
@@ -45,7 +47,9 @@
 /* Light Theme Variables */
 :root.light {
   --bg-main: #f8fafc;
-  --header-bg: rgba(248, 250, 252, 0.75);
+  --header-bg: rgba(248, 250, 252, 0.95);
+  --header-border: rgba(0, 0, 0, 0.1);
+  --header-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   --bg-card: #ffffff;
   --bg-card-hover: #f1f5f9;
   --border-color: rgba(0, 0, 0, 0.08);
@@ -115,7 +119,8 @@ a {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   background: var(--header-bg);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: var(--header-shadow);
   height: 76px;
   display: flex;
   align-items: center;
