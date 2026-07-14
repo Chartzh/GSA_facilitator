@@ -927,6 +927,7 @@ export default function App() {
                       const search = faqSearch.toLowerCase();
                       return q.includes(search) || a.includes(search) || tags.includes(search);
                     })
+                    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
                     .map((faq, index) => (
                       <div key={index} className={`acc-card ${openFaqIndex === index ? 'open' : ''}`}>
                         <div className="acc-trigger" onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}>
