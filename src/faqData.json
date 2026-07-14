@@ -1,0 +1,1074 @@
+[
+  {
+    "category": "Mulai dari Sini",
+    "question": "Saya baru join grup, harus mulai dari mana?",
+    "answer": "Mulai dari 4 langkah ini:\n\n1. Baca panduan utama di web Rajif:  \n   `https://gsa-facilitator-rajif.vercel.app/#home`\n\n2. Daftar ke program Google Cloud Arcade Facilitator 2026 melalui form prefill resmi dari Google/Dicoding yang sudah berisi kode fasilitator Rajif:  \n   `https://docs.google.com/forms/d/e/1FAIpQLSfvBy0GqZPZpzC3aa6TKB5q3CMV9124cbsX4Ytv95O_plxN5w/viewform?usp=pp_url&entry.1875553715=__other_option__&entry.1875553715.other_option_response=GCAF26-ID-UAQ-MFC&entry.111338853=__other_option__&entry.111338853.other_option_response=Muhammad%20Rajif%20Raditya&entry.600268542=__other_option__&entry.600268542.other_option_response=GCAF26-ID-UAQ-MFC`\n\n 3. Setelah daftar, cek email secara berkala. Email instruksi biasanya dikirim dalam 24–48 jam.\n\nKalau masih bingung, cek FAQ ini dulu. Kalau belum terjawab, baru tanya di grup atau DM fasilitator.",
+    "tags": [
+      "mulai",
+      "baru join",
+      "langkah awal",
+      "first step",
+      "pemula"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Mulai dari Sini",
+    "question": "Checklist awal yang harus saya lakukan apa saja?",
+    "answer": "Checklist awal:\n\n- [ ] Baca panduan di web Rajif.\n- [ ] Buat atau login akun Google Skills.\n- [ ] Aktifkan public profile Google Skills.\n- [ ] Salin URL public profile Google Skills.\n- [ ] Daftar ke program melalui form prefill resmi Google/Dicoding.\n- [ ] Pastikan kode fasilitator `GCAF26-ID-UAQ-MFC` dan nama fasilitator `Muhammad Rajif Raditya` sudah terisi di form.\n- [ ] Cek email dalam 24–48 jam.\n- [ ] Klaim kupon/kredit sesuai instruksi email.\n- [ ] Mulai kerjakan Arcade Games terlebih dahulu.\n- [ ] Lanjut kerjakan Skill Badge sebanyak mungkin.",
+    "tags": [
+      "checklist",
+      "urutan",
+      "mulai",
+      "next step"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Mulai dari Sini",
+    "question": "Kalau saya benar-benar pemula, bisa ikut?",
+    "answer": "Bisa, selama memenuhi kriteria peserta. Program ini memang dibuat sebagai program belajar berbasis gamifikasi. Kamu akan belajar cloud, AI, machine learning, data engineering, dan topik Google Cloud lainnya melalui lab dan badge.\n\nTapi tetap perlu komitmen belajar, koneksi internet yang baik, dan perangkat yang memadai karena beberapa lab bersifat teknis.",
+    "tags": [
+      "pemula",
+      "beginner",
+      "baru belajar",
+      "coding"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Mulai dari Sini",
+    "question": "Kalau saya tidak bisa coding, apakah tetap bisa ikut?",
+    "answer": "Bisa. Tidak semua bagian membutuhkan kemampuan coding yang berat. Namun, beberapa lab mungkin melibatkan instruksi teknis, penggunaan Google Cloud Console, command line, atau konfigurasi cloud.\n\nKalau belum terbiasa, ikuti instruksi lab pelan-pelan dan jangan ragu bertanya dengan menyertakan screenshot serta langkah yang sudah dicoba.",
+    "tags": [
+      "coding",
+      "tidak bisa coding",
+      "pemula",
+      "teknis"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Tentang Program",
+    "question": "Urutan pengerjaan yang disarankan apa?",
+    "answer": "Urutan yang disarankan:\n\n1. Pastikan sudah terdaftar dan menerima email resmi.\n2. Klaim kupon/kredit sesuai instruksi email.\n3. Kerjakan **Arcade Games terlebih dahulu** karena game punya batas waktu bulanan dan kuotanya bisa terbatas.\n4. Lanjut kerjakan **Skill Badge** sebanyak mungkin.\n5. Jika sudah memenuhi syarat, lanjutkan ke **Bonus Milestone**.",
+    "tags": [
+      "urutan",
+      "game dulu",
+      "skill badge",
+      "roadmap"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Tentang Program",
+    "question": "Google Cloud Arcade Facilitator 2026 itu apa?",
+    "answer": "Google Cloud Arcade Facilitator 2026 adalah program belajar Google Cloud berbasis gamifikasi. Peserta dapat mempelajari topik seperti cloud computing, artificial intelligence, machine learning, data engineering, hingga pembuatan AI agent.\n\nSelama program, peserta bisa memperoleh badge keahlian dan Poin Arcade yang dapat digunakan untuk mencapai milestone serta berkesempatan menukarkan hadiah atau merchandise Google Cloud sesuai ketentuan program.",
+    "tags": [
+      "apa itu",
+      "program",
+      "arcade facilitator",
+      "google cloud"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Tentang Program",
+    "question": "Program ini gratis atau berbayar?",
+    "answer": "Program ini gratis untuk diikuti. Setelah mendaftar, peserta akan menerima instruksi melalui email untuk klaim kupon/kredit gratis yang digunakan untuk mengikuti game, course, dan skill badge dalam program.\n\nNamun, untuk beberapa bagian seperti Bonus Milestone yang melibatkan Google Cloud Free Trial, peserta mungkin diminta menyiapkan kartu kredit/debit untuk proses verifikasi free trial. Berdasarkan informasi resmi, Google Cloud tidak akan menagih otomatis kecuali pengguna melakukan upgrade manual.",
+    "tags": [
+      "gratis",
+      "bayar",
+      "biaya",
+      "free"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Tentang Program",
+    "question": "Apa keuntungan ikut program ini?",
+    "answer": "Beberapa benefit program:\n\n- Belajar skill cloud dan AI terbaru.\n- Mendapatkan digital badge dari Google Cloud.\n- Menambah portofolio untuk CV atau LinkedIn.\n- Mengumpulkan Poin Arcade.\n- Berkesempatan menukarkan poin dengan merchandise Google Cloud.\n- Belajar melalui format gamifikasi yang lebih seru.\n- Mendapat panduan dari fasilitator.",
+    "tags": [
+      "benefit",
+      "keuntungan",
+      "badge",
+      "portfolio",
+      "linkedin"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Tentang Program",
+    "question": "Program ini berlangsung kapan?",
+    "answer": "Program berlangsung dari:\n\n**13 Juli 2026 pukul 09:00 WIB sampai 14 September 2026 pukul 23:59 WIB.**\n\nForm pendaftaran juga dapat ditutup lebih cepat jika kuota sudah penuh.",
+    "tags": [
+      "timeline",
+      "tanggal",
+      "mulai",
+      "selesai",
+      "deadline"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Apakah program ini sama dengan Google Skills Arcade biasa?",
+    "answer": "Terkait, tapi tidak persis sama. Program Arcade Facilitator membantu peserta mengumpulkan Poin Arcade dan Bonus Poin dalam cohort fasilitator.\n\nNamun, milestone Arcade Facilitator tidak otomatis sama dengan pencapaian Google Skills Arcade Player. Poin dari program fasilitator membantu menambah total poin untuk pencapaian Google Skills Arcade.",
+    "tags": [
+      "arcade biasa",
+      "skills arcade",
+      "facilitator",
+      "player"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Siapa saja yang boleh mendaftar sebagai peserta?",
+    "answer": "Kriteria peserta:\n\n- Warga Negara Indonesia.\n- Berusia 18 tahun ke atas.\n- Memiliki koneksi internet yang baik.\n- Memiliki laptop dengan browser Chrome terbaru.\n- Dapat mendaftar dengan kode referral fasilitator, atau daftar tanpa kode jika belum punya fasilitator.",
+    "tags": [
+      "syarat",
+      "kriteria",
+      "peserta",
+      "wni",
+      "umur"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Apakah wajib berusia 18 tahun ke atas?",
+    "answer": "Ya. Berdasarkan informasi resmi, peserta wajib berusia **18 tahun ke atas**. Akun Google Skills juga dapat diblokir jika pengguna berusia di bawah 18 tahun, dan untuk kasus batasan usia ini akun tidak dapat dipulihkan.",
+    "tags": [
+      "umur",
+      "usia",
+      "18 tahun",
+      "underage"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Apakah wajib WNI?",
+    "answer": "Ya. Untuk program Google Cloud Arcade Facilitator Indonesia 2026, peserta wajib merupakan Warga Negara Indonesia.",
+    "tags": [
+      "wni",
+      "indonesia",
+      "negara"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Apakah wajib punya laptop?",
+    "answer": "Ya, berdasarkan kriteria resmi peserta wajib memiliki laptop dengan Chrome browser terbaru.\n\nUntuk registrasi atau membaca panduan, HP mungkin masih bisa digunakan. Namun untuk mengerjakan lab Google Cloud, sangat disarankan memakai laptop/PC karena banyak instruksi teknis, console, dan beberapa tab browser.",
+    "tags": [
+      "laptop",
+      "hp",
+      "perangkat",
+      "device"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Bisa daftar pakai HP?",
+    "answer": "Bisa dicoba untuk pendaftaran atau membaca panduan. Namun untuk pengerjaan lab, tetap sangat disarankan menggunakan laptop/PC dengan Chrome terbaru agar lebih stabil dan nyaman.",
+    "tags": [
+      "hp",
+      "mobile",
+      "daftar lewat hp",
+      "smartphone"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Kalau saya lulusan SMA/gap year/belum kuliah, boleh ikut?",
+    "answer": "Selama memenuhi kriteria resmi, terutama WNI, berusia 18 tahun ke atas, memiliki koneksi internet yang baik, dan perangkat yang memadai, kamu bisa mengikuti program ini.\n\nProgram ini tidak hanya untuk mahasiswa, tetapi untuk peserta yang memenuhi kriteria program.",
+    "tags": [
+      "sma",
+      "gap year",
+      "mahasiswa",
+      "kuliah",
+      "umum"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Syarat Peserta",
+    "question": "Kalau saya pernah ikut program Arcade Facilitator 2025, boleh ikut lagi?",
+    "answer": "Boleh. Peserta yang sudah berpartisipasi pada tahun 2025 dapat mendaftar kembali di tahun 2026 karena silabus tahun ini berbeda.\n\nNamun, jika ada badge yang sama dan sudah pernah diselesaikan sebelumnya, badge tersebut tidak akan dihitung untuk program 2026. Agar badge dihitung, kamu harus menyelesaikannya dalam durasi program 2026, yaitu 13 Juli–14 September 2026.",
+    "tags": [
+      "2025",
+      "ikut lagi",
+      "peserta lama",
+      "badge lama"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Kalau saya sudah pernah mengerjakan badge sebelumnya, apakah tetap dihitung?",
+    "answer": "Badge hanya dihitung jika diselesaikan pada periode program, yaitu **13 Juli–14 September 2026**.\n\nJika badge sudah selesai sebelum periode program, badge tersebut tidak dihitung untuk program ini. Jika ingin badge yang sama tetap dihitung, opsi yang disebutkan FAQ resmi adalah membuat akun Google Skills baru dengan email baru dan mendaftar menggunakan email tersebut.",
+    "tags": [
+      "badge lama",
+      "sudah selesai",
+      "pernah ikut",
+      "akun baru"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Kapan pendaftaran dibuka dan ditutup?",
+    "answer": "Pendaftaran dibuka selama periode program:\n\n**13 Juli 2026 pukul 09:00 WIB sampai 14 September 2026 pukul 23:59 WIB.**\n\nNamun, form dapat ditutup lebih cepat jika kuota program sudah penuh.",
+    "tags": [
+      "pendaftaran",
+      "daftar",
+      "deadline",
+      "kuota"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Link pendaftaran ada di mana?",
+    "answer": "Untuk pendaftaran, gunakan form prefill resmi dari Google/Dicoding berikut:\n\n`https://docs.google.com/forms/d/e/1FAIpQLSfvBy0GqZPZpzC3aa6TKB5q3CMV9124cbsX4Ytv95O_plxN5w/viewform?usp=pp_url&entry.1875553715=__other_option__&entry.1875553715.other_option_response=GCAF26-ID-UAQ-MFC&entry.111338853=__other_option__&entry.111338853.other_option_response=Muhammad%20Rajif%20Raditya&entry.600268542=__other_option__&entry.600268542.other_option_response=GCAF26-ID-UAQ-MFC`\n\nForm ini sudah otomatis mengisi kode fasilitator Rajif, nama fasilitator, dan kode referral yang diperlukan. Meski begitu, sebelum submit tetap cek kembali apakah data berikut sudah benar:\n\n- Kode fasilitator/referral: `GCAF26-ID-UAQ-MFC`\n- Nama fasilitator: `Muhammad Rajif Raditya`\n\nPanduan lengkap juga bisa kamu akses dari web Rajif:\n\n`https://gsa-facilitator-rajif.vercel.app/#home`",
+    "tags": [
+      "link daftar",
+      "pendaftaran",
+      "registrasi",
+      "form",
+      "prefill"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Apa yang harus disiapkan sebelum daftar?",
+    "answer": "Sebelum daftar, siapkan:\n\n- Akun Google.\n- Akun Google Skills.\n- Public profile Google Skills yang sudah aktif.\n- URL public profile Google Skills.\n- Koneksi internet yang stabil.\n- Email aktif yang bisa dicek.\n- Link form prefill resmi Google/Dicoding.\n- Kode fasilitator Rajif: `GCAF26-ID-UAQ-MFC`.\n\nDisarankan juga menambahkan email `googlecloudedu-noreply@google.com` ke kontak atau daftar aman agar email tidak masuk Spam/Junk/Promotions.",
+    "tags": [
+      "persiapan",
+      "sebelum daftar",
+      "public profile",
+      "email"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Setelah mengisi form pendaftaran, apa yang terjadi?",
+    "answer": "Setelah mengisi form, kamu akan menerima email dalam waktu **24–48 jam**. Email tersebut berisi instruksi untuk klaim kupon/kredit gratis serta detail program seperti timeline, silabus, sistem poin, FAQ, dan informasi lainnya.\n\nPastikan kamu mengecek folder Inbox, Spam, Junk, dan Promotions.",
+    "tags": [
+      "setelah daftar",
+      "email",
+      "24 jam",
+      "48 jam"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Saya belum menerima email setelah daftar. Harus bagaimana?",
+    "answer": "Coba langkah berikut:\n\n1. Tunggu 24–48 jam setelah mengisi form.\n2. Cek folder Spam/Junk/Promotions.\n3. Pastikan email yang dipakai saat daftar benar.\n4. Pastikan URL public profile Google Skills yang dimasukkan benar.\n5. Jika masih belum ada, hubungi fasilitator atau email dukungan `arcade@dicoding.com`.",
+    "tags": [
+      "email belum masuk",
+      "tidak menerima email",
+      "spam",
+      "junk"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Kenapa penting memasukkan URL public profile Google Skills yang benar?",
+    "answer": "Karena jika kamu memasukkan URL profil Google Skills yang salah, kamu bisa tidak menerima email instruksi program.\n\nPastikan public profile sudah aktif dan URL-nya benar sebelum submit form.",
+    "tags": [
+      "public profile",
+      "url profil",
+      "salah url",
+      "email"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Pendaftaran",
+    "question": "Apakah data pendaftaran bisa diubah setelah form ditutup?",
+    "answer": "Jika form sudah ditutup, perubahan detail registrasi tidak dijamin bisa dilakukan. Perubahan email juga tidak diizinkan.\n\nKamu tetap bisa menghubungi fasilitator dan memberikan detail yang benar. Fasilitator dapat meneruskan informasi tersebut, tetapi keputusan perbaikan data tetap mengikuti kebijakan tim program.",
+    "tags": [
+      "ubah data",
+      "edit form",
+      "salah data",
+      "email salah"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kode Fasilitator / Referral",
+    "question": "Kalau form pendaftaran tertutup, artinya apa?",
+    "answer": "Jika form pendaftaran sudah tertutup, kemungkinan:\n\n- Periode pendaftaran sudah berakhir, atau\n- Kuota program sudah penuh.\n\nPendaftaran resmi berakhir pada 14 September 2026 pukul 23:59 WIB, tetapi bisa ditutup lebih cepat jika kuota terpenuhi.",
+    "tags": [
+      "form closed",
+      "form tertutup",
+      "kuota penuh"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kode Fasilitator / Referral",
+    "question": "Kode fasilitator Rajif apa?",
+    "answer": "Kode fasilitator Rajif adalah:\n\n`GCAF26-ID-UAQ-MFC`\n\nJika menggunakan form prefill resmi Google/Dicoding, kode ini seharusnya sudah terisi otomatis. Sebelum submit, tetap pastikan kode fasilitator/referral yang muncul adalah `GCAF26-ID-UAQ-MFC` dan nama fasilitatornya `Muhammad Rajif Raditya`.",
+    "tags": [
+      "kode",
+      "referral",
+      "kode rajif",
+      "kode fasilitator"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Kode Fasilitator / Referral",
+    "question": "Kode referral dimasukkan di mana?",
+    "answer": "Jika memakai form prefill resmi Google/Dicoding, kode referral/fasilitator Rajif sudah terisi otomatis di form. Kamu cukup cek ulang sebelum submit.\n\nPastikan data berikut benar:\n\n- Kode fasilitator/referral: `GCAF26-ID-UAQ-MFC`\n- Nama fasilitator: `Muhammad Rajif Raditya`\n\nJika membuka form non-prefill atau kolomnya kosong, masukkan kode `GCAF26-ID-UAQ-MFC` secara manual.",
+    "tags": [
+      "input kode",
+      "referral",
+      "form",
+      "pendaftaran",
+      "prefill"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kode Fasilitator / Referral",
+    "question": "Kalau saya tidak punya kode referral, apakah tetap bisa daftar?",
+    "answer": "Bisa. Berdasarkan informasi resmi, peserta dapat mendaftar tanpa kode referral. Nantinya, tim Arcade akan memasangkan peserta dengan tim fasilitator setelah pendaftaran ditutup.\n\nNamun, kalau kamu ikut melalui komunitas Rajif, disarankan memasukkan kode Rajif agar lebih mudah diarahkan dan dipandu.",
+    "tags": [
+      "tanpa kode",
+      "referral kosong",
+      "tidak punya kode"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kode Fasilitator / Referral",
+    "question": "Kalau sudah daftar tanpa kode Rajif, masih boleh ikut grup ini?",
+    "answer": "Boleh. Kamu tetap boleh belajar dan berdiskusi di grup. Namun, untuk tracking sebagai peserta referral Rajif, idealnya kode fasilitator dimasukkan sejak pendaftaran.\n\nJika sudah terlanjur daftar tanpa kode, lanjutkan program seperti biasa dan ikuti instruksi resmi yang kamu terima lewat email.",
+    "tags": [
+      "daftar tanpa kode",
+      "ikut grup",
+      "referral rajif"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Akun Google Skills",
+    "question": "Apakah wajib menggunakan kode Rajif?",
+    "answer": "Tidak wajib secara umum. Program tetap memungkinkan peserta daftar tanpa kode referral.\n\nNamun, jika kamu ingin bergabung melalui bimbingan Rajif dan komunitas ini, gunakan kode `GCAF26-ID-UAQ-MFC` saat pendaftaran.",
+    "tags": [
+      "wajib kode",
+      "kode rajif",
+      "referral"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Akun Google Skills",
+    "question": "Google Skills itu apa?",
+    "answer": "Google Skills adalah platform belajar dari Google untuk mengikuti lab, course, game, dan skill badge. Di platform ini, progress badge kamu akan tercatat dan dapat ditampilkan melalui public profile.",
+    "tags": [
+      "google skills",
+      "cloud skills boost",
+      "platform"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Akun Google Skills",
+    "question": "Apakah akun Google Skills harus sama dengan email pendaftaran?",
+    "answer": "Sangat disarankan menggunakan email yang sama dari awal sampai akhir: untuk akun Google Skills, pendaftaran program, klaim kredit, dan pengerjaan lab.\n\nMenggunakan email berbeda bisa membuat proses tracking, email instruksi, kredit, atau progress menjadi bermasalah.",
+    "tags": [
+      "email sama",
+      "akun",
+      "google skills",
+      "daftar"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Akun Google Skills",
+    "question": "Bagaimana cara menemukan URL public profile Google Skills?",
+    "answer": "Langkah umumnya:\n\n1. Login ke Google Skills.\n2. Buka halaman Settings/Pengaturan.\n3. Pada bagian Public visibility, centang “Make profile public”.\n4. Klik “Update Settings”.\n5. Tunggu halaman reload.\n6. Salin URL public profile yang muncul.\n\nContoh format URL:\n\n`https://www.skills.google/public_profiles/PROFILE_ID`",
+    "tags": [
+      "public profile",
+      "url profil",
+      "make profile public"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Akun Google Skills",
+    "question": "Kenapa public profile harus dibuat public?",
+    "answer": "Karena badge dan progress kamu perlu terlihat melalui URL public profile. Ini penting untuk proses tracking program dan validasi penyelesaian badge.\n\nJika profil tidak public atau URL salah, progress kamu bisa sulit diverifikasi.",
+    "tags": [
+      "profil publik",
+      "public visibility",
+      "badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Akun Google Skills",
+    "question": "Kalau nama di profil Google Skills salah, bagaimana?",
+    "answer": "Coba ubah melalui pengaturan akun/profil Google Skills jika tersedia. Pastikan data yang kamu gunakan konsisten dan sesuai.\n\nJika terkait data pendaftaran yang sudah dikirim, hubungi fasilitator dengan informasi yang benar. Namun, perubahan data setelah form ditutup tidak selalu bisa dijamin.",
+    "tags": [
+      "nama salah",
+      "profil",
+      "edit nama"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Google Arcade Gear / GEAR",
+    "question": "Kalau sudah punya akun Google Skills dari tahun lalu, apakah boleh dipakai?",
+    "answer": "Boleh, tetapi perlu diperhatikan: badge yang sudah selesai sebelum periode program 2026 tidak akan dihitung.\n\nJika kamu sudah menyelesaikan badge yang sama sebelumnya dan ingin badge tersebut dihitung dalam program 2026, opsi yang disebutkan FAQ resmi adalah memakai email Google Skills baru dan mendaftar dengan email baru tersebut.",
+    "tags": [
+      "akun lama",
+      "tahun lalu",
+      "badge lama"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Google Arcade Gear / GEAR",
+    "question": "Google Arcade Gear / GEAR itu apa?",
+    "answer": "GEAR adalah bagian dari program yang berkaitan dengan pembelajaran Gemini Enterprise Agent Ready. Dalam konteks Bonus Milestone, peserta perlu memiliki badge GEAR dan menyelesaikan beberapa skill badge terkait AI agent.",
+    "tags": [
+      "gear",
+      "arcade gear",
+      "gemini enterprise",
+      "agent"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Google Arcade Gear / GEAR",
+    "question": "Apakah harus daftar GEAR?",
+    "answer": "Untuk mengikuti program utama, ikuti instruksi resmi pendaftaran program. Namun, untuk **Bonus Milestone**, salah satu syaratnya adalah peserta sudah mendaftar program GEAR saat enrollment dan memperoleh badge GEAR pada profil Google Developer.\n\nJadi, kalau target kamu ingin mengejar Bonus Milestone, GEAR menjadi penting.",
+    "tags": [
+      "daftar gear",
+      "wajib gear",
+      "bonus milestone"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Google Arcade Gear / GEAR",
+    "question": "Bagaimana tahu GEAR saya sudah berhasil?",
+    "answer": "Cek profil Google Developer/Google Skills kamu dan pastikan badge GEAR muncul sesuai instruksi program.\n\nJika belum muncul, pastikan kamu mengikuti langkah pendaftaran GEAR dengan benar, memakai akun yang sama, lalu refresh profil atau tunggu beberapa saat.",
+    "tags": [
+      "badge gear",
+      "gear muncul",
+      "cek gear"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Badge GEAR tidak muncul, harus bagaimana?",
+    "answer": "Coba langkah ini:\n\n1. Pastikan kamu memakai akun Google yang sama.\n2. Cek kembali instruksi pendaftaran GEAR.\n3. Refresh halaman profil.\n4. Coba buka dengan incognito atau browser lain.\n5. Tunggu beberapa saat jika baru saja menyelesaikan proses.\n6. Jika masih belum muncul, kirim screenshot dan langkah yang sudah dicoba ke grup atau fasilitator.",
+    "tags": [
+      "gear tidak muncul",
+      "badge tidak muncul",
+      "troubleshooting gear"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Arcade Games itu apa?",
+    "answer": "Arcade Games adalah game belajar di Google Skills Arcade. Setiap penyelesaian 1 badge Game akan memberikan 1 Poin Arcade.\n\nDisarankan mengerjakan Arcade Games terlebih dahulu karena game diperbarui setiap bulan, memiliki deadline, dan kuotanya bisa cepat penuh.",
+    "tags": [
+      "arcade game",
+      "game",
+      "poin game"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Skill Badge itu apa?",
+    "answer": "Skill Badge adalah badge keahlian yang diperoleh setelah menyelesaikan rangkaian lab/course tertentu di Google Skills.\n\nDalam sistem poin, setiap kelipatan 2 Skill Badge memberikan 1 Poin Arcade.",
+    "tags": [
+      "skill badge",
+      "badge keahlian",
+      "badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Lebih baik mengerjakan Arcade Games atau Skill Badge dulu?",
+    "answer": "Disarankan mengerjakan **Arcade Games terlebih dahulu** karena game memiliki deadline bulanan dan kuotanya bisa terbatas.\n\nSetelah itu, lanjutkan mengerjakan Skill Badge sebanyak mungkin untuk menambah Poin Arcade.",
+    "tags": [
+      "game dulu",
+      "skill badge dulu",
+      "prioritas"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Kapan boleh mulai mengerjakan lab/game/badge?",
+    "answer": "Disarankan mulai setelah kamu berhasil mendaftar/enroll ke program dan menerima email pendaftaran resmi, terutama untuk aktivitas yang terkait program dan bonus milestone.\n\nBadge atau game yang dihitung untuk program harus diselesaikan dalam periode **13 Juli–14 September 2026**.",
+    "tags": [
+      "mulai lab",
+      "kapan mulai",
+      "enroll",
+      "email resmi"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Kalau saya mengerjakan sebelum 13 Juli 2026, apakah dihitung?",
+    "answer": "Tidak. Badge atau game harus diselesaikan pada atau setelah 13 Juli 2026 dan sebelum program berakhir agar dihitung.",
+    "tags": [
+      "sebelum mulai",
+      "tidak dihitung",
+      "badge lama"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Kalau saya mengerjakan setelah 14 September 2026, apakah dihitung?",
+    "answer": "Tidak. Badge atau game harus diselesaikan sebelum program berakhir, yaitu 14 September 2026 pukul 23:59 WIB.",
+    "tags": [
+      "setelah deadline",
+      "tidak dihitung",
+      "selesai terlambat"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Kalau saya sudah menyelesaikan sebagian lab sebelumnya, lalu menyelesaikan sisanya saat program, apakah dapat poin?",
+    "answer": "Ya, selama badge tersebut berhasil selesai dalam rentang waktu program dan badge-nya terlihat di URL public profile kamu.",
+    "tags": [
+      "sebagian lab",
+      "lanjut badge",
+      "sudah pernah"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Arcade Games, Lab, dan Skill Badge",
+    "question": "Berapa batas lab yang bisa dikerjakan dalam 24 jam?",
+    "answer": "Setiap pengguna hanya dapat menyelesaikan maksimal **15 lab dalam 24 jam**.\n\nSetelah batas ini habis, kamu akan mendapatkan 1 kesempatan lab baru setiap 2 jam, atau kamu bisa menunggu 24 jam dari waktu percobaan lab pertama agar kesempatan lab kembali penuh.",
+    "tags": [
+      "limit lab",
+      "15 lab",
+      "24 jam"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Apakah percobaan lab yang gagal tetap dihitung ke limit harian?",
+    "answer": "Ya. Setiap percobaan lab, baik berhasil maupun tidak, tetap dihitung ke batas 15 lab per 24 jam.",
+    "tags": [
+      "lab gagal",
+      "limit",
+      "attempt"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Bagaimana sistem Poin Arcade dihitung?",
+    "answer": "Sistem poin utama:\n\n- 1 Arcade Game selesai = 1 Poin Arcade.\n- 2 Skill Badge selesai = 1 Poin Arcade.\n- Bonus Poin diberikan berdasarkan milestone tertinggi yang dicapai.\n\nContoh: 4 Skill Badge = 2 Poin Arcade.",
+    "tags": [
+      "poin",
+      "sistem poin",
+      "hitung poin"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Kalau saya hanya menyelesaikan 1 Skill Badge, dapat poin?",
+    "answer": "Belum. Untuk mendapatkan 1 Poin Arcade dari Skill Badge, kamu perlu menyelesaikan minimal 2 Skill Badge.",
+    "tags": [
+      "1 badge",
+      "poin",
+      "skill badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Apakah Bonus Poin dari setiap milestone diakumulasi?",
+    "answer": "Tidak. Bonus Poin hanya diberikan untuk milestone tertinggi yang kamu capai, bukan akumulasi dari semua milestone sebelumnya.",
+    "tags": [
+      "bonus poin",
+      "milestone tertinggi",
+      "akumulasi"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Milestone 1 syaratnya apa dan dapat berapa poin?",
+    "answer": "Milestone 1:\n\n- Selesaikan 6 Arcade Games.\n- Selesaikan 14 Skill Badge apa pun.\n\nPerhitungan:\n\n- 6 Arcade Games = 6 Poin.\n- 14 Skill Badge = 7 Poin.\n- Bonus Milestone = 7 Bonus Poin.\n\nTotal: **13 Arcade Poin + 7 Bonus Poin**.\n\nJika juga menyelesaikan Bonus Milestone, bisa mendapat tambahan 10 Bonus Poin sehingga total menjadi 30 poin.",
+    "tags": [
+      "milestone 1",
+      "6 game",
+      "14 badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Milestone 2 syaratnya apa dan dapat berapa poin?",
+    "answer": "Milestone 2:\n\n- Selesaikan 8 Arcade Games.\n- Selesaikan 28 Skill Badge apa pun.\n\nPerhitungan:\n\n- 8 Arcade Games = 8 Poin.\n- 28 Skill Badge = 14 Poin.\n- Bonus Milestone = 18 Bonus Poin.\n\nTotal: **22 Arcade Poin + 18 Bonus Poin**.\n\nJika juga menyelesaikan Bonus Milestone, bisa mendapat tambahan 10 Bonus Poin sehingga total menjadi 50 poin.",
+    "tags": [
+      "milestone 2",
+      "8 game",
+      "28 badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Milestone 3 syaratnya apa dan dapat berapa poin?",
+    "answer": "Milestone 3:\n\n- Selesaikan 10 Arcade Games.\n- Selesaikan 42 Skill Badge apa pun.\n\nPerhitungan:\n\n- 10 Arcade Games = 10 Poin.\n- 42 Skill Badge = 21 Poin.\n- Bonus Milestone = 29 Bonus Poin.\n\nTotal: **31 Arcade Poin + 29 Bonus Poin**.\n\nJika juga menyelesaikan Bonus Milestone, bisa mendapat tambahan 10 Bonus Poin.",
+    "tags": [
+      "milestone 3",
+      "10 game",
+      "42 badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Ultimate Milestone syaratnya apa dan dapat berapa poin?",
+    "answer": "Ultimate Milestone:\n\n- Selesaikan 12 Arcade Games.\n- Selesaikan 56 Skill Badge apa pun.\n\nPerhitungan:\n\n- 12 Arcade Games = 12 Poin.\n- 56 Skill Badge = 28 Poin.\n- Bonus Milestone = 40 Bonus Poin.\n\nTotal: **40 Arcade Poin + 40 Bonus Poin**.\n\nJika juga menyelesaikan Bonus Milestone, bisa mendapat tambahan 10 Bonus Poin.",
+    "tags": [
+      "ultimate milestone",
+      "12 game",
+      "56 badge"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Poin dan Milestone",
+    "question": "Bagaimana cara cek berapa poin yang sudah saya dapat?",
+    "answer": "Kamu bisa mengecek badge yang sudah terkumpul di public profile Google Skills, lalu membandingkannya dengan sistem poin:\n\n- Jumlah Arcade Game.\n- Jumlah Skill Badge.\n- Milestone tertinggi yang dicapai.\n\nTim program juga akan mengirim update progress dan bonus point melalui email selama periode cohort.",
+    "tags": [
+      "cek poin",
+      "progress",
+      "public profile"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Apakah mencapai milestone otomatis dapat hadiah?",
+    "answer": "Tidak otomatis. Mencapai milestone Arcade Facilitator tidak langsung menjamin hadiah.\n\nPoin dari program fasilitator membantu menambah total Poin Arcade untuk mencapai pencapaian Google Skills Arcade Player. Hadiah mengikuti ketentuan, kuota, dan proses redeem Google Skills Arcade.",
+    "tags": [
+      "hadiah",
+      "milestone",
+      "otomatis",
+      "swag"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Bonus Milestone itu apa?",
+    "answer": "Bonus Milestone adalah kesempatan tambahan untuk mendapatkan **10 Bonus Poin** dengan menyelesaikan rangkaian aktivitas terkait cloud dan AI agent.\n\nAktivitas ini dirancang agar peserta tidak hanya mengumpulkan poin, tetapi juga membuat AI agent pertama menggunakan Google Cloud.",
+    "tags": [
+      "bonus milestone",
+      "10 poin",
+      "ai agent"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Syarat mengikuti Bonus Milestone apa?",
+    "answer": "Syarat Bonus Milestone:\n\n1. Terdaftar sebagai peserta aktif cohort Arcade Facilitator 2026.\n2. Sudah mendaftar program GEAR saat enrollment dan memperoleh badge GEAR.\n3. Sudah menyelesaikan minimal Milestone 1 dalam program facilitator.",
+    "tags": [
+      "syarat bonus",
+      "gear",
+      "milestone 1"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Apakah boleh mengerjakan Bonus Milestone sebelum daftar program?",
+    "answer": "Tidak disarankan. Informasi resmi menyarankan agar peserta tidak menyelesaikan langkah Bonus Milestone sebelum berhasil enroll ke program dan menerima email pendaftaran resmi.",
+    "tags": [
+      "bonus sebelum daftar",
+      "enroll",
+      "email resmi"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Apa saja langkah Bonus Milestone?",
+    "answer": "Ringkasnya:\n\n1. Selesaikan 4 Skill Badge GEAR.\n2. Daftar Google Cloud Free Trial jika belum punya billing account.\n3. Bangun AI agent pertama menggunakan Vertex AI Agent Platform.\n4. Kirim Unique Project Name dan Billing ID untuk verifikasi.",
+    "tags": [
+      "langkah bonus",
+      "gear",
+      "vertex ai",
+      "billing id"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Apa saja 4 Skill Badge GEAR untuk Bonus Milestone?",
+    "answer": "4 Skill Badge GEAR:\n\n1. Create Your First Gemini Enterprise Application\n2. Engineer AI Agents with Agent Development Kit (ADK)\n3. Deploy Multi-Agent Architectures\n4. Orchestrate Multi-agent Workflows with Gemini Enterprise\n\nBadge ini juga dihitung sebagai bagian dari milestone reguler dalam sistem poin.",
+    "tags": [
+      "gear skill badge",
+      "gemini enterprise",
+      "adk"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Apakah Google Cloud Free Trial wajib untuk Bonus Milestone?",
+    "answer": "Jika belum memiliki billing account di Google Cloud dengan email yang terdaftar, kamu perlu mendaftar Google Cloud Free Trial untuk menyelesaikan Bonus Milestone.\n\nFree Trial memberi kredit Google Cloud senilai $300 dalam mata uang lokal untuk digunakan selama 90 hari. Google Cloud tidak akan menagih otomatis kecuali kamu memilih upgrade manual.",
+    "tags": [
+      "free trial",
+      "billing",
+      "kartu kredit",
+      "bonus"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Bonus Milestone",
+    "question": "Apakah Google Cloud Free Trial membutuhkan kartu kredit/debit?",
+    "answer": "Ya, untuk mendaftar uji coba gratis Google Cloud diperlukan kartu kredit/debit. Untuk negara tertentu, mungkin tersedia opsi pembayaran tambahan.\n\nPenting: berdasarkan informasi resmi, kamu tidak akan dikenakan biaya otomatis selama tidak melakukan upgrade manual.",
+    "tags": [
+      "kartu kredit",
+      "debit",
+      "free trial",
+      "billing"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Hadiah / Swag",
+    "question": "Data apa yang harus dikirim untuk verifikasi Bonus Milestone?",
+    "answer": "Kamu perlu mengirim:\n\n- Unique Project Name dari proyek tempat kamu membuat AI agent.\n- Unique Billing ID dari proyek yang sama.\n\nBilling ID biasanya terdiri dari 18 karakter dengan format seperti:\n\n`XXXXXX-XXXXXX-XXXXXX`",
+    "tags": [
+      "verifikasi bonus",
+      "project name",
+      "billing id"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Hadiah / Swag",
+    "question": "Apakah semua peserta pasti dapat hadiah/swag?",
+    "answer": "Tidak. Hadiah/swag mengikuti ketentuan program, pencapaian Google Skills Arcade Player, ketersediaan kuota, dan proses redeem. Mencapai milestone fasilitator tidak otomatis menjamin hadiah.",
+    "tags": [
+      "swag",
+      "hadiah",
+      "pasti dapat",
+      "merchandise"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Hadiah / Swag",
+    "question": "Bagaimana cara mendapatkan hadiah?",
+    "answer": "Kumpulkan Poin Arcade dan Bonus Poin sebanyak mungkin, capai pencapaian Google Skills Arcade Player sesuai ketentuan, lalu lakukan redeem hadiah di counter hadiah Google Skills Arcade jika sudah memenuhi syarat dan kuota masih tersedia.",
+    "tags": [
+      "cara dapat hadiah",
+      "redeem",
+      "poin"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Hadiah / Swag",
+    "question": "Kapan hadiah dikirim?",
+    "answer": "Saat redeem, kamu akan diminta memasukkan alamat pengiriman. Swag dikirim sekitar **8–12 minggu setelah pemesanan/redeem**.",
+    "tags": [
+      "hadiah dikirim",
+      "shipping",
+      "swag"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Hadiah / Swag",
+    "question": "Apakah gambar hadiah di web pasti sama dengan hadiah asli?",
+    "answer": "Tidak selalu. Gambar hadiah hanya ilustrasi. Bentuk merchandise asli dapat berbeda.",
+    "tags": [
+      "gambar hadiah",
+      "merchandise",
+      "ilustrasi"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Apakah ada sertifikat setelah menyelesaikan milestone?",
+    "answer": "Tidak ada sertifikat terpisah untuk peserta program ini. Namun, kamu akan mendapatkan digital badge dari Google di profil Google Skills setelah menyelesaikan game atau skill badge.\n\nBadge tersebut bisa ditambahkan ke CV, resume, atau LinkedIn.",
+    "tags": [
+      "sertifikat",
+      "certificate",
+      "badge digital"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Link di email pendaftaran tidak bisa dibuka. Harus bagaimana?",
+    "answer": "Coba copy URL yang ada di email, lalu paste langsung ke browser yang kamu gunakan. Kadang pengaturan inbox/email membuat link tidak terbuka dengan benar.",
+    "tags": [
+      "link email",
+      "tidak bisa dibuka",
+      "email pendaftaran"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Saya stuck di reCAPTCHA saat membuat akun Google Skills. Apa solusinya?",
+    "answer": "Coba langkah berikut:\n\n1. Klik tombol “Create Account” hanya sekali, lalu tunggu 3–5 detik.\n2. Jangan tekan Enter berulang kali.\n3. Matikan ad-blocker, ekstensi privasi, atau firewall yang mungkin memblokir script keamanan.\n4. Coba incognito/private window tanpa ekstensi.\n5. Jika muncul pop-up verifikasi, selesaikan tanpa klik area luar atau pindah tab.\n6. Update Chrome ke versi terbaru.\n7. Coba browser lain.\n8. Pastikan koneksi internet stabil.\n9. Jika tetap gagal, hubungi fasilitator atau email `arcade-facilitator@google.com`.",
+    "tags": [
+      "recaptcha",
+      "captcha",
+      "create account",
+      "gagal daftar"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Saya kena pesan “free lab limit today”. Harus bagaimana?",
+    "answer": "Itu berarti kamu sudah mencapai batas lab harian, yaitu 15 lab dalam 24 jam terakhir.\n\nSolusinya:\n\n- Tunggu 24 jam dari waktu percobaan lab pertama agar limit kembali penuh, atau\n- Tunggu 2 jam untuk mendapatkan 1 kesempatan lab baru.\n\nBatas 15 lab per 24 jam tidak bisa dinaikkan.",
+    "tags": [
+      "free lab limit",
+      "limit lab",
+      "15 lab"
+    ],
+    "featured": true
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Apa arti “Quota Expired” di Google Skills?",
+    "answer": "“Quota Expired” berarti kuota percobaan untuk lab tersebut sudah habis. Sebagai bagian dari uji coba lab gratis, kamu memiliki 5 kesempatan untuk setiap lab dalam program.\n\nJika kuota habis, tunggu 24 jam agar kuota otomatis di-reset.",
+    "tags": [
+      "quota expired",
+      "kuota habis",
+      "lab"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Saya tidak bisa mendapatkan kredit Google Skills. Harus bagaimana?",
+    "answer": "Coba langkah berikut:\n\n1. Ikuti ulang instruksi dari email pendaftaran.\n2. Buka melalui incognito window.\n3. Jika baru menyelesaikan lab, tunggu beberapa menit lalu refresh tab Chrome beberapa kali.\n4. Mulai kembali lab, tunggu 6 menit, pastikan skor 100, lalu akhiri lab dan cek kembali.\n5. Jika masih gagal, hubungi fasilitator.\n6. Jika perlu, email `arcade-facilitator@google.com`.\n\nAda kemungkinan juga kode akses kredit sudah kedaluwarsa, jadi pastikan kamu menukarkan kode sebelum tenggat yang disebutkan di email.",
+    "tags": [
+      "kredit",
+      "credits pass",
+      "kupon",
+      "tidak masuk"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Akun Google Skills saya diblokir. Kenapa dan bagaimana memulihkannya?",
+    "answer": "Akun bisa diblokir jika menggunakan resource di luar cakupan lab, misalnya:\n\n- Membuat VM tambahan melebihi instruksi.\n- Membuat node lebih banyak dari yang diminta.\n- Memakai jenis mesin dengan core lebih tinggi.\n- Menjalankan perintah yang memicu resource ekstra di luar instruksi lab.\n\nUntuk meminta unblock, hubungi `arcade-facilitator@google.com`.\n\nCatatan penting: akun juga dapat diblokir jika pengguna berusia di bawah 18 tahun. Untuk kasus batasan usia, akun tidak dapat dipulihkan.",
+    "tags": [
+      "akun diblokir",
+      "unblock",
+      "blocked",
+      "resource lab"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Badge saya belum muncul setelah selesai lab. Harus bagaimana?",
+    "answer": "Coba langkah berikut:\n\n1. Pastikan semua lab dalam badge sudah selesai.\n2. Pastikan skor lab sudah sesuai.\n3. Refresh halaman profil.\n4. Tunggu beberapa menit karena sinkronisasi bisa tidak langsung.\n5. Pastikan public profile aktif.\n6. Pastikan kamu memakai email yang sama.\n7. Jika masih belum muncul, kirim screenshot dan detail langkah yang sudah dicoba.",
+    "tags": [
+      "badge tidak muncul",
+      "sinkronisasi",
+      "profil"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Lab sudah selesai tapi poin belum kelihatan. Harus bagaimana?",
+    "answer": "Poin tidak selalu muncul secara real-time. Cek dulu badge di public profile, lalu bandingkan dengan sistem poin.\n\nTim program juga akan mengirim update progress dan bonus point melalui email selama periode cohort. Jika ada perbedaan besar setelah beberapa waktu, kumpulkan bukti screenshot dan hubungi fasilitator.",
+    "tags": [
+      "poin belum masuk",
+      "progress",
+      "sinkronisasi"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Troubleshooting",
+    "question": "Saya salah email saat daftar. Bisa diganti?",
+    "answer": "Perubahan email tidak diizinkan, terutama jika form sudah ditutup. Jika ada kesalahan data, hubungi fasilitator dan berikan informasi yang benar. Fasilitator dapat meneruskan informasi tersebut, tetapi keputusan perubahan tetap mengikuti kebijakan tim program.",
+    "tags": [
+      "salah email",
+      "ganti email",
+      "edit data"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Saya tidak bisa join / tombol tidak berfungsi. Harus bagaimana?",
+    "answer": "Coba langkah umum berikut:\n\n1. Pastikan memakai akun yang benar.\n2. Buka link dari Chrome terbaru.\n3. Coba incognito.\n4. Matikan ekstensi browser.\n5. Ganti jaringan internet.\n6. Coba perangkat lain.\n7. Screenshot error yang muncul.\n8. Kirim ke grup atau fasilitator dengan format kendala.",
+    "tags": [
+      "tidak bisa join",
+      "tombol error",
+      "link error"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Grup WhatsApp ini untuk apa?",
+    "answer": "Grup WhatsApp digunakan untuk:\n\n- Update informasi program.\n- Reminder penting.\n- Diskusi ringan.\n- Tanya jawab kendala.\n- Saling bantu antar peserta.\n- Arahan dari fasilitator.\n\nUntuk informasi utama dan pertanyaan berulang, tetap cek FAQ terlebih dahulu agar grup tidak penuh pertanyaan yang sama.",
+    "tags": [
+      "grup wa",
+      "komunitas",
+      "whatsapp"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Boleh bertanya di grup?",
+    "answer": "Boleh. Tapi sebelum bertanya, cek FAQ dulu. Kalau pertanyaanmu belum terjawab, kirim pertanyaan dengan jelas agar mudah dibantu.\n\nUntuk kendala teknis, gunakan format:\n\n- Masalah:\n- Step yang sudah dicoba:\n- Screenshot:\n- Email disensor:\n- Link/halaman tempat error:",
+    "tags": [
+      "tanya di grup",
+      "format pertanyaan",
+      "bantuan"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Boleh DM Rajif?",
+    "answer": "Boleh, terutama kalau kendalanya spesifik atau mengandung data pribadi seperti email, screenshot akun, atau detail pendaftaran.\n\nNamun, untuk pertanyaan umum, lebih baik tanya di grup agar jawabannya bisa membantu peserta lain juga. Jika pertanyaannya sudah ada di FAQ, kemungkinan akan diarahkan kembali ke FAQ.",
+    "tags": [
+      "dm",
+      "japri",
+      "pribadi",
+      "rajif"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Apakah Rajif menjawab setiap saat?",
+    "answer": "Rajif berusaha menjawab secara fleksibel. Namun, karena jumlah peserta banyak, respons mungkin tidak selalu instan.\n\nAgar lebih cepat dibantu, pastikan pertanyaan sudah jelas, menyertakan screenshot jika ada error, dan mencantumkan langkah yang sudah dicoba.",
+    "tags": [
+      "jam admin",
+      "respon",
+      "balas",
+      "fleksibel"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Kalau pertanyaan saya sudah ada di FAQ, apakah akan dijawab?",
+    "answer": "Kemungkinan akan diarahkan ke FAQ agar grup tetap rapi dan fasilitator bisa fokus membantu kendala yang belum ada solusinya.\n\nJadi, sebelum bertanya, coba search FAQ dulu dengan kata kunci seperti “kode”, “email”, “badge”, “gear”, “lab”, “poin”, atau “deadline”.",
+    "tags": [
+      "sudah ada di faq",
+      "pertanyaan berulang",
+      "search"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Komunitas WhatsApp",
+    "question": "Apakah boleh share info/link di grup?",
+    "answer": "Boleh jika relevan dengan program dan membantu peserta lain. Hindari spam, promosi pribadi yang tidak relevan, atau informasi yang belum jelas sumbernya.\n\nJika ragu, tanyakan ke fasilitator terlebih dahulu.",
+    "tags": [
+      "share link",
+      "promosi",
+      "spam",
+      "aturan grup"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kontak Bantuan",
+    "question": "Bagaimana cara bertanya yang baik agar cepat dibantu?",
+    "answer": "Gunakan format ini:\n\n```txt\nMasalah:\nStep yang sudah dicoba:\nScreenshot:\nEmail disensor:\nLink/halaman tempat error:\n```\n\nContoh:\n\n```txt\nMasalah: Badge GEAR belum muncul\nStep yang sudah dicoba: sudah daftar GEAR, refresh profile, coba incognito\nScreenshot: terlampir\nEmail disensor: r***@gmail.com\nLink/halaman tempat error: halaman profile Google Skills\n```\n\nDengan format ini, fasilitator dan member lain bisa lebih cepat memahami masalahnya.",
+    "tags": [
+      "cara bertanya",
+      "format",
+      "screenshot",
+      "bantuan"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kontak Bantuan",
+    "question": "Kalau pertanyaan belum terjawab di FAQ, hubungi siapa?",
+    "answer": "Urutan bantuan yang disarankan:\n\n1. Cek FAQ dan search kata kunci.\n2. Tanya di grup WhatsApp komunitas Rajif.\n3. DM Rajif jika kendalanya spesifik/pribadi.\n4. Untuk pertanyaan umum program, bisa hubungi `arcade@dicoding.com`.\n5. Untuk kendala Google Skills, bisa hubungi `arcade-facilitator@google.com` dalam bahasa Inggris.",
+    "tags": [
+      "kontak",
+      "bantuan",
+      "support",
+      "email"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kontak Bantuan",
+    "question": "Untuk pertanyaan umum program, email ke mana?",
+    "answer": "Untuk pertanyaan umum mengenai program, kamu bisa menghubungi:\n\n`arcade@dicoding.com`\n\nKamu juga bisa bertanya ke fasilitator terlebih dahulu.",
+    "tags": [
+      "dicoding",
+      "email support",
+      "program"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kontak Bantuan",
+    "question": "Untuk kendala Google Skills, email ke mana?",
+    "answer": "Untuk pertanyaan atau kendala terkait Google Skills, kamu bisa menghubungi:\n\n`arcade-facilitator@google.com`\n\nGunakan bahasa Inggris saat menghubungi email tersebut.",
+    "tags": [
+      "google skills",
+      "support",
+      "email google"
+    ],
+    "featured": false
+  },
+  {
+    "category": "Kontak Bantuan",
+    "question": "Kapan sebaiknya menghubungi fasilitator?",
+    "answer": "Hubungi fasilitator jika:\n\n- Kamu bingung alur program.\n- Email undangan belum masuk setelah 24–48 jam.\n- Ada kendala akun/profil.\n- Badge/kredit tidak muncul.\n- Kamu sudah mencoba solusi di FAQ tapi masih gagal.\n- Kendala mengandung data pribadi dan kurang cocok dibahas di grup.\n\n\n\n\nUntuk fitur search, setiap FAQ sebaiknya dicari dari:\n\n```txt\njudul pertanyaan + isi jawaban + tags\n```\n\nKeyword umum yang perlu efektif:\n\n```txt\ndaftar, pendaftaran, registrasi, link, form, kode, referral, rajif, fasilitator,\nemail, undangan, spam, junk, promotions, public profile, url profil,\ngoogle skills, cloud skills boost, gear, badge gear, badge, skill badge,\narcade game, game, lab, limit lab, 15 lab, quota expired, kredit, kupon,\npoin, point, milestone, bonus milestone, swag, hadiah, merchandise, sertifikat,\nlaptop, hp, umur, 18 tahun, wni, pemula, coding, error, recaptcha, blocked\n```\n\n\n\n```js\n{\n  id: \"faq-001\",\n  category: \"Mulai dari Sini\",\n  question: \"Saya baru join grup, harus mulai dari mana?\",\n  answer: \"Mulai dari 4 langkah ini: ...\",\n  tags: [\"mulai\", \"baru join\", \"langkah awal\", \"pemula\"],\n  featured: true\n}\n```\n\nKategori tetap:\n\n```js\nconst categories = [\n  \"Mulai dari Sini\",\n  \"Tentang Program\",\n  \"Syarat Peserta\",\n  \"Pendaftaran\",\n  \"Kode Fasilitator / Referral\",\n  \"Akun Google Skills\",\n  \"Google Arcade Gear / GEAR\",\n  \"Arcade Games, Lab, dan Skill Badge\",\n  \"Poin dan Milestone\",\n  \"Bonus Milestone\",\n  \"Hadiah / Swag\",\n  \"Troubleshooting\",\n  \"Komunitas WhatsApp\",\n  \"Kontak Bantuan\"\n]\n```\n\n\n\n\nRevisi terbaru: bagian pendaftaran sudah diarahkan ke form prefill resmi Google/Dicoding yang otomatis mengisi kode fasilitator Rajif (`GCAF26-ID-UAQ-MFC`) dan nama fasilitator (`Muhammad Rajif Raditya`).",
+    "tags": [
+      "fasilitator",
+      "bantuan rajif",
+      "dm"
+    ],
+    "featured": false
+  }
+]

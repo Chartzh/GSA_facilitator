@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import faqData from './faqData.json';
 import { 
   Sparkles, 
   Calculator, 
@@ -61,7 +62,7 @@ const CONFIG = {
   FACIL_NAME: "Muhammad Rajif Raditya",
   REFERRAL_CODE: "GCAF26-ID-UAQ-MFC",
   WA_LINK: "https://chat.whatsapp.com/IEDhYSI9EpYDI9LEdT95h1",
-  REGISTRATION_LINK: "https://docs.google.com/forms/d/e/1FAIpQLSfvBy0GqZPZpzC3aa6TKB5q3CMV9124cbsX4Ytv95O_plxN5w/closedform?resourcekey=0-zGX30xoG2JuARKgKrOztow",
+  REGISTRATION_LINK: "https://www.google.com/url?q=https://docs.google.com/forms/d/e/1FAIpQLSfvBy0GqZPZpzC3aa6TKB5q3CMV9124cbsX4Ytv95O_plxN5w/viewform?usp%3Dpp_url%26entry.1875553715%3D__other_option__%26entry.1875553715.other_option_response%3DGCAF26-ID-UAQ-MFC%26entry.111338853%3D__other_option__%26entry.111338853.other_option_response%3DMuhammad%2520Rajif%2520Raditya%26entry.600268542%3D__other_option__%26entry.600268542.other_option_response%3DGCAF26-ID-UAQ-MFC&sa=D&source=editors&ust=1783915607168033&usg=AOvVaw3QQnZ-8IEuPP4_VEbXuxhZ",
   TARGET_DATE: new Date("2026-07-13T09:00:00+07:00"),
   ANONYMOUS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdjykb5NiyW57GowHRhFOyuE9GvjwcVsF8smy7dGq77vGreIw/formResponse",
   ANONYMOUS_ENTRY_ID: "entry.1958733736",
@@ -69,11 +70,61 @@ const CONFIG = {
   MUTUAL_ENTRY_ID: "entry.1233135674"
 };
 
+// Helper to format FAQ answers, replacing URLs with clickable links
+const formatFaqAnswer = (text) => {
+  if (!text) return "";
+  
+  // Matches optional backticks containing http/https URLs
+  const urlRegex = /`?(https?:\/\/[^\s`"]+)`?/g;
+  
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  
+  // Clone regex
+  const regex = new RegExp(urlRegex);
+  
+  while ((match = regex.exec(text)) !== null) {
+    const matchIndex = match.index;
+    const matchedUrl = match[1];
+    
+    // Add text preceding the match
+    if (matchIndex > lastIndex) {
+      parts.push(text.substring(lastIndex, matchIndex));
+    }
+    
+    // Add the clickable link
+    parts.push(
+      <a 
+        key={matchIndex} 
+        href={matchedUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        style={{ 
+          color: 'var(--color-primary-light)', 
+          textDecoration: 'underline', 
+          fontWeight: '600' 
+        }}
+      >
+        Klik di sini
+      </a>
+    );
+    
+    lastIndex = regex.lastIndex;
+  }
+  
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+  
+  return parts.length > 0 ? parts : text;
+};
+
 export default function App() {
   // Hash Routing Helpers
   const getInitialTab = () => {
     const hash = window.location.hash.replace('#', '').toLowerCase();
-    const validTabs = ['home', 'tentang', 'cara', 'qna', 'komunitas', 'skills', 'gear'];
+    const validTabs = ['home', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear'];
     return validTabs.includes(hash) ? hash : 'home';
   };
 
@@ -93,7 +144,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '').toLowerCase();
-      const validTabs = ['home', 'tentang', 'cara', 'qna', 'komunitas', 'skills', 'gear'];
+      const validTabs = ['home', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear'];
       if (validTabs.includes(hash)) {
         setActiveTab(hash);
       }
@@ -155,39 +206,7 @@ export default function App() {
   // FAQ Accordion State
   const [faqSearch, setFaqSearch] = useState('');
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
-
-  const faqData = [
-    {
-      q: "Apakah bimbingan Google Cloud Arcade X Dicoding ini berbayar?",
-      a: "Sama sekali tidak, 100% gratis! Pendaftaran bimbingan tidak dipungut biaya apa pun. Selama program berlangsung, kamu akan dibagikan kode token gratis dari Google untuk meluncurkan Console tanpa kartu kredit.",
-      k: "gratis free biaya bayar bimbingan"
-    },
-    {
-      q: "Bagaimana cara klaim swag? Apakah gratis ongkos kirim ke Indonesia?",
-      a: "Setiap modul praktikum yang diselesaikan akan memberikan lencana digital (badge) di profil Google Cloud Skills Boost. Akumulasikan badge tersebut untuk dikonversi menjadi poin di akhir musim. Poin tersebut digunakan untuk memesan swag fisik di toko merchandise resmi. Ya, pengiriman merchandise ke alamat rumahmu di Indonesia sepenuhnya gratis tanpa biaya ongkir ditanggung Google!",
-      k: "swag hadiah kirim ongkir bayar paket rumah"
-    },
-    {
-      q: "Bagaimana jika token lab habis di tengah jalan atau akun saya terblokir?",
-      a: "Jika token gratis habis, kamu bisa mengajukan penambahan kredit gratis melalui Google Form khusus yang dibagikan Kak Rajif di grup WA. Jika akun terkena blokir kuota (quota blocked), kamu bisa langsung menggunakan fitur bantuan chat online di portal Skills Boost untuk mereset kuota akunmu secara instan.",
-      k: "token kredit habis kuota blocked block limit error"
-    },
-    {
-      q: "Saya tidak punya latar belakang IT / pemrograman, apakah bisa ikut bimbingan?",
-      a: "Tentu saja! Program ini dirancang untuk pemula. Setiap lab praktikum dilengkapi petunjuk langkah demi langkah yang sangat detail (cukup salin dan tempel perintah). Selain itu, Kak Rajif sebagai fasilitator akan membagikan panduan visual dan membantu kendalamu langsung di grup chat.",
-      k: "pemula basic noob non-it programming coding"
-    },
-    {
-      q: "Kapan pendaftaran dibuka dan di mana saya bisa mengakses link pendaftaran?",
-      a: "Pendaftaran program bimbingan peserta resmi dimulai pada 13 Juli 2026 pukul 09:00 WIB hingga penutupan pada 14 September 2026 pukul 23:59 WIB. Kak Rajif telah menyertakan tombol pendaftaran di portal ini yang akan otomatis aktif ketika pendaftaran resmi dibuka.",
-      k: "daftar link buka registrasi kapan form"
-    },
-    {
-      q: "Apakah saya bisa mengerjakan praktikum hanya menggunakan Handphone (HP)?",
-      a: "Ya, sangat bisa! Pada musim bimbingan sebelumnya, ada beberapa anak didik Kak Rajif yang tidak mempunyai laptop/PC dan hanya belajar bermodalkan browser di HP. Mereka tetap tekun menyelesaikan praktikum dan sukses membawa pulang hadiah Google Cloud.",
-      k: "hp handphone device laptop pc komputer smartphone"
-    }
-  ];
+  const [selectedFaqCategory, setSelectedFaqCategory] = useState('Semua');
 
 
 
@@ -305,7 +324,7 @@ export default function App() {
               <li><span className={`nav-item-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => { setActiveTab('home'); setIsDropdownOpen(false); }}>Home</span></li>
               <li><span className={`nav-item-link ${activeTab === 'tentang' ? 'active' : ''}`} onClick={() => { setActiveTab('tentang'); setIsDropdownOpen(false); }}>Tentang</span></li>
               <li><span className={`nav-item-link ${activeTab === 'cara' ? 'active' : ''}`} onClick={() => { setActiveTab('cara'); setIsDropdownOpen(false); }}>Cara Bermain</span></li>
-              <li><span className={`nav-item-link ${activeTab === 'qna' ? 'active' : ''}`} onClick={() => { setActiveTab('qna'); setIsDropdownOpen(false); }}>QnA</span></li>
+              <li><span className={`nav-item-link ${activeTab === 'faq' ? 'active' : ''}`} onClick={() => { setActiveTab('faq'); setIsDropdownOpen(false); }}>FAQ</span></li>
               <li><span className={`nav-item-link ${activeTab === 'komunitas' ? 'active' : ''}`} onClick={() => { setActiveTab('komunitas'); setIsDropdownOpen(false); }}>Komunitas</span></li>
               <li 
                 className="nav-dropdown-item" 
@@ -371,7 +390,7 @@ export default function App() {
               <li onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }} className={activeTab === 'home' ? 'active' : ''}>Home</li>
               <li onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }} className={activeTab === 'tentang' ? 'active' : ''}>Tentang</li>
               <li onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }} className={activeTab === 'cara' ? 'active' : ''}>Cara Bermain</li>
-              <li onClick={() => { setActiveTab('qna'); setIsMobileMenuOpen(false); }} className={activeTab === 'qna' ? 'active' : ''}>QnA</li>
+              <li onClick={() => { setActiveTab('faq'); setIsMobileMenuOpen(false); }} className={activeTab === 'faq' ? 'active' : ''}>FAQ</li>
               <li onClick={() => { setActiveTab('komunitas'); setIsMobileMenuOpen(false); }} className={activeTab === 'komunitas' ? 'active' : ''}>Komunitas</li>
               <li className="mobile-drawer-divider"></li>
               <li onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }} className={activeTab === 'skills' ? 'active' : ''}>Panduan Google Skills</li>
@@ -802,7 +821,7 @@ export default function App() {
           </div>
         )}
 
-        {activeTab === 'qna' && (
+        {activeTab === 'faq' && (
           <div style={{ padding: '40px 0' }}>
             <div className="section-header text-center">
               <span className="hero-tag"><HelpCircle size={14} /> FAQ Portal</span>
@@ -810,39 +829,167 @@ export default function App() {
               <p className="section-subtitle">Temukan jawaban instan atas kendala umum pendaftaran and pengerjaan lab cloud.</p>
             </div>
 
-            <div className="faq-search-box">
-              <Search size={18} className="text-muted" />
-              <input 
-                type="text" 
-                placeholder="Cari pertanyaan... (contoh: 'gratis', 'token', 'swag')" 
-                value={faqSearch} 
-                onChange={(e) => setFaqSearch(e.target.value)}
-              />
-            </div>
+            <div className="dashboard-grid" style={{ alignItems: 'start' }}>
+              
+              {/* Left Column: Categories Sidebar */}
+              <div className="card" style={{ gridColumn: 'span 4', padding: '16px' }}>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '16px', paddingLeft: '8px', color: 'var(--text-main)' }}>Kategori FAQ</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {[
+                    "Semua",
+                    "Paling Sering Ditanyakan",
+                    "Mulai dari Sini",
+                    "Tentang Program",
+                    "Syarat Peserta",
+                    "Pendaftaran",
+                    "Kode Fasilitator / Referral",
+                    "Akun Google Skills",
+                    "Google Arcade Gear / GEAR",
+                    "Arcade Games, Lab, dan Skill Badge",
+                    "Poin dan Milestone",
+                    "Bonus Milestone",
+                    "Hadiah / Swag",
+                    "Troubleshooting",
+                    "Komunitas WhatsApp",
+                    "Kontak Bantuan"
+                  ].map(cat => {
+                    const count = cat === "Semua" 
+                      ? faqData.length 
+                      : cat === "Paling Sering Ditanyakan" 
+                      ? faqData.filter(f => f.featured).length 
+                      : faqData.filter(f => f.category === cat).length;
+                    
+                    return (
+                      <button 
+                        key={cat}
+                        onClick={() => {
+                          setSelectedFaqCategory(cat);
+                          setOpenFaqIndex(null);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          padding: '10px 12px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          background: selectedFaqCategory === cat ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
+                          color: selectedFaqCategory === cat ? 'var(--color-primary-light)' : 'var(--text-muted)',
+                          fontSize: '0.82rem',
+                          fontWeight: selectedFaqCategory === cat ? '600' : '500',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                        className="faq-cat-btn"
+                      >
+                        <span>{cat}</span>
+                        <span style={{ 
+                          fontSize: '0.72rem', 
+                          background: selectedFaqCategory === cat ? 'var(--color-primary)' : 'rgba(255,255,255,0.05)', 
+                          color: selectedFaqCategory === cat ? '#ffffff' : 'var(--text-muted)',
+                          padding: '2px 6px',
+                          borderRadius: '10px'
+                        }}>{count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-            <div className="accordion-wrapper">
-              {faqData
-                .filter(faq => {
-                  const q = faq.q.toLowerCase();
-                  const a = faq.a.toLowerCase();
-                  const k = faq.k.toLowerCase();
-                  const search = faqSearch.toLowerCase();
-                  return q.includes(search) || a.includes(search) || k.includes(search);
-                })
-                .map((faq, index) => (
-                  <div key={index} className={`acc-card ${openFaqIndex === index ? 'open' : ''}`}>
-                    <div className="acc-trigger" onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}>
-                      <h4>{faq.q}</h4>
-                      <span className="acc-arrow"><Plus size={16} /></span>
-                    </div>
-                    <div className="acc-body" style={{ maxHeight: openFaqIndex === index ? '300px' : '0' }}>
-                      <div className="acc-body-content">
-                        {faq.a}
+              {/* Right Column: QnA Accordion List */}
+              <div style={{ gridColumn: 'span 8' }}>
+                <div className="faq-search-box" style={{ marginBottom: '20px' }}>
+                  <Search size={18} className="text-muted" />
+                  <input 
+                    type="text" 
+                    placeholder="Cari pertanyaan... (contoh: 'gratis', 'token', 'swag', 'limit')" 
+                    value={faqSearch} 
+                    onChange={(e) => setFaqSearch(e.target.value)}
+                  />
+                </div>
+
+                <div className="accordion-wrapper">
+                  {faqData
+                    .filter(faq => {
+                      // Category filter
+                      if (selectedFaqCategory === 'Paling Sering Ditanyakan') {
+                        if (!faq.featured) return false;
+                      } else if (selectedFaqCategory !== 'Semua') {
+                        if (faq.category !== selectedFaqCategory) return false;
+                      }
+                      
+                      // Search filter
+                      const q = faq.question.toLowerCase();
+                      const a = faq.answer.toLowerCase();
+                      const tags = (faq.tags || []).join(' ').toLowerCase();
+                      const search = faqSearch.toLowerCase();
+                      return q.includes(search) || a.includes(search) || tags.includes(search);
+                    })
+                    .map((faq, index) => (
+                      <div key={index} className={`acc-card ${openFaqIndex === index ? 'open' : ''}`}>
+                        <div className="acc-trigger" onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}>
+                          <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {faq.featured && (
+                              <span style={{ 
+                                fontSize: '0.62rem', 
+                                padding: '2px 8px', 
+                                borderRadius: '4px', 
+                                background: 'var(--color-warning)', 
+                                color: '#0f172a', 
+                                fontWeight: '800', 
+                                textTransform: 'uppercase', 
+                                letterSpacing: '0.05em',
+                                display: 'inline-block',
+                                border: '1px solid var(--color-warning)'
+                              }}>
+                                Terpopuler
+                              </span>
+                            )}
+                            {faq.question}
+                          </h4>
+                          <span className="acc-arrow"><Plus size={16} /></span>
+                        </div>
+                        <div className="acc-body" style={{ maxHeight: openFaqIndex === index ? '600px' : '0', overflowY: 'auto' }}>
+                          <div className="acc-body-content" style={{ whiteSpace: 'pre-line' }}>
+                            {formatFaqAnswer(faq.answer)}
+                            
+                            {faq.tags && faq.tags.length > 0 && (
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
+                                {faq.tags.map(tag => (
+                                  <span key={tag} style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-muted)', border: '1px solid var(--border-color)' }}>
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
+                    ))
+                  }
+                  
+                  {faqData.filter(faq => {
+                    if (selectedFaqCategory === 'Paling Sering Ditanyakan') {
+                      if (!faq.featured) return false;
+                    } else if (selectedFaqCategory !== 'Semua') {
+                      if (faq.category !== selectedFaqCategory) return false;
+                    }
+                    const q = faq.question.toLowerCase();
+                    const a = faq.answer.toLowerCase();
+                    const tags = (faq.tags || []).join(' ').toLowerCase();
+                    const search = faqSearch.toLowerCase();
+                    return q.includes(search) || a.includes(search) || tags.includes(search);
+                  }).length === 0 && (
+                    <div className="card text-center" style={{ padding: '40px', color: 'var(--text-muted)' }}>
+                      <HelpCircle size={32} style={{ margin: '0 auto 12px auto', display: 'block', color: 'var(--color-primary-light)' }} />
+                      <p style={{ fontSize: '0.9rem' }}>Tidak menemukan pertanyaan yang cocok. Coba ubah kata kunci atau ganti kategori.</p>
                     </div>
-                  </div>
-                ))
-              }
+                  )}
+                </div>
+              </div>
+
             </div>
           </div>
         )}
