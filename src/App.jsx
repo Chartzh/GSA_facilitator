@@ -30,7 +30,11 @@ import {
   AlertTriangle,
   ChevronDown,
   Menu,
-  X
+  X,
+  Target,
+  Flame,
+  Trophy,
+  Zap
 } from 'lucide-react';
 
 // Custom inline SVG icons for brands (not exported in newer Lucide versions)
@@ -69,6 +73,59 @@ const CONFIG = {
   MUTUAL_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLScrReJb1rJeHNA2AZFyHoTweVUlPS9AB8dl-RSYt0HJpflvxw/formResponse",
   MUTUAL_ENTRY_ID: "entry.1233135674"
 };
+
+// Weekly Challenge Schedule Data
+const WEEKLY_SCHEDULE = [
+  {
+    week: "Week 1",
+    period: "Sabtu 25 Jul – Jumat 31 Jul 2026",
+    winners: "Top 3",
+    startDate: new Date("2026-07-25T00:00:00+07:00"),
+    endDate: new Date("2026-07-31T23:59:59+07:00")
+  },
+  {
+    week: "Week 2",
+    period: "Sabtu 1 Agu – Jumat 7 Agu 2026",
+    winners: "Top 3",
+    startDate: new Date("2026-08-01T00:00:00+07:00"),
+    endDate: new Date("2026-08-07T23:59:59+07:00")
+  },
+  {
+    week: "Week 3",
+    period: "Sabtu 8 Agu – Jumat 14 Agu 2026",
+    winners: "Top 3",
+    startDate: new Date("2026-08-08T00:00:00+07:00"),
+    endDate: new Date("2026-08-14T23:59:59+07:00")
+  },
+  {
+    week: "Week 4",
+    period: "Sabtu 15 Agu – Jumat 21 Agu 2026",
+    winners: "Top 4",
+    startDate: new Date("2026-08-15T00:00:00+07:00"),
+    endDate: new Date("2026-08-21T23:59:59+07:00")
+  },
+  {
+    week: "Week 5",
+    period: "Sabtu 22 Agu – Jumat 28 Agu 2026",
+    winners: "Top 4",
+    startDate: new Date("2026-08-22T00:00:00+07:00"),
+    endDate: new Date("2026-08-28T23:59:59+07:00")
+  },
+  {
+    week: "Week 6",
+    period: "Sabtu 29 Agu – Jumat 4 Sep 2026",
+    winners: "Top 4",
+    startDate: new Date("2026-08-29T00:00:00+07:00"),
+    endDate: new Date("2026-09-04T23:59:59+07:00")
+  },
+  {
+    week: "Week 7 (Grand Final)",
+    period: "Sabtu 5 Sep – Jumat 11 Sep 2026",
+    winners: "Top 5",
+    startDate: new Date("2026-09-05T00:00:00+07:00"),
+    endDate: new Date("2026-09-11T23:59:59+07:00")
+  }
+];
 
 // Helper to format FAQ answers, replacing URLs with clickable links
 const formatFaqAnswer = (text) => {
@@ -123,9 +180,10 @@ const formatFaqAnswer = (text) => {
 export default function App() {
   // Hash Routing Helpers
   const getInitialTab = () => {
-    const hash = window.location.hash.replace('#', '').toLowerCase();
-    const validTabs = ['home', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear'];
-    return validTabs.includes(hash) ? hash : 'home';
+    const rawHash = window.location.hash.replace('#', '').toLowerCase();
+    if (rawHash === 'weekly' || rawHash === 'weekly-challenge') return 'weekly-challenge';
+    const validTabs = ['home', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear', 'weekly-challenge'];
+    return validTabs.includes(rawHash) ? rawHash : 'home';
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab);
@@ -143,10 +201,14 @@ export default function App() {
 
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').toLowerCase();
-      const validTabs = ['home', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear'];
-      if (validTabs.includes(hash)) {
-        setActiveTab(hash);
+      const rawHash = window.location.hash.replace('#', '').toLowerCase();
+      if (rawHash === 'weekly' || rawHash === 'weekly-challenge') {
+        setActiveTab('weekly-challenge');
+      } else {
+        const validTabs = ['home', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear', 'weekly-challenge'];
+        if (validTabs.includes(rawHash)) {
+          setActiveTab(rawHash);
+        }
       }
     };
 
@@ -322,6 +384,15 @@ export default function App() {
           <nav id="desktop-navigation">
             <ul className="nav-menu">
               <li><span className={`nav-item-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => { setActiveTab('home'); setIsDropdownOpen(false); }}>Home</span></li>
+              <li>
+                <span 
+                  className={`nav-item-link ${activeTab === 'weekly-challenge' ? 'active' : ''}`} 
+                  onClick={() => { setActiveTab('weekly-challenge'); setIsDropdownOpen(false); }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                >
+                  Weekly Challenge <span className="nav-badge-fire">🔥 NEW</span>
+                </span>
+              </li>
               <li><span className={`nav-item-link ${activeTab === 'tentang' ? 'active' : ''}`} onClick={() => { setActiveTab('tentang'); setIsDropdownOpen(false); }}>Tentang</span></li>
               <li><span className={`nav-item-link ${activeTab === 'cara' ? 'active' : ''}`} onClick={() => { setActiveTab('cara'); setIsDropdownOpen(false); }}>Cara Bermain</span></li>
               <li><span className={`nav-item-link ${activeTab === 'faq' ? 'active' : ''}`} onClick={() => { setActiveTab('faq'); setIsDropdownOpen(false); }}>FAQ</span></li>
@@ -388,6 +459,14 @@ export default function App() {
             </div>
             <ul className="mobile-drawer-menu">
               <li onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }} className={activeTab === 'home' ? 'active' : ''}>Home</li>
+              <li 
+                onClick={() => { setActiveTab('weekly-challenge'); setIsMobileMenuOpen(false); }} 
+                className={activeTab === 'weekly-challenge' ? 'active' : ''}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <span>Weekly Challenge</span>
+                <span className="nav-badge-fire">🔥 NEW</span>
+              </li>
               <li onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }} className={activeTab === 'tentang' ? 'active' : ''}>Tentang</li>
               <li onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }} className={activeTab === 'cara' ? 'active' : ''}>Cara Bermain</li>
               <li onClick={() => { setActiveTab('faq'); setIsMobileMenuOpen(false); }} className={activeTab === 'faq' ? 'active' : ''}>FAQ</li>
@@ -407,6 +486,29 @@ export default function App() {
             <div className="hero-box">
               
               <div>
+                {/* Weekly Challenge Highlight Banner */}
+                <div 
+                  className="hero-weekly-banner" 
+                  onClick={() => setActiveTab('weekly-challenge')}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.1rem' }}>🔥</span>
+                    <span style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--text-main)' }}>
+                      <strong>Weekly Challenge is LIVE</strong> — Rebut hadiah tiap minggu!
+                    </span>
+                  </div>
+                  <button 
+                    className="btn btn-primary"
+                    style={{ padding: '6px 14px', fontSize: '0.8rem', gap: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveTab('weekly-challenge');
+                    }}
+                  >
+                    Lihat Detail <ArrowRight size={14} />
+                  </button>
+                </div>
+
                 <h1 className="hero-title">
                   Kuasai Skill Cloud & Dapatkan <span className="gradient-text">Swag Resmi Google!</span>
                 </h1>
@@ -581,6 +683,247 @@ export default function App() {
                 <button className="btn btn-outline" onClick={() => setActiveTab('cara')}>Langkah Main</button>
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'weekly-challenge' && (
+          <div style={{ padding: '40px 0' }} id="weekly-challenge">
+            {/* Section Header */}
+            <div className="section-header text-center">
+              <span className="hero-tag" style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-danger)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                🔥 Competitions & Rewards
+              </span>
+              <h1 className="hero-title" style={{ fontSize: '2.5rem', marginTop: '10px' }}>
+                Player <span className="gradient-text">Weekly Challenge</span>
+              </h1>
+              <p className="section-subtitle">
+                Setiap minggu, kumpulkan skill badge sebanyak-banyaknya dan rebut hadiahnya! Tiap minggu ada pemenang baru.
+              </p>
+            </div>
+
+            {/* 3 Summary Cards */}
+            <div className="dashboard-grid" style={{ marginTop: '32px', marginBottom: '32px' }}>
+              <div className="card" style={{ gridColumn: 'span 4' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <div className="avatar" style={{ background: 'rgba(99, 102, 241, 0.15)', color: 'var(--color-primary-light)' }}>
+                    <Target size={20} />
+                  </div>
+                  <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)', fontWeight: 700 }}>CHALLENGE</h4>
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+                  Fokus mengumpulkan skill badges selama periode weekly challenge.
+                </p>
+              </div>
+
+              <div className="card" style={{ gridColumn: 'span 4' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <div className="avatar" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--color-success)' }}>
+                    <CheckCircle size={20} />
+                  </div>
+                  <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)', fontWeight: 700 }}>ELIGIBILITY</h4>
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+                  Wajib sudah punya minimal 5 Skill Badge + 1 Game Badge untuk ikut.
+                </p>
+              </div>
+
+              <div className="card" style={{ gridColumn: 'span 4' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <div className="avatar" style={{ background: 'rgba(245, 158, 11, 0.15)', color: 'var(--color-warning)' }}>
+                    <Award size={20} />
+                  </div>
+                  <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-main)', fontWeight: 700 }}>HOW IT WORKS</h4>
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+                  Pemenang dihitung dari jumlah pertambahan skill badge terbanyak dalam satu minggu.
+                </p>
+              </div>
+            </div>
+
+            {/* Highlight Hadiah Box */}
+            <div 
+              className="card text-center" 
+              style={{ 
+                marginBottom: '32px',
+                padding: '24px 28px',
+                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(239, 68, 68, 0.12) 100%)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                boxShadow: '0 8px 30px rgba(245, 158, 11, 0.15)'
+              }}
+            >
+              <div style={{ fontSize: '1.35rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: '-0.01em' }}>
+                🎁 Total hadiah setiap minggu: <span style={{ color: 'var(--color-warning)' }}>800K – 2JT</span> 🎁
+              </div>
+            </div>
+
+            {/* Timeline Table Card */}
+            <div className="card" style={{ marginBottom: '32px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+                <h3 className="card-title" style={{ margin: 0, fontSize: '1.3rem' }}>
+                  <Calendar size={22} className="text-blue" /> Timeline Player Weekly Challenge
+                </h3>
+                {(() => {
+                  const now = new Date();
+                  const isAllPast = now > WEEKLY_SCHEDULE[WEEKLY_SCHEDULE.length - 1].endDate;
+                  const currentWeek = WEEKLY_SCHEDULE.find(w => now >= w.startDate && now <= w.endDate);
+
+                  if (isAllPast) {
+                    return (
+                      <span className="badge" style={{ background: 'rgba(239, 68, 68, 0.15)', color: 'var(--color-danger)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '6px 14px', fontSize: '0.8rem', fontWeight: 700 }}>
+                        Challenge Selesai
+                      </span>
+                    );
+                  }
+                  if (currentWeek) {
+                    return (
+                      <span className="badge green-badge" style={{ padding: '6px 14px', fontSize: '0.8rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <span className="blink-dot"></span> {currentWeek.week} Sedang Berlangsung
+                      </span>
+                    );
+                  }
+                  return (
+                    <span className="badge" style={{ background: 'rgba(99, 102, 241, 0.15)', color: 'var(--color-primary-light)', padding: '6px 14px', fontSize: '0.8rem', fontWeight: 700 }}>
+                      Mendatang
+                    </span>
+                  );
+                })()}
+              </div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table className="weekly-timeline-table">
+                  <thead>
+                    <tr>
+                      <th>Minggu</th>
+                      <th>Periode</th>
+                      <th>Jumlah Pemenang</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {WEEKLY_SCHEDULE.map((item) => {
+                      const now = new Date();
+                      const isCurrent = now >= item.startDate && now <= item.endDate;
+                      const isPast = now > item.endDate;
+                      const isAllPast = now > WEEKLY_SCHEDULE[WEEKLY_SCHEDULE.length - 1].endDate;
+
+                      return (
+                        <tr 
+                          key={item.week}
+                          className={isCurrent ? 'row-current-week' : ''}
+                        >
+                          <td style={{ fontWeight: '700' }}>
+                            {item.week}
+                          </td>
+                          <td>{item.period}</td>
+                          <td>
+                            <span className="badge yellow-badge" style={{ fontSize: '0.8rem', fontWeight: '600' }}>
+                              {item.winners}
+                            </span>
+                          </td>
+                          <td>
+                            {isCurrent ? (
+                              <span className="badge green-badge" style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: '600' }}>
+                                <span className="blink-dot"></span> Sedang Berlangsung
+                              </span>
+                            ) : isPast ? (
+                              <span className="badge-muted" style={{ fontSize: '0.8rem' }}>
+                                {isAllPast ? 'Challenge Selesai' : 'Selesai'}
+                              </span>
+                            ) : (
+                              <span className="badge-future" style={{ fontSize: '0.8rem' }}>
+                                Mendatang
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Section: Cara Perhitungan & Aturan Pemenang */}
+            <div className="dashboard-grid" style={{ marginBottom: '32px' }}>
+              
+              {/* Cara Perhitungan */}
+              <div className="card" style={{ gridColumn: 'span 6' }}>
+                <h3 className="card-title" style={{ fontSize: '1.2rem', marginBottom: '16px' }}>
+                  <Calculator size={20} className="text-blue" /> Cara Perhitungan
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div className="guide-highlight-box guide-highlight-primary" style={{ padding: '18px 20px' }}>
+                    <h4 style={{ fontSize: '1rem', margin: '0 0 6px 0', color: 'var(--color-primary-light)', fontWeight: '700' }}>
+                      Minggu 1 – 6
+                    </h4>
+                    <p className="guide-text" style={{ fontSize: '0.9rem', margin: 0, lineHeight: 1.55 }}>
+                      Dihitung dari <strong>PERTAMBAHAN</strong> jumlah skill badge tertinggi dalam periode minggu itu (tiap minggu mulai dari 0 lagi).
+                    </p>
+                  </div>
+
+                  <div className="guide-highlight-box guide-highlight-warning" style={{ padding: '18px 20px' }}>
+                    <h4 style={{ fontSize: '1rem', margin: '0 0 6px 0', color: 'var(--color-warning)', fontWeight: '700' }}>
+                      Minggu 7 (Grand Final)
+                    </h4>
+                    <p className="guide-text" style={{ fontSize: '0.9rem', margin: 0, lineHeight: 1.55 }}>
+                      Dihitung dari <strong>TOTAL</strong> perolehan skill badge tertinggi dalam periode itu.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Aturan Pemenang */}
+              <div className="card" style={{ gridColumn: 'span 6' }}>
+                <h3 className="card-title" style={{ fontSize: '1.2rem', marginBottom: '16px' }}>
+                  <Award size={20} className="text-green" /> Aturan Pemenang (Adil & Merata)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ padding: '14px 18px', borderRadius: 'var(--radius-sm)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)' }}>
+                    <strong style={{ color: 'var(--text-main)', fontSize: '0.92rem' }}>Minggu 1 – 3:</strong>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                      Setiap Top Achiever hanya bisa menang <strong>1 kali</strong>.
+                    </p>
+                  </div>
+
+                  <div style={{ padding: '14px 18px', borderRadius: 'var(--radius-sm)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)' }}>
+                    <strong style={{ color: 'var(--text-main)', fontSize: '0.92rem' }}>Minggu 4 – 6:</strong>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                      Pemenang Minggu 1–3 <strong>boleh menang lagi</strong>.
+                    </p>
+                  </div>
+
+                  <div style={{ padding: '14px 18px', borderRadius: 'var(--radius-sm)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)' }}>
+                    <strong style={{ color: 'var(--text-main)', fontSize: '0.92rem' }}>Minggu 7 (Grand Final):</strong>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                      <strong>Semua player</strong> (termasuk yang pernah menang) berkesempatan menang lagi.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Motivasi Penutup */}
+            <div className="weekly-motivation-card">
+              <div className="motivation-pill">
+                <Sparkles size={16} /> Tetap Semangat & Konsisten!
+              </div>
+              <h3 className="motivation-quote" style={{ marginBottom: '20px' }}>
+                "Tiap minggu adalah <span className="gradient-text">babak baru</span> — belum telat untuk ikut. Yang penting <span className="text-green" style={{ textDecoration: 'underline decoration-wavy rgba(16, 185, 129, 0.4)' }}>konsisten menambah badge</span> setiap minggu!"
+              </h3>
+
+              <div className="motivation-features-row" style={{ marginBottom: 0 }}>
+                <div className="motivation-feature-item">
+                  <Flame size={16} className="text-yellow" />
+                  <span><strong>Reset Tiap Sabtu:</strong> Peluang sama setiap minggu</span>
+                </div>
+                <div className="motivation-feature-item">
+                  <Trophy size={16} className="text-blue" />
+                  <span><strong>Top Achievers:</strong> Rebut total hadiah hingga 2JT</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
