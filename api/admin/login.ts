@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { getEnvVar } from '../_env'
 
 // Simple IP rate-limiter: max 5 login attempts per minute per IP
 const loginAttemptsMap = new Map<string, { count: number; firstAttempt: number }>()
@@ -28,10 +29,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { password } = req.body || {}
-  const expectedPassword = process.env.ADMIN_PASSWORD
+  const expectedPassword = getEnvVar('ADMIN_PASSWORD')
 
   if (!expectedPassword) {
-    res.status(500).json({ error: 'ADMIN_PASSWORD belum dikonfigurasi di environment variables server.' })
+    res.status(500).json({ error: 'ADMIN_PASSWORD belum dikonfigurasi di environment variables server atau .env.local.' })
     return
   }
 

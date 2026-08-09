@@ -72,17 +72,24 @@ CREATE TABLE IF NOT EXISTS participants (
   created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabel 2: Snapshots Mingguan untuk Hitung Kenaikan
+-- Tabel 2: Snapshots Mingguan untuk Hitung Kenaikan (poin NUMERIC(6,1) untuk presisi eksak desimal .5)
 CREATE TABLE IF NOT EXISTS snapshots (
   id             SERIAL PRIMARY KEY,
   participant_id INTEGER REFERENCES participants(id) ON DELETE CASCADE,
   snapshot_date  DATE NOT NULL,
-  points         INTEGER NOT NULL,
+  points         NUMERIC(6,1) NOT NULL,
+  bonus_points   INTEGER NOT NULL DEFAULT 0,
+  milestone      TEXT,
   games          INTEGER NOT NULL,
   skill_badges   INTEGER NOT NULL,
   captured_at    TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE (participant_id, snapshot_date)
 );
+
+-- MIGRASI UNTUK TABEL SNAPSHOTS YANG SUDAH ADA:
+ALTER TABLE snapshots ALTER COLUMN points TYPE NUMERIC(6,1);
+ALTER TABLE snapshots ADD COLUMN IF NOT EXISTS bonus_points INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE snapshots ADD COLUMN IF NOT EXISTS milestone TEXT;
 
 -- Tabel 3: Riwayat Job Scraping
 CREATE TABLE IF NOT EXISTS jobs (

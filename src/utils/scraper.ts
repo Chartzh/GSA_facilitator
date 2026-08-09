@@ -2,7 +2,6 @@ import * as cheerio from 'cheerio'
 import {
   PROGRAM,
   POINTS,
-  MILESTONES,
   TIERS,
   ARCADE_GAMES,
   SKILL_BADGES,
@@ -11,6 +10,13 @@ import {
   ArcadeGame,
   SkillBadge
 } from '../config/program'
+import {
+  basePoints as calcBasePoints,
+  milestoneBonus as calcMilestoneBonus,
+  currentMilestone as calcCurrentMilestone,
+  totalPoints as calcTotalPoints,
+  MILESTONES
+} from './points'
 
 // --- URL Validation ---
 export interface UrlValidationResult {
@@ -370,12 +376,17 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     }
 
     // 1. Check Arcade Game Match (ID or Title/Keywords)
-    const arcadeGame = findArcadeGameMatch(raw, matchedGameIds)
-    if (arcadeGame) {
-      if (!matchedGameIds.has(arcadeGame.id)) {
-        matchedGameIds.add(arcadeGame.id)
-        validGames.push({ ...arcadeGame, earnedDate: raw.earnedDateRaw, dateUnknown: raw.dateUnknown })
-      }
+    let arcadeGame = findArcadeGameMatch(raw, matchedGameIds)
+
+    // If returned game ID is already claimed, attempt reassigning to an unearned game slot
+    if (arcadeGame && matchedGameIds.has(arcadeGame.id)) {
+      const openSlot = ARCADE_GAMES.find(g => !matchedGameIds.has(g.id))
+      if (openSlot) arcadeGame = openSlot
+    }
+
+    if (arcadeGame && !matchedGameIds.has(arcadeGame.id)) {
+      matchedGameIds.add(arcadeGame.id)
+      validGames.push({ ...arcadeGame, earnedDate: raw.earnedDateRaw, dateUnknown: raw.dateUnknown })
       continue
     }
 
@@ -417,22 +428,15 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     })
   }
 
-  // ATURAN #4: Rumus Poin & Milestones
+  // ATURAN #4: Rumus Poin & Milestones dari points.ts
   const pointsFromGames = validGames.length * POINTS.perGame
   const totalSkillBadgesCount = validSyllabusBadges.length + validExtraBadges.length
   const pointsFromSkillBadges = totalSkillBadgesCount * 0.5
 
-  const totalArcadePoints = pointsFromGames + pointsFromSkillBadges
-
-  // Highest achieved milestone (non-cumulative)
-  let highestMilestone: typeof MILESTONES[number] | null = null
-  for (const m of MILESTONES) {
-    if (validGames.length >= m.games && totalSkillBadgesCount >= m.badges) {
-      highestMilestone = m
-    }
-  }
-
-  const milestoneBonus = highestMilestone ? highestMilestone.bonus : 0
+  const totalArcadePoints = calcBasePoints(validGames.length, totalSkillBadgesCount)
+  const milestoneDef = calcCurrentMilestone(validGames.length, totalSkillBadgesCount)
+  const milestoneBonus = calcMilestoneBonus(validGames.length, totalSkillBadgesCount)
+  const highestMilestone = milestoneDef
 
   // Check Bonus Milestone (4 GEAR Badges)
   const gearCompletedCount = GEAR_BADGES.filter(gb => {
@@ -448,7 +452,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
   const gearBonus = hasGearBonus ? BONUS_MILESTONE_POINTS : 0
   const totalPointsWithBonus = totalArcadePoints + milestoneBonus + gearBonus
 
-  // Current Tier
+  // Current Tier evaluated against TOTAL POINTS (base + bonus)
   let currentTier: typeof TIERS[number] | null = null
   for (const t of TIERS) {
     if (totalPointsWithBonus >= t.minPoints) {

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import { formatPoints } from '../utils/points'
 import AdminPanel from './AdminPanel'
 
 interface Top10User {
   rank: number
   name: string
   points: number
+  bonusPoints?: number
+  totalPoints?: number
+  milestone?: string | null
   games: number
   badges: number
 }
@@ -121,40 +125,50 @@ export default function LeaderboardSection() {
                 <tr>
                   <th>RANK</th>
                   <th>NAMA PESERTA</th>
-                  <th>POIN ARCADE</th>
+                  <th>POIN TOTAL</th>
                   <th>GAMES</th>
                   <th>SKILL BADGES</th>
                 </tr>
               </thead>
               <tbody>
-                {top10Data.map((user) => (
-                  <tr key={user.rank} className={user.rank <= 3 ? 'row-active-highlight' : ''}>
-                    <td>
-                      <span
-                        className={`badge-tag ${
-                          user.rank === 1
-                            ? 'badge-tag-warning'
-                            : user.rank === 2
-                            ? 'badge-tag-done'
-                            : user.rank === 3
-                            ? 'badge-tag-excluded'
-                            : 'badge-tag-pending'
-                        }`}
-                        style={{ fontFamily: 'var(--font-arcade)', fontSize: '0.75rem' }}
-                      >
-                        #{user.rank} {user.rank === 1 ? '👑' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : ''}
-                      </span>
-                    </td>
-                    <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{user.name}</td>
-                    <td>
-                      <strong style={{ color: 'var(--neon-cyan)', fontFamily: 'var(--font-arcade)', fontSize: '0.95rem' }}>
-                        {user.points} PT
-                      </strong>
-                    </td>
-                    <td>{user.games} Game</td>
-                    <td>{user.badges} Badges</td>
-                  </tr>
-                ))}
+                {top10Data.map((user) => {
+                  const tPoints = user.totalPoints ?? ((user.points || 0) + (user.bonusPoints || 0))
+                  return (
+                    <tr key={user.rank} className={user.rank <= 3 ? 'row-active-highlight' : ''}>
+                      <td>
+                        <span
+                          className={`badge-tag ${
+                            user.rank === 1
+                              ? 'badge-tag-warning'
+                              : user.rank === 2
+                              ? 'badge-tag-done'
+                              : user.rank === 3
+                              ? 'badge-tag-excluded'
+                              : 'badge-tag-pending'
+                          }`}
+                          style={{ fontFamily: 'var(--font-arcade)', fontSize: '0.75rem' }}
+                        >
+                          #{user.rank} {user.rank === 1 ? '👑' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : ''}
+                        </span>
+                      </td>
+                      <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {user.name}
+                        {user.milestone && (
+                          <span className="badge-tag badge-tag-warning" style={{ marginLeft: '8px', fontSize: '0.72rem', padding: '2px 6px' }}>
+                            {user.milestone}
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <strong style={{ color: 'var(--neon-cyan)', fontFamily: 'var(--font-arcade)', fontSize: '0.95rem' }}>
+                          {formatPoints(tPoints)} poin
+                        </strong>
+                      </td>
+                      <td>{user.games} Game</td>
+                      <td>{user.badges} Badges</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           )}

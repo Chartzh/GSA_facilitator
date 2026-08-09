@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { validateProfileUrl, parseProfileHtml, ParsedProfileResult } from '../utils/scraper'
+import { formatPoints } from '../utils/points'
 import LabChecklist from './LabChecklist'
 
 // Simple 10-minute client cache per profile URL
@@ -189,27 +190,27 @@ export default function PointsCalculator() {
           <div className="bento-grid" style={{ margin: '20px 0', gap: '16px' }}>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ fontSize: '2.2rem', color: 'var(--neon-cyan)' }}>
-                {resultData.totalPointsWithBonus} PT
+                {formatPoints(resultData.totalPointsWithBonus)}
               </div>
-              <div className="stat-label-muted">TOTAL POIN AKHIR (+BONUS)</div>
+              <div className="stat-label-muted">TOTAL POIN AKHIR</div>
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--neon-yellow)' }}>
-                {resultData.validGames.length} / 12
+                {resultData.validGames.length}
               </div>
-              <div className="stat-label-muted">ARCADE GAMES ({resultData.pointsFromGames} PT)</div>
+              <div className="stat-label-muted">{resultData.validGames.length} Game ({formatPoints(resultData.pointsFromGames)} PT)</div>
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--state-done)' }}>
-                {resultData.validSyllabusBadges.length + resultData.validExtraBadges.length} Badges
+                {formatPoints(resultData.pointsFromSkillBadges)}
               </div>
-              <div className="stat-label-muted">SKILL BADGES ({resultData.pointsFromSkillBadges} PT)</div>
+              <div className="stat-label-muted">{resultData.validSyllabusBadges.length + resultData.validExtraBadges.length} Badge ({formatPoints(resultData.pointsFromSkillBadges)} PT)</div>
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--neon-magenta)' }}>
-                +{resultData.milestoneBonus} PT
+                +{resultData.milestoneBonus}
               </div>
-              <div className="stat-label-muted">BONUS MILESTONE</div>
+              <div className="stat-label-muted">BONUS {resultData.highestMilestone?.label || 'MILESTONE'}</div>
             </div>
           </div>
 
@@ -225,7 +226,7 @@ export default function PointsCalculator() {
               color: 'var(--text-primary)'
             }}
           >
-            🧮 <strong>Rincian Perhitungan Akhir:</strong> {resultData.pointsFromGames} PT (Game) + {resultData.pointsFromSkillBadges} PT (Skill Badges) + {resultData.milestoneBonus} PT (Bonus {resultData.highestMilestone?.label || 'Milestone'}) {resultData.gearBonus ? `+ ${resultData.gearBonus} PT (Bonus Milestone GEAR)` : ''} = <strong>{resultData.totalPointsWithBonus} Poin Arcade</strong>
+            🧮 <strong>Rincian Poin:</strong> {resultData.validGames.length} Game ({formatPoints(resultData.pointsFromGames)}) + {resultData.validSyllabusBadges.length + resultData.validExtraBadges.length} Badge ({formatPoints(resultData.pointsFromSkillBadges)}) + Bonus {resultData.highestMilestone?.label || 'Milestone'} (+{resultData.milestoneBonus}) {resultData.gearBonus ? `+ Bonus GEAR (+${resultData.gearBonus})` : ''} = <strong>{formatPoints(resultData.totalPointsWithBonus)} Total Poin</strong>
           </div>
 
           {/* Milestone Status & Gap */}

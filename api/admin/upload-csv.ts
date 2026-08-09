@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { validateProfileUrl } from '../../src/utils/scraper'
 import { saveParticipantsFromCsv } from '../_db'
+import { getEnvVar } from '../_env'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -10,10 +11,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // 1. Server-side Authentication
   const { password, csvText } = req.body || {}
-  const expectedPassword = process.env.ADMIN_PASSWORD
+  const expectedPassword = getEnvVar('ADMIN_PASSWORD')
 
   if (!expectedPassword) {
-    res.status(500).json({ error: 'ADMIN_PASSWORD belum dikonfigurasi di environment variables server.' })
+    res.status(500).json({ error: 'ADMIN_PASSWORD belum dikonfigurasi di environment variables server atau .env.local.' })
     return
   }
 
