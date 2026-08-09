@@ -272,8 +272,10 @@ export default function App() {
                   Panduan <ChevronDown size={14} style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
                 </span>
                 {isDropdownOpen && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '8px 0', minWidth: '180px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+                  <div style={{ position: 'absolute', top: '100%', left: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '8px 0', minWidth: '220px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
                     <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('cara'); setIsDropdownOpen(false); }}>Cara Bermain</div>
+                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('skills'); setIsDropdownOpen(false); }}>Panduan Google Skills</div>
+                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('gear'); setIsDropdownOpen(false); }}>Panduan GEAR</div>
                     <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('faq'); setIsDropdownOpen(false); }}>FAQ</div>
                     <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('komunitas'); setIsDropdownOpen(false); }}>Komunitas</div>
                     <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('tentang'); setIsDropdownOpen(false); }}>Tentang</div>
@@ -310,6 +312,8 @@ export default function App() {
             <div className="nav-link" onClick={() => { setActiveTab('leaderboard'); setIsMobileMenuOpen(false); }}>Leaderboard</div>
             <div className="nav-link" onClick={() => { setActiveTab('weekly-challenge'); setIsMobileMenuOpen(false); }}>Weekly Challenge</div>
             <div className="nav-link" onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }}>Cara Bermain</div>
+            <div className="nav-link" onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }}>Panduan Google Skills</div>
+            <div className="nav-link" onClick={() => { setActiveTab('gear'); setIsMobileMenuOpen(false); }}>Panduan GEAR</div>
             <div className="nav-link" onClick={() => { setActiveTab('faq'); setIsMobileMenuOpen(false); }}>FAQ</div>
             <div className="nav-link" onClick={() => { setActiveTab('komunitas'); setIsMobileMenuOpen(false); }}>Komunitas</div>
             <div className="nav-link" onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }}>Tentang</div>
@@ -514,16 +518,255 @@ export default function App() {
         )}
 
         {activeTab === 'cara' && (
-          <div className="bento-card col-span-12" style={{ marginTop: '24px' }}>
-            <h2 className="card-title-arcade" style={{ fontSize: '1.2rem', marginBottom: '16px' }}>
-              💻 CARA BERMAIN & LANGKAH PENGERJAAN
-            </h2>
-            <ol style={{ paddingLeft: '20px', lineHeight: '1.8', color: 'var(--text-primary)' }}>
-              <li><strong>Daftar & Gabung Grup:</strong> Gunakan form prefill resmi dengan kode <code>{CONFIG.REFERRAL_CODE}</code>.</li>
-              <li><strong>Klaim Kredit & Mulai Lab:</strong> Gunakan token kredit gratis untuk mengakses Google Cloud Console.</li>
-              <li><strong>Kumpulkan Badges & Poin:</strong> Selesaikan 12 Arcade Game Badges dan 51 Skill Badges.</li>
-              <li><strong>Redeem Swag Impian:</strong> Tukarkan poin saat masa Swag Drop dibuka oleh Google Cloud.</li>
-            </ol>
+          <div style={{ padding: '24px 0' }}>
+            <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
+              <span className="badge-tag badge-tag-done" style={{ marginBottom: '12px' }}><Laptop size={14} /> Panduan Pengerjaan</span>
+              <h1 className="card-title-arcade" style={{ fontSize: '1.8rem', marginTop: '10px' }}>Langkah Mudah <span style={{ color: 'var(--neon-yellow)' }}>Mulai Petualanganmu</span></h1>
+              <p style={{ marginTop: '8px' }}>Ikuti panduan langkah demi langkah ini untuk memastikan kamu mengumpulkan poin dengan benar!</p>
+              <div style={{ marginTop: '20px' }}>
+                <a 
+                  href="https://rsvp.withgoogle.com/events/arcade-fasilitator-id/silabus" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn-arcade btn-arcade-primary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 24px', fontSize: '0.88rem' }}
+                >
+                  <Award size={18} /> Akses Silabus Program
+                </a>
+              </div>
+            </div>
+
+            <div className="bento-grid" style={{ gap: '16px', marginBottom: '32px' }}>
+              <div className="bento-card col-span-3">
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--neon-cyan)', marginBottom: '8px' }}>1</div>
+                <h4 style={{ color: 'var(--text-primary)', marginBottom: '6px' }}>Daftar & Gabung Grup</h4>
+                <p style={{ fontSize: '0.84rem' }}>Daftarkan dirimu melalui link registrasi resmi (saat pendaftaran dibuka) dan pastikan langsung bergabung ke grup WhatsApp Kak Rajif untuk koordinasi.</p>
+              </div>
+
+              <div className="bento-card col-span-3">
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--neon-yellow)', marginBottom: '8px' }}>2</div>
+                <h4 style={{ color: 'var(--text-primary)', marginBottom: '6px' }}>Klaim Token & Mulai Lab</h4>
+                <p style={{ fontSize: '0.84rem' }}>Kamu akan mendapatkan token akses gratis. Gunakan token ini untuk meluncurkan Google Cloud Console dan mulai menyelesaikan quest/lab bulanan yang ditentukan.</p>
+              </div>
+
+              <div className="bento-card col-span-3">
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--state-done)', marginBottom: '8px' }}>3</div>
+                <h4 style={{ color: 'var(--text-primary)', marginBottom: '6px' }}>Kumpulkan Badges & Poin</h4>
+                <p style={{ fontSize: '0.84rem' }}>Selesaikan lab untuk meraih lencana: <strong>Arcade Game Badge</strong> (1 Poin) dan <strong>Skills Badge</strong> (2 Lencana = 1 Poin).</p>
+              </div>
+
+              <div className="bento-card col-span-3">
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--neon-magenta)', marginBottom: '8px' }}>4</div>
+                <h4 style={{ color: 'var(--text-primary)', marginBottom: '6px' }}>Redeem Swag Impian</h4>
+                <p style={{ fontSize: '0.84rem' }}>Ketika masa "Swag Drop" dibuka, tukarkan akumulasi poinmu di website resmi Arcade Google Cloud dengan merchandise eksklusif pilihanmu.</p>
+              </div>
+            </div>
+
+            {/* Badges Rule Details */}
+            <div className="bento-grid" style={{ gap: '20px' }}>
+              <div className="bento-card col-span-6">
+                <h3 className="card-title-arcade" style={{ fontSize: '1rem', color: 'var(--neon-cyan)', marginBottom: '14px' }}>
+                  <Laptop size={18} /> 1. Arcade Game Badges (1 Poin)
+                </h3>
+                <p style={{ fontSize: '0.86rem', marginBottom: '14px' }}>
+                  Setiap bulannya, Google Cloud merilis game bertema spesifik (seperti Trivia, Level 1, Level 2, dll.).
+                </p>
+                <ul style={{ paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.84rem', color: 'var(--text-muted)' }}>
+                  <li>Satu game biasanya memuat 4 hingga 8 lab praktik.</li>
+                  <li>Tidak ada pengerjaan kuis berulang; Anda cukup menyelesaikan lab hingga mendapat centang hijau.</li>
+                  <li>Begitu game terselesaikan 100%, badge digital akan otomatis masuk ke profil Anda dalam waktu 24 jam.</li>
+                  <li>Nilai penukaran: <strong>1 Badge = 1 Arcade Point</strong>.</li>
+                </ul>
+              </div>
+
+              <div className="bento-card col-span-6">
+                <h3 className="card-title-arcade" style={{ fontSize: '1rem', color: 'var(--state-done)', marginBottom: '14px' }}>
+                  <Award size={18} /> 2. Skill Badges (2 Badges = 1 Poin)
+                </h3>
+                <p style={{ fontSize: '0.86rem', marginBottom: '14px' }}>
+                  Merupakan lencana yang didapat dengan menyelesaikan rangkaian lab terstruktur yang diakhiri dengan <strong>Challenge Lab</strong>.
+                </p>
+                <ul style={{ paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.84rem', color: 'var(--text-muted)' }}>
+                  <li>Challenge Lab menguji kemampuan mandiri Anda (tanpa ada instruksi langkah-langkah di dalam lab).</li>
+                  <li>Kak Rajif akan memandu tips mengerjakan Challenge Lab ini lewat video panduan di grup.</li>
+                  <li>Skill badge memiliki kredensial resmi yang bisa dipajang di LinkedIn.</li>
+                  <li>Nilai penukaran: <strong>2 Badges = 1 Arcade Point</strong>.</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Date Validation Banner */}
+            <div className="bento-card col-span-12" style={{ marginTop: '24px', background: 'rgba(255, 214, 0, 0.05)', border: '1px solid var(--neon-yellow)' }}>
+              <p style={{ color: 'var(--neon-yellow)', fontSize: '0.9rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <AlertTriangle size={16} /> Syarat Validitas Penyelesaian Lencana (Badge):
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: 1.6 }}>
+                Lencana (baik Game Badge maupun Skill Badge) hanya akan dihitung masuk ke dalam akumulasi poin program jika diselesaikan <strong>pada atau setelah tanggal 13 Juli 2026 pukul 09:00 WIB</strong> hingga program pendaftaran resmi ditutup pada <strong>14 September 2026 pukul 23:59 WIB</strong>. Lencana yang diselesaikan sebelum tanggal pembukaan tidak akan dihitung oleh sistem otomatis Google Cloud.
+              </p>
+            </div>
+
+            {/* Video Tutorial Section */}
+            <div className="bento-card col-span-12" style={{ marginTop: '24px', textAlign: 'center' }}>
+              <h3 className="card-title-arcade" style={{ justifyContent: 'center', marginBottom: '14px', color: 'var(--neon-cyan)' }}>
+                <Volume2 size={20} /> Panduan Klaim Kredit & Gambaran Pengerjaan Lab
+              </h3>
+              <p style={{ fontSize: '0.88rem', maxWidth: '700px', margin: '0 auto 20px auto', lineHeight: 1.6 }}>
+                Sebelum mulai belajar, tonton video singkat dari YouTube berikut untuk melihat cara melakukan klaim token/kredit gratis serta demo singkat pengerjaan lab di Google Cloud Skills Boost.
+              </p>
+
+              <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', maxWidth: '700px', margin: '0 auto 20px auto' }}>
+                <iframe 
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }} 
+                  src="https://www.youtube.com/embed/3fjIsJTeWfk" 
+                  title="Cara Klaim Kredit Google Cloud Skills Boost" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen>
+                </iframe>
+              </div>
+
+              <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'left', background: 'rgba(10, 10, 18, 0.6)', border: '1px solid var(--border)', padding: '20px', borderRadius: 'var(--radius-sm)' }}>
+                <h4 style={{ color: 'var(--text-primary)', marginBottom: '10px', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Info size={16} className="text-cyan" /> Ringkasan Cara Pengerjaan Lab:
+                </h4>
+                <ol style={{ paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                  <li>
+                    <strong>Login ke Akun Kalian:</strong> Masuk ke platform <a href="https://www.cloudskillsboost.google/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-cyan)', textDecoration: 'underline' }}>Google Cloud Skills Boost</a>.
+                    <div style={{ marginTop: '6px', paddingLeft: '12px', borderLeft: '2px solid var(--neon-cyan)', fontSize: '0.8rem' }}>
+                      • <em>Belum punya akun?</em> Silakan klik tombol <strong>Join</strong> di kanan atas (opsi <strong>Sign in with Google</strong>).<br />
+                      • <em>Pengaturan Profil Publik (Penting!):</em> Buka Profil kalian &rarr; <strong>Share Profile</strong> &rarr; <strong>Make Profile Public</strong> agar lencana kalian tercatat.
+                    </div>
+                  </li>
+                  <li>
+                    <strong>Klaim Kredit:</strong> Masukkan kode token gratis yang dibagikan Kak Rajif di menu promo/claim credit.
+                  </li>
+                  <li><strong>Mulai Lab (Start Lab):</strong> Buka lab yang ditargetkan, lalu klik tombol <strong>"Start Lab"</strong> untuk membuat kredensial Google Cloud Console sementara.</li>
+                  <li><strong>Masuk ke Google Cloud Console:</strong> Gunakan username & password sementara yang disediakan di sisi kiri layar.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'skills' && (
+          <div style={{ padding: '24px 0' }}>
+            <div className="bento-card col-span-12" style={{ marginBottom: '24px' }}>
+              <span className="badge-tag badge-tag-done" style={{ marginBottom: '12px' }}><Laptop size={14} /> Panduan Platform</span>
+              <h1 className="card-title-arcade" style={{ fontSize: '1.8rem', marginTop: '10px' }}>
+                Panduan Pendaftaran <span style={{ color: 'var(--neon-cyan)' }}>Skills Google</span>
+              </h1>
+              <p style={{ marginTop: '8px' }}>Pelajari tata cara mendaftarkan profil Google Cloud Skills Boost dan mengatasi kendala teknis.</p>
+            </div>
+
+            <div className="bento-grid" style={{ gap: '20px' }}>
+              <div className="bento-card col-span-12" style={{ background: 'rgba(255, 46, 151, 0.05)', border: '1px solid var(--neon-magenta)' }}>
+                <h4 style={{ color: 'var(--neon-magenta)', fontSize: '1rem', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <AlertTriangle size={18} /> Ketentuan Umur Minimum
+                </h4>
+                <p style={{ fontSize: '0.86rem', lineHeight: 1.6 }}>
+                  Saat meregistrasikan akun di portal Skills Boost, pastikan pengaturan tahun lahirmu dikonfigurasikan agar umurmu <strong>di atas 17 tahun</strong>. Jika data umur dideteksi di bawah 17 tahun, sistem Google akan otomatis menolak pembuatan akun baru demi mematuhi regulasi privasi anak.
+                </p>
+              </div>
+
+              <div className="bento-card col-span-12" style={{ background: 'rgba(255, 214, 0, 0.05)', border: '1px solid var(--neon-yellow)' }}>
+                <h4 style={{ color: 'var(--neon-yellow)', fontSize: '1rem', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Info size={18} /> Mengatasi Masalah Captcha Gagal
+                </h4>
+                <p style={{ fontSize: '0.86rem', marginBottom: '10px' }}>
+                  Banyak peserta menemui kendala di mana verifikasi captcha terus-menerus gagal atau tombol daftar membeku. Berikut langkah alternatif penyelesaiannya:
+                </p>
+                <ul style={{ paddingLeft: '20px', fontSize: '0.84rem', display: 'flex', flexDirection: 'column', gap: '6px', color: 'var(--text-muted)' }}>
+                  <li><strong>Beralih Jaringan Internet:</strong> Beralihlah dari Wi-Fi ke data seluler (atau sebaliknya) untuk mereset reputasi IP koneksimu.</li>
+                  <li><strong>Mode Incognito:</strong> Buka jendela penyamaran browser untuk menghindari cookie/cache lama yang rusak.</li>
+                  <li><strong>Gunakan HP:</strong> Seringkali pengisian captcha melalui browser handphone memiliki tingkat keberhasilan lebih tinggi.</li>
+                </ul>
+              </div>
+
+              <div className="bento-card col-span-12" style={{ background: 'rgba(0, 255, 157, 0.05)', border: '1px solid var(--state-done)' }}>
+                <h4 style={{ color: 'var(--state-done)', fontSize: '1rem', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle size={18} /> Prosedur Pembuatan Profil
+                </h4>
+                <ol style={{ paddingLeft: '20px', fontSize: '0.84rem', display: 'flex', flexDirection: 'column', gap: '8px', color: 'var(--text-primary)', lineHeight: 1.6 }}>
+                  <li>Kunjungi halaman resmi Google Cloud Skills Boost di <a href="https://www.cloudskillsboost.google/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-cyan)', textDecoration: 'underline' }}>skills.google</a>.</li>
+                  <li>Pilih menu <strong>"Join"</strong> di bagian kanan atas layar.</li>
+                  <li>Pilihlah metode pendaftaran instan <strong>"Sign in with Google"</strong> agar sinkronisasi email lebih aman.</li>
+                  <li>Atur tahun lahir agar terbaca di atas 17 tahun.</li>
+                  <li>Setelah berhasil login, masuk ke <strong>Profile</strong> &rarr; klik tombol <strong>Share Profile</strong> &rarr; klik <strong>Make Profile Public</strong>. Ini wajib dilakukan agar lencana dapat diverifikasi oleh admin. Silakan klik <a href="https://drive.google.com/file/d/1x9MZkZ3Pv456832fVidcLAlgtYVMWtw-/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-cyan)', textDecoration: 'underline', fontWeight: 600 }}>panduan visual lengkap</a>.</li>
+                </ol>
+              </div>
+
+              <div className="bento-card col-span-12" style={{ textAlign: 'center' }}>
+                <h3 className="card-title-arcade" style={{ justifyContent: 'center', fontSize: '1rem', marginBottom: '14px' }}>
+                  <CheckCircle size={18} className="text-done" /> Contoh Profil Terverifikasi
+                </h3>
+                <div style={{ borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--border)', maxWidth: '800px', margin: '0 auto' }}>
+                  <img 
+                    src="/google_skill.png" 
+                    alt="Contoh Google Skill Public Profile" 
+                    style={{ width: '100%', height: 'auto', display: 'block' }} 
+                  />
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '14px' }}>
+                  Pastikan status lencana dan URL profilmu diatur menjadi <strong>Public</strong> seperti contoh visual di atas agar poinmu sah dihitung di leaderboard bimbingan.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'gear' && (
+          <div style={{ padding: '24px 0' }}>
+            <div className="bento-card col-span-12" style={{ marginBottom: '24px' }}>
+              <span className="badge-tag badge-tag-done" style={{ marginBottom: '12px' }}><Laptop size={14} /> Developer Program</span>
+              <h1 className="card-title-arcade" style={{ fontSize: '1.8rem', marginTop: '10px' }}>
+                Panduan Pendaftaran <span style={{ color: 'var(--state-done)' }}>Google GEAR</span>
+              </h1>
+              <p style={{ marginTop: '8px' }}>Pelajari petunjuk registrasi Google Developer Program (GEAR) dan tata cara pengisian profilnya.</p>
+            </div>
+
+            <div className="bento-grid" style={{ gap: '20px' }}>
+              <div className="bento-card col-span-12" style={{ background: 'rgba(0, 240, 255, 0.05)', border: '1px solid var(--neon-cyan)' }}>
+                <h4 style={{ color: 'var(--neon-cyan)', fontSize: '1rem', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Info size={18} /> Mengisi Kolom Institusi / Komunitas
+                </h4>
+                <p style={{ fontSize: '0.86rem', marginBottom: '12px' }}>
+                  Banyak pendaftar bingung mengisi kolom <strong>Institusi</strong> atau <strong>Komunitas</strong> di form pendaftaran program developer Google. Silakan isi sesuai statusmu saat ini:
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.84rem' }}>
+                  <p>• <strong>Sekolah (SD/SMP/SMA):</strong> Isilah kolom institusi dengan <strong>Nama Sekolah Lengkap</strong> (contoh: SMAN 8 Jakarta).</p>
+                  <p>• <strong>Mahasiswa Kuliah:</strong> Isilah dengan <strong>Nama Kampus/Universitas</strong> (contoh: Universitas Indonesia).</p>
+                  <p>• <strong>Sudah Bekerja / Lainnya:</strong> Isilah dengan <strong>Nama Perusahaan</strong> atau nama <strong>Pendidikan Terakhir</strong> kalian.</p>
+                </div>
+              </div>
+
+              <div className="bento-card col-span-12" style={{ background: 'rgba(0, 255, 157, 0.05)', border: '1px solid var(--state-done)' }}>
+                <h4 style={{ color: 'var(--state-done)', fontSize: '1rem', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle size={18} /> Alur Pendaftaran GEAR
+                </h4>
+                <ol style={{ paddingLeft: '20px', fontSize: '0.84rem', display: 'flex', flexDirection: 'column', gap: '8px', color: 'var(--text-primary)', lineHeight: 1.6 }}>
+                  <li>Buka halaman pendaftaran Google GEAR di <a href="https://developers.google.com/program/gear" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-cyan)', textDecoration: 'underline' }}>developers.google.com/program/gear</a>.</li>
+                  <li>Klik tombol hijau <strong>"Join Google Developer Program"</strong>.</li>
+                  <li>Lakukan login menggunakan akun Google/Gmail kalian.</li>
+                  <li>Lengkapi form isian data diri, isi kolom institusi sesuai panduan di atas.</li>
+                  <li>Setujui syarat pendaftaran, klik submit, dan simpan tangkapan layar dasbor suksesmu.</li>
+                </ol>
+              </div>
+
+              <div className="bento-card col-span-12" style={{ textAlign: 'center' }}>
+                <h3 className="card-title-arcade" style={{ justifyContent: 'center', fontSize: '1rem', marginBottom: '14px' }}>
+                  <CheckCircle size={18} className="text-done" /> Contoh Dasbor Sukses
+                </h3>
+                <div style={{ borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--border)', maxWidth: '800px', margin: '0 auto' }}>
+                  <img 
+                    src="/Gear.png" 
+                    alt="Contoh Google GEAR Dashboard" 
+                    style={{ width: '100%', height: 'auto', display: 'block' }} 
+                  />
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '14px' }}>
+                  Visual di atas merepresentasikan tampilan lencana dasbor Google Developer Program setelah pendaftaran GEAR kamu sukses disetujui.
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
