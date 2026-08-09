@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { validateProfileUrl, parseProfileHtml, ParsedProfileResult } from '../utils/scraper'
 import { formatPoints } from '../utils/points'
 import LabChecklist from './LabChecklist'
+import { LogOut } from 'lucide-react'
 
 // Simple 10-minute client cache per profile URL
 const profileCache = new Map<string, { timestamp: number; data: ParsedProfileResult }>()
@@ -16,6 +17,15 @@ export default function PointsCalculator() {
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [resultData, setResultData] = useState<ParsedProfileResult | null>(null)
+
+  const handleLogout = () => {
+    setResultData(null)
+    try {
+      localStorage.removeItem('gsa_calc_data')
+    } catch {
+      // Ignore localStorage errors
+    }
+  }
 
   // Load cached input URL and result from localStorage when mounting / returning to page
   useEffect(() => {
@@ -106,56 +116,54 @@ export default function PointsCalculator() {
   return (
     <div style={{ marginTop: '20px' }}>
       
-      {/* Step 1: Input Form Card */}
-      <div className="bento-card bento-card-large col-span-12">
-        <div className="card-header-flex">
-          <h2 className="card-title-arcade">
-            <span>⚡</span> KALKULATOR POIN ARCADE 2026
-          </h2>
-          <span className="badge-tag badge-tag-done">ID-MATCHING ENGINE</span>
-        </div>
-
-        <p style={{ marginBottom: '16px' }}>
-          Masukkan URL Public Profile Google Skills Anda untuk mengkalkulasi poin, milestone, dan status pengerjaan secara otomatis.
-        </p>
-
-        {/* Input Form */}
-        <form onSubmit={handleCheckProfile} className="input-arcade-group" style={{ marginBottom: '12px' }}>
-          <input
-            type="url"
-            className="input-arcade"
-            placeholder="https://www.skills.google/public_profiles/YOUR_ID"
-            value={inputUrl}
-            onChange={(e) => setInputUrl(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="btn-arcade btn-arcade-primary"
-            disabled={loading}
-          >
-            {loading ? 'MEMPROSES PROFIL...' : 'HITUNG POIN SAYA 🚀'}
-          </button>
-        </form>
-
-        <div style={{ fontSize: '0.8rem', color: 'var(--neon-cyan)', fontWeight: 500 }}>
-          💡 Hasil perhitungan tersimpan otomatis (cached) dan tidak akan hilang saat berpindah halaman.
-        </div>
-
-        {/* Error Message */}
-        {errorMsg && (
-          <div
-            className="badge-tag badge-tag-excluded"
-            style={{ padding: '12px 16px', width: '100%', marginTop: '16px', lineHeight: '1.5' }}
-          >
-            ❌ {errorMsg}
+      {/* Step 1: Input Form Card (Only shown when NO profile result is active) */}
+      {!resultData && (
+        <div className="bento-card bento-card-large col-span-12">
+          <div className="card-header-flex">
+            <h2 className="card-title-arcade">
+              ⚡ KALKULATOR POIN ARCADE 2026
+            </h2>
+            <span className="badge-tag badge-tag-done">ID-MATCHING ENGINE</span>
           </div>
-        )}
-      </div>
 
-      {/* Step 3: Prominent Score Summary & Milestone Gap */}
+          <p style={{ marginBottom: '16px' }}>
+            Masukkan URL Public Profile Google Skills Anda untuk mengkalkulasi poin, milestone, dan status pengerjaan secara otomatis.
+          </p>
+
+          {/* Input Form */}
+          <form onSubmit={handleCheckProfile} className="input-arcade-group" style={{ marginBottom: '12px' }}>
+            <input
+              type="url"
+              className="input-arcade"
+              placeholder="https://www.skills.google/public_profiles/YOUR_ID"
+              value={inputUrl}
+              onChange={(e) => setInputUrl(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="btn-arcade btn-arcade-primary"
+              disabled={loading}
+            >
+              {loading ? 'MEMPROSES PROFIL...' : 'HITUNG POIN SAYA 🚀'}
+            </button>
+          </form>
+
+          {/* Error Message */}
+          {errorMsg && (
+            <div
+              className="badge-tag badge-tag-excluded"
+              style={{ padding: '12px 16px', width: '100%', marginTop: '16px', lineHeight: '1.5' }}
+            >
+              ❌ {errorMsg}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Step 2: Dashboard Result & Tracker (Shown when profile is loaded) */}
       {resultData && (
-        <div className="bento-card col-span-12 bento-card-highlight" style={{ marginTop: '24px' }}>
+        <div className="bento-card col-span-12 bento-card-highlight">
           
           <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '12px' }}>
             <div>
@@ -172,11 +180,21 @@ export default function PointsCalculator() {
               </a>
             </div>
 
-            {resultData.currentTier && (
-              <span className="badge-tag badge-tag-warning" style={{ fontSize: '0.88rem', padding: '6px 14px' }}>
-                🏆 {resultData.currentTier.label} ({resultData.totalPointsWithBonus} Poin)
-              </span>
-            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              {resultData.currentTier && (
+                <span className="badge-tag badge-tag-warning" style={{ fontSize: '0.88rem', padding: '6px 14px' }}>
+                  🏆 {resultData.currentTier.label} ({resultData.totalPointsWithBonus} Poin)
+                </span>
+              )}
+
+              <button 
+                className="btn-arcade btn-arcade-outline" 
+                onClick={handleLogout} 
+                style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--neon-magenta)', borderColor: 'var(--neon-magenta)' }}
+              >
+                <LogOut size={14} /> Keluar
+              </button>
+            </div>
           </div>
 
           {/* Unknown Date Info */}

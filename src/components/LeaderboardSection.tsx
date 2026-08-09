@@ -16,9 +16,15 @@ interface Top10User {
 export default function LeaderboardSection() {
   const [selectedDate, setSelectedDate] = useState('2026-08-09')
   const [snapshotDateLabel, setSnapshotDateLabel] = useState('9 Agustus 2026')
-  const [top10Data, setTop10Data] = useState<Top10User[]>([])
+  const [top10Data, setTop10Data] = useState<Top10User[]>(() => {
+    try {
+      const cached = localStorage.getItem('gsa_top10_cache_2026-08-09')
+      if (cached) return JSON.parse(cached)
+    } catch {}
+    return []
+  })
   const [dbReady, setDbReady] = useState<boolean>(true)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>(() => top10Data.length === 0)
 
   // Private Rank Lookup states
   const [lookupUrl, setLookupUrl] = useState('')
@@ -29,22 +35,38 @@ export default function LeaderboardSection() {
   // Admin Modal toggle state
   const [showAdminModal, setShowAdminModal] = useState(false)
 
-  // Fetch Top 10 from Server
+  // Fetch Top 10 from Server with background sync
   useEffect(() => {
     let isMounted = true
-    setLoading(true)
+    try {
+      const cached = localStorage.getItem(`gsa_top10_cache_${selectedDate}`)
+      if (cached) {
+        setTop10Data(JSON.parse(cached))
+        setLoading(false)
+      } else {
+        setLoading(true)
+      }
+    } catch {
+      setLoading(true)
+    }
+
     fetch(`/api/leaderboard?action=get_top10&date=${selectedDate}`)
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
-          setTop10Data(data.top10 || [])
+          const list = data.top10 || []
+          setTop10Data(list)
           setDbReady(Boolean(data.dbReady))
           if (data.lastUpdated) setSnapshotDateLabel(data.lastUpdated)
+          try {
+            localStorage.setItem(`gsa_top10_cache_${selectedDate}`, JSON.stringify(list))
+          } catch {
+            // Ignore localStorage error
+          }
         }
       })
       .catch(err => {
         console.warn('Leaderboard fetch error:', err)
-        if (isMounted) setTop10Data([])
       })
       .finally(() => {
         if (isMounted) setLoading(false)

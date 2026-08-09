@@ -84,6 +84,7 @@ export interface RawExtractedBadge {
   earnedDateRaw: string
   parsedDate: Date | null
   dateUnknown: boolean
+  imageUrl?: string | null
 }
 
 export function parseEarnedDate(dateStr: string): { date: Date | null; unknown: boolean } {
@@ -220,10 +221,10 @@ export interface ParsedProfileResult {
   profileName: string
   profileUrl: string
   totalRawBadges: number
-  validGames: (ArcadeGame & { earnedDate: string; dateUnknown: boolean })[]
-  validSyllabusBadges: (SkillBadge & { earnedDate: string; dateUnknown: boolean; matchMethod: 'id' | 'title' })[]
-  validExtraBadges: { id: number | null; name: string; earnedDate: string; dateUnknown: boolean }[]
-  excludedItems: { title: string; dateStr: string; reason: string }[]
+  validGames: (ArcadeGame & { earnedDate: string; dateUnknown: boolean; imageUrl?: string | null })[]
+  validSyllabusBadges: (SkillBadge & { earnedDate: string; dateUnknown: boolean; matchMethod: 'id' | 'title'; imageUrl?: string | null })[]
+  validExtraBadges: { id: number | null; name: string; earnedDate: string; dateUnknown: boolean; imageUrl?: string | null }[]
+  excludedItems: { title: string; dateStr: string; reason: string; imageUrl?: string | null }[]
   unknownDateCount: number
   pointsFromGames: number
   pointsFromSkillBadges: number
@@ -254,6 +255,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         const href = linkEl?.getAttribute('href') || card.getAttribute('href') || ''
         const title = card.querySelector('.ql-title-medium, [class*="title"], h3, h4, span')?.textContent?.trim() || card.getAttribute('aria-label') || card.getAttribute('title') || ''
         const dateStr = card.querySelector('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]')?.textContent?.trim() || ''
+        const imgEl = card.querySelector('img')
+        const imageUrl = imgEl?.getAttribute('src') || null
 
         if (title) {
           const courseMatch = RE_COURSE_TEMPLATE.exec(href)
@@ -269,7 +272,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
               gameId: gameMatch ? parseInt(gameMatch[1], 10) : null,
               earnedDateRaw: dateStr,
               parsedDate: parsed.date,
-              dateUnknown: parsed.unknown
+              dateUnknown: parsed.unknown,
+              imageUrl
             })
           }
         }
@@ -290,6 +294,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       const href = linkEl.attr('href') || card.attr('href') || ''
       const title = card.find('.ql-title-medium, [class*="title"], h3, h4, span').first().text().trim() || card.attr('aria-label') || card.attr('title') || ''
       const dateStr = card.find('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]').first().text().trim() || card.find('time').attr('datetime') || ''
+      const imgEl = card.find('img').first()
+      const imageUrl = imgEl.attr('src') || null
 
       if (title) {
         const courseMatch = RE_COURSE_TEMPLATE.exec(href)
@@ -306,7 +312,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
             gameId: gameMatch ? parseInt(gameMatch[1], 10) : null,
             earnedDateRaw: dateStr,
             parsedDate: parsed.date,
-            dateUnknown: parsed.unknown
+            dateUnknown: parsed.unknown,
+            imageUrl
           })
         }
       }
@@ -321,6 +328,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         const courseMatch = RE_COURSE_TEMPLATE.exec(href)
         const gameMatch = RE_GAME.exec(href)
         const parsed = parseEarnedDate(parentText)
+        const imageUrl = link.find('img').first().attr('src') || link.parent().find('img').first().attr('src') || null
 
         const key = `${href}-${title}`
         if (title && !seenHrefs.has(key)) {
@@ -332,7 +340,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
             gameId: gameMatch ? parseInt(gameMatch[1], 10) : null,
             earnedDateRaw: parentText,
             parsedDate: parsed.date,
-            dateUnknown: parsed.unknown
+            dateUnknown: parsed.unknown,
+            imageUrl
           })
         }
       })
@@ -343,10 +352,10 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
   pStartDate.setHours(0, 0, 0, 0)
   const pEndDate = new Date(PROGRAM.endDate)
 
-  const validGames: (ArcadeGame & { earnedDate: string; dateUnknown: boolean })[] = []
-  const validSyllabusBadges: (SkillBadge & { earnedDate: string; dateUnknown: boolean; matchMethod: 'id' | 'title' })[] = []
-  const validExtraBadges: { id: number | null; name: string; earnedDate: string; dateUnknown: boolean }[] = []
-  const excludedItems: { title: string; dateStr: string; reason: string }[] = []
+  const validGames: (ArcadeGame & { earnedDate: string; dateUnknown: boolean; imageUrl?: string | null })[] = []
+  const validSyllabusBadges: (SkillBadge & { earnedDate: string; dateUnknown: boolean; matchMethod: 'id' | 'title'; imageUrl?: string | null })[] = []
+  const validExtraBadges: { id: number | null; name: string; earnedDate: string; dateUnknown: boolean; imageUrl?: string | null }[] = []
+  const excludedItems: { title: string; dateStr: string; reason: string; imageUrl?: string | null }[] = []
 
   let unknownDateCount = 0
   const matchedSkillIds = new Set<number>()
@@ -359,7 +368,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         excludedItems.push({
           title: raw.title,
           dateStr: raw.earnedDateRaw || 'Sebelum 13 Juli 2026',
-          reason: 'Diperoleh sebelum 13 Juli 2026 (di luar periode program)'
+          reason: 'Diperoleh sebelum 13 Juli 2026 (di luar periode program)',
+          imageUrl: raw.imageUrl
         })
         continue
       }
@@ -367,7 +377,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         excludedItems.push({
           title: raw.title,
           dateStr: raw.earnedDateRaw || 'Setelah 14 Sep 2026',
-          reason: 'Diperoleh setelah 14 September 2026 (di luar periode program)'
+          reason: 'Diperoleh setelah 14 September 2026 (di luar periode program)',
+          imageUrl: raw.imageUrl
         })
         continue
       }
@@ -386,7 +397,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
 
     if (arcadeGame && !matchedGameIds.has(arcadeGame.id)) {
       matchedGameIds.add(arcadeGame.id)
-      validGames.push({ ...arcadeGame, earnedDate: raw.earnedDateRaw, dateUnknown: raw.dateUnknown })
+      validGames.push({ ...arcadeGame, earnedDate: raw.earnedDateRaw, dateUnknown: raw.dateUnknown, imageUrl: raw.imageUrl })
       continue
     }
 
@@ -399,7 +410,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
           ...syllabusBadge,
           earnedDate: raw.earnedDateRaw,
           dateUnknown: raw.dateUnknown,
-          matchMethod: 'id'
+          matchMethod: 'id',
+          imageUrl: raw.imageUrl
         })
         continue
       }
@@ -414,7 +426,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         ...titleMatchedBadge,
         earnedDate: raw.earnedDateRaw,
         dateUnknown: raw.dateUnknown,
-        matchMethod: 'title'
+        matchMethod: 'title',
+        imageUrl: raw.imageUrl
       })
       continue
     }
@@ -424,7 +437,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       id: raw.courseId,
       name: raw.title,
       earnedDate: raw.earnedDateRaw,
-      dateUnknown: raw.dateUnknown
+      dateUnknown: raw.dateUnknown,
+      imageUrl: raw.imageUrl
     })
   }
 
