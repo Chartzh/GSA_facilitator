@@ -1,11 +1,10 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { processChunkInternal } from './admin/scrape-chunk'
-import { getEnvVar } from './_env'
+import { processChunkInternal } from './admin/scrape-chunk.js'
+import { getEnvVar } from './_env.js'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   const authHeader = req.headers.authorization
   const cronSecret = getEnvVar('CRON_SECRET')
-  const secretParam = req.query.secret as string
+  const secretParam = req.query.secret
 
   const isAuthHeaderValid = cronSecret && authHeader === `Bearer ${cronSecret}`
   const isQuerySecretValid = cronSecret && secretParam === cronSecret
@@ -23,15 +22,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const chunkResult = await processChunkInternal(offset, limit, 'cron_job')
 
-    // If there is a next offset, self-trigger next chunk in background
     if (chunkResult.nextOffset !== null) {
-      const host = (req.headers['x-forwarded-host'] as string) || req.headers.host || process.env.VERCEL_URL || 'localhost:3000'
+      const host = req.headers['x-forwarded-host'] || req.headers.host || process.env.VERCEL_URL || 'localhost:3000'
       const protocol = host.includes('localhost') ? 'http' : 'https'
       const baseUrl = `${protocol}://${host}`
 
       console.log(`[CRON-LEADERBOARD] Triggering next chunk at offset ${chunkResult.nextOffset}...`)
 
-      // Asynchronous background trigger
       fetch(`${baseUrl}/api/cron-leaderboard?offset=${chunkResult.nextOffset}`, {
         headers: {
           'Authorization': `Bearer ${cronSecret || ''}`
@@ -46,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       timestamp: new Date().toISOString(),
       chunkResult
     })
-  } catch (err: any) {
+  } catch (err) {
     console.error('[CRON-ERROR] Failed to execute cron chunk:', err?.message)
     res.status(500).json({ error: err?.message || 'Gagal menjalankan cron chunk.' })
   }

@@ -1,15 +1,13 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { validateProfileUrl } from '../../src/utils/scraper'
-import { saveParticipantsFromCsv } from '../_db'
-import { getEnvVar } from '../_env'
+import { validateProfileUrl } from '../_scrape.js'
+import { saveParticipantsFromCsv } from '../_db.js'
+import { getEnvVar } from '../_env.js'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed.' })
     return
   }
 
-  // 1. Server-side Authentication
   const { password, csvText } = req.body || {}
   const expectedPassword = getEnvVar('ADMIN_PASSWORD')
 
@@ -28,16 +26,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  // 2. Parse CSV headers & rows in memory
   const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0)
   if (lines.length < 2) {
     res.status(400).json({ error: 'Format CSV harus berisi baris header dan minimal 1 baris data.' })
     return
   }
 
-  // Helper to split CSV line respecting quotes
-  const parseCsvLine = (line: string): string[] => {
-    const result: string[] = []
+  const parseCsvLine = (line) => {
+    const result = []
     let current = ''
     let inQuotes = false
 
@@ -67,9 +63,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  // 3. Process rows: Keep ONLY name & profileUrl, discard email/phone/other columns immediately
-  const validRows: { nama: string; profileUrl: string }[] = []
-  const skippedRows: { rowNumber: number; reason: string; rawText: string }[] = []
+  const validRows = []
+  const skippedRows = []
 
   for (let i = 1; i < lines.length; i++) {
     const cols = parseCsvLine(lines[i])
@@ -87,22 +82,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       continue
     }
 
-    // DISCARD ALL OTHER COLUMNS (email, phone, etc are never stored or logged)
     validRows.push({
       nama: rawName,
       profileUrl: validation.url
     })
   }
 
-  // 4. Save to Database (or in-memory store)
   const saveResult = await saveParticipantsFromCsv(validRows)
 
   res.status(200).json({
-    message: 'CSV berhasil diproses!',
-    totalRowsProcessed: lines.length - 1,
-    validParticipantsCount: validRows.length,
-    skippedRowsCount: skippedRows.length,
+    success: true,
+    message: `Berhasil memproses ${validRows.length} peserta dari CSV.`,
+    totalProcessed: validRows.length,
+    totalSkipped: skippedRows.length,
     skippedDetails: skippedRows,
-    dbUsed: saveResult.dbUsed
+    dbStatus: saveResult.dbUsed ? 'Tersimpan ke Supabase Database' : 'Database offline (Memori sementara)'
   })
 }

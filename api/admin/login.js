@@ -1,19 +1,16 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getEnvVar } from '../_env'
+import { getEnvVar } from '../_env.js'
 
-// Simple IP rate-limiter: max 5 login attempts per minute per IP
-const loginAttemptsMap = new Map<string, { count: number; firstAttempt: number }>()
+const loginAttemptsMap = new Map()
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed.' })
     return
   }
 
-  const clientIp = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'unknown'
+  const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown'
   const now = Date.now()
 
-  // Clean old entries (> 60s)
   const attempt = loginAttemptsMap.get(clientIp)
   if (attempt) {
     if (now - attempt.firstAttempt > 60000) {
@@ -41,7 +38,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  // Login success: return admin token / status
   res.status(200).json({
     success: true,
     message: 'Login admin berhasil.',

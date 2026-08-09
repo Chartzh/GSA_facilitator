@@ -1,8 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { validateProfileUrl, parseProfileHtml } from '../src/utils/scraper'
-import { getTop10, isDbConfigured } from './_db'
+import { validateProfileUrl, parseProfileHtml } from './_scrape.js'
+import { getTop10, isDbConfigured } from './_db.js'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST')
@@ -14,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const action = (req.query.action || req.body?.action || 'get_top10') as string
+    const action = (req.query.action || req.body?.action || 'get_top10')
 
     // GET TOP 10 (Strictly 10 rows from Server)
     if (action === 'get_top10') {
@@ -24,8 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.status(200).json({
         dbReady,
         lastUpdated,
-        top10,
-        totalParticipantsCount: top10.length > 0 ? 256 : 0
+        top10: top10 || [],
+        totalParticipantsCount: (top10 && top10.length > 0) ? 256 : 0
       })
       return
     }
@@ -57,14 +56,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           rank: estimatedRank,
           totalParticipants: 256
         })
-      } catch (err: any) {
+      } catch (err) {
         res.status(400).json({ error: 'Gagal mengecek peringkat pribadi. Pastikan profil publik.' })
       }
       return
     }
 
     res.status(400).json({ error: 'Action tidak dikenal.' })
-  } catch (err: any) {
+  } catch (err) {
     console.error('Leaderboard handler error:', err)
     res.status(200).json({
       dbReady: false,

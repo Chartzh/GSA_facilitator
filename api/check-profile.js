@@ -1,8 +1,6 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { validateProfileUrl, parseProfileHtml } from '../src/utils/scraper'
+import { validateProfileUrl, parseProfileHtml } from './_scrape.js'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS Headers
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST')
@@ -16,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const profileUrl = (req.body?.profileUrl || req.query?.profileUrl || '') as string
+  const profileUrl = (req.body?.profileUrl || req.query?.profileUrl || '')
 
   const validation = validateProfileUrl(profileUrl)
   if (!validation.valid || !validation.url) {
@@ -45,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = parseProfileHtml(html, validation.url)
 
     res.status(200).json(result)
-  } catch (err: any) {
+  } catch (err) {
     res.status(400).json({
       error: `Gagal membaca profil: ${err?.message || 'Terjadi kesalahan pada server.'}`
     })

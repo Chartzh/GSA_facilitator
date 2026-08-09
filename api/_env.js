@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-export function getEnvVar(key: string): string | undefined {
+export function getEnvVar(key) {
   if (process.env[key]) {
     return process.env[key]
   }
