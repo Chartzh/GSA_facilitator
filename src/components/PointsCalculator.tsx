@@ -79,29 +79,15 @@ export default function PointsCalculator() {
 
     setLoading(true)
     try {
-      // Try local serverless API route first
       const res = await fetch(`/api/check-profile?profileUrl=${encodeURIComponent(cleanUrl)}`)
-      if (res.ok) {
-        const json: ParsedProfileResult = await res.json()
+      const json = await res.json().catch(() => null)
+
+      if (res.ok && json && !json.error) {
         profileCache.set(cleanUrl, { timestamp: Date.now(), data: json })
         setResultData(json)
         saveToStorage(cleanUrl, json)
       } else {
-        // Fallback: client fetch if API fails or local dev proxy
-        const clientRes = await fetch(cleanUrl, {
-          headers: { 'accept': 'text/html,application/xhtml+xml' }
-        })
-        if (!clientRes.ok) {
-          if (clientRes.status === 429) {
-            throw new Error('Server sedang sibuk, coba lagi sebentar.')
-          }
-          throw new Error(`HTTP ${clientRes.status}`)
-        }
-        const html = await clientRes.text()
-        const parsed = parseProfileHtml(html, cleanUrl)
-        profileCache.set(cleanUrl, { timestamp: Date.now(), data: parsed })
-        setResultData(parsed)
-        saveToStorage(cleanUrl, parsed)
+        throw new Error(json?.error || 'Gagal membaca profil. Pastikan profil di-set Public.')
       }
     } catch (err: any) {
       setErrorMsg(

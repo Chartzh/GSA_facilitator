@@ -35,7 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
     if (!response.ok) {
-      res.status(502).json({
+      res.status(400).json({
         error: `Halaman public profile tidak dapat diakses (Status HTTP ${response.status}). Pastikan profil di-set Public.`
       })
       return
@@ -46,7 +46,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.status(200).json(result)
   } catch (err: any) {
-    res.status(500).json({
+    res.status(400).json({
       error: `Gagal membaca profil: ${err?.message || 'Terjadi kesalahan pada server.'}`
     })
   }

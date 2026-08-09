@@ -19,14 +19,22 @@ export interface LeaderboardRow {
   badges: number
 }
 
-const url = getEnvVar('SUPABASE_URL')
-const key = getEnvVar('SUPABASE_SERVICE_ROLE_KEY')
+const rawUrl = getEnvVar('SUPABASE_URL')
+const rawKey = getEnvVar('SUPABASE_SERVICE_ROLE_KEY')
 
-export const dbReady = Boolean(url && key)
+export const dbReady = Boolean(rawUrl && rawKey && rawUrl.startsWith('http'))
 
-export const supabase = dbReady && url && key
-  ? createClient(url, key, { auth: { persistSession: false } })
-  : null
+export const supabase = (function() {
+  if (!rawUrl || !rawKey || !rawUrl.startsWith('http')) {
+    return null
+  }
+  try {
+    return createClient(rawUrl, rawKey, { auth: { persistSession: false } })
+  } catch (err) {
+    console.warn('Failed to initialize Supabase client:', err)
+    return null
+  }
+})()
 
 export const isDbConfigured = (): boolean => dbReady
 
@@ -37,14 +45,14 @@ export async function getTop10(): Promise<{ top10: LeaderboardRow[]; lastUpdated
   }
 
   try {
-    const { data: latest } = await supabase
+    const { data: latest, error: latestErr } = await supabase
       .from('snapshots')
       .select('snapshot_date')
       .order('snapshot_date', { ascending: false })
       .limit(1)
       .maybeSingle()
 
-    if (!latest) {
+    if (latestErr || !latest) {
       return { top10: [], lastUpdated: null, dbReady: true }
     }
 
@@ -54,7 +62,7 @@ export async function getTop10(): Promise<{ top10: LeaderboardRow[]; lastUpdated
       .eq('snapshot_date', latest.snapshot_date)
 
     if (error || !data) {
-      throw error || new Error('Data tidak ditemukan')
+      return { top10: [], lastUpdated: latest.snapshot_date, dbReady: true }
     }
 
     // Sort by Total Points (points + bonus_points) DESC, bonus_points DESC, skill_badges DESC, games DESC
@@ -100,7 +108,7 @@ export async function getTop10(): Promise<{ top10: LeaderboardRow[]; lastUpdated
       dbReady: true
     }
   } catch (err: any) {
-    console.warn('[DB] getTop10 query error:', err?.message)
+    console.warn('getTop10 unexpected error:', err?.message || err)
     return { top10: [], lastUpdated: null, dbReady: true }
   }
 }
