@@ -120,7 +120,6 @@ export default function App() {
   }
 
   const [activeTab, setActiveTab] = useState(getInitialTab)
-  const [theme, setTheme] = useState('dark')
   const [copied, setCopied] = useState(false)
   const [countdown, setCountdown] = useState({ days: '--', hours: '--', minutes: '--', seconds: '--' })
   const [isRegOpen, setIsRegOpen] = useState(false)
@@ -146,16 +145,6 @@ export default function App() {
     window.addEventListener('hashchange', handleHashChange)
     return () => window.removeEventListener('hashchange', handleHashChange)
   }, [])
-
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark'
-    setTheme(nextTheme)
-    if (nextTheme === 'light') {
-      document.documentElement.classList.add('light')
-    } else {
-      document.documentElement.classList.remove('light')
-    }
-  }
 
   const copyReferralCode = () => {
     navigator.clipboard.writeText(CONFIG.REFERRAL_CODE)
@@ -195,29 +184,6 @@ export default function App() {
   const [faqSearch, setFaqSearch] = useState('')
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
   const [selectedFaqCategory, setSelectedFaqCategory] = useState('Semua')
-
-  // Mutuals State
-  const [mutualsSearch, setMutualsSearch] = useState('')
-  const [activeMutualTab, setActiveMutualTab] = useState('instagram')
-  const [submittedMutuals] = useState([
-    { platform: 'instagram', username: '@rajif_raditya', role: 'Fasilitator (Admin)', link: 'https://www.instagram.com/rajif_raditya/' },
-    { platform: 'instagram', username: '@ahmad_cloud', role: 'Peserta', link: '#' },
-    { platform: 'instagram', username: '@siti_dev', role: 'Peserta', link: '#' },
-    { platform: 'linkedin', username: 'Muhammad Rajif Raditya', role: 'Fasilitator (Admin)', link: 'https://www.linkedin.com/in/rajifraditya' },
-    { platform: 'linkedin', username: 'Budi Santoso', role: 'Peserta', link: '#' },
-    { platform: 'github', username: 'Chartzh', role: 'Fasilitator (Admin)', link: 'https://github.com/Chartzh/' },
-    { platform: 'github', username: 'dewi-codes', role: 'Peserta', link: '#' }
-  ])
-  const [newMutual, setNewMutual] = useState({ platform: 'instagram', username: '', link: '' })
-  const [mutualSuccess, setMutualSuccess] = useState(false)
-
-  const handleMutualSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newMutual.username || !newMutual.link) return
-    setMutualSuccess(true)
-    setNewMutual({ platform: 'instagram', username: '', link: '' })
-    setTimeout(() => setMutualSuccess(false), 5000)
-  }
 
   // Chatbot State
   const [chatOpen, setChatOpen] = useState(false)
@@ -310,9 +276,6 @@ export default function App() {
           </nav>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle Theme">
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
             <a 
               href={CONFIG.REGISTRATION_LINK} 
               target="_blank" 
@@ -672,20 +635,6 @@ export default function App() {
             Google Skills Arcade Facilitator 2026 - Indonesia
           </div>
           <div>Fasilitator Resmi: <strong>Muhammad Rajif Raditya</strong> (Kode: <code>{CONFIG.REFERRAL_CODE}</code>)</div>
-
-          {/* Mandatory Credit Box */}
-          <div className="footer-credit-box">
-            Teknik pembacaan profil diadaptasi dari <strong>tracker-arcade-2026</strong> oleh <strong>Ilham Arief</strong> (
-            <a
-              href="https://github.com/ilhamarief0"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'var(--neon-cyan)', textDecoration: 'none' }}
-            >
-              github.com/ilhamarief0
-            </a>
-            )
-          </div>
 
           <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '16px 0 8px 0' }}>
             ⚠️ Disclaimer: Web ini tidak resmi, dibuat oleh fasilitator. Angka poin di sini adalah estimasi. Data resmi tetap dari Google/Dicoding.

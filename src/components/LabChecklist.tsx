@@ -11,6 +11,17 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
   const [sortBy, setSortBy] = useState<'default' | 'labs_asc' | 'credits_asc'>('default')
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
+  // Accordion state for Arcade Game months
+  const [openMonths, setOpenMonths] = useState<Record<string, boolean>>({
+    '2026-08': true,  // Agustus open by default
+    '2026-07': false, // Juli collapsed by default
+    '2026-09': false  // September collapsed by default
+  })
+
+  const toggleMonth = (monthKey: string) => {
+    setOpenMonths(prev => ({ ...prev, [monthKey]: !prev[monthKey] }))
+  }
+
   // Map completed badge IDs & game IDs from scrapedData
   const completedBadgeMap = useMemo(() => {
     const map = new Map<number, string>()
@@ -30,32 +41,27 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
 
   const doneSyllabusCount = completedBadgeMap.size
 
-  // Group Arcade Games by Month
-  const gameGroups = useMemo(() => {
-    const months = Array.from(new Set(ARCADE_GAMES.map(g => g.month)))
-    const currentMonthStr = '2026-08' // Current active month
-
-    return months.map(m => {
-      const isPastMonth = m < currentMonthStr
-      const monthGames = ARCADE_GAMES.filter(g => g.month === m).map(g => ({
-        ...g,
-        isDone: completedGameMap.has(g.id),
-        earnedDate: completedGameMap.get(g.id) || null,
-        isClosed: isPastMonth
-      }))
-
-      const monthTitle = m === '2026-07' ? 'JULI 2026 — SUDAH TUTUP' : m === '2026-08' ? 'AGUSTUS 2026 — AKTIF' : `${m} — UPCOMING`
-
-      return {
-        month: m,
-        title: monthTitle,
-        isClosed: isPastMonth,
-        games: monthGames
-      }
-    })
+  // Arcade Games grouped by Month (Juli, Agustus, September)
+  const julyGames = useMemo(() => {
+    return ARCADE_GAMES.filter(g => g.month === '2026-07').map(g => ({
+      ...g,
+      isDone: completedGameMap.has(g.id),
+      earnedDate: completedGameMap.get(g.id) || null
+    }))
   }, [completedGameMap])
 
-  // Group Skill Badges by Tier
+  const augustGames = useMemo(() => {
+    return ARCADE_GAMES.filter(g => g.month === '2026-08').map(g => ({
+      ...g,
+      isDone: completedGameMap.has(g.id),
+      earnedDate: completedGameMap.get(g.id) || null
+    }))
+  }, [completedGameMap])
+
+  const julyDoneCount = julyGames.filter(g => g.isDone).length
+  const augustDoneCount = augustGames.filter(g => g.isDone).length
+
+  // Skill Badges grouped by Tier
   const skillTiers = useMemo(() => {
     const tiers = ['beginner', 'intermediate', 'advanced'] as const
     return tiers.map(tier => {
@@ -65,7 +71,6 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
         earnedDate: completedBadgeMap.get(b.id) || null
       }))
 
-      // Apply filter & sort
       let filtered = items.filter(item => {
         if (statusFilter === 'done') return item.isDone
         if (statusFilter === 'pending') return !item.isDone
@@ -82,7 +87,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
 
       return {
         tier,
-        title: tier === 'beginner' ? 'BEGINNER (17 Badges)' : tier === 'intermediate' ? 'INTERMEDIATE (17 Badges)' : 'ADVANCED (17 Badges)',
+        title: tier === 'beginner' ? 'Beginner (17 Badges)' : tier === 'intermediate' ? 'Intermediate (17 Badges)' : 'Advanced (17 Badges)',
         doneCount,
         totalCount: items.length,
         items: filtered
@@ -96,7 +101,6 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
     setTimeout(() => setCopiedCode(null), 2500)
   }
 
-  // Export .txt checklist download
   const downloadChecklistTxt = () => {
     let content = `============================================================\n`
     content += `CHECKLIST PROGRES GOOGLE SKILLS ARCADE FACILITATOR 2026\n`
@@ -108,7 +112,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
     content += `- Arcade Games Selesai: ${completedGameMap.size} / ${TOTALS.gamesAvailable} Selesai\n\n`
 
     content += `============================================================\n`
-    content += `BLOK 1: ARCADE GAMES (12 GAMES)\n`
+    content += `ARCADE GAME (12 GAMES)\n`
     content += `============================================================\n\n`
 
     ARCADE_GAMES.forEach((g) => {
@@ -119,7 +123,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
     })
 
     content += `\n============================================================\n`
-    content += `BLOK 2: SKILL BADGES (51 BADGES)\n`
+    content += `SKILL BADGE (51 BADGES)\n`
     content += `============================================================\n\n`
 
     SKILL_BADGES.forEach((b) => {
@@ -141,7 +145,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
   return (
     <div style={{ marginTop: '28px' }}>
       
-      {/* Prominent Badge Summary Banner (NO LAB PROGRESS NUMBERS) */}
+      {/* Badge Summary Banner */}
       <div
         style={{
           padding: '20px 24px',
@@ -158,7 +162,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
               Kamu sudah menyelesaikan <span style={{ color: 'var(--state-done)' }}>{doneSyllabusCount} dari {TOTALS.skillBadges}</span> badge silabus.
             </div>
             <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)' }}>
-              Setiap kelipatan 2 Skill Badge bernilai 1 Poin Arcade. Badge bersifat all-or-nothing (dihitung saat terbit di profil).
+              Setiap 1 Skill Badge bernilai 0.5 Poin Arcade (2 Skill Badge = 1 Poin). Badge dihitung saat terbit di profil.
             </div>
           </div>
 
@@ -167,7 +171,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
             className="btn-arcade btn-arcade-outline"
             style={{ padding: '8px 16px', fontSize: '0.82rem' }}
           >
-            📥 DOWNLOAD CHECKLIST (.TXT)
+            📥 Download Checklist (.txt)
           </button>
         </div>
 
@@ -179,10 +183,10 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
         </div>
       </div>
 
-      {/* Global Filter & Sort Controls for Badges */}
+      {/* Global Filter & Sort Controls */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '24px' }}>
         <h2 style={{ fontFamily: 'var(--font-arcade)', fontSize: '1rem', color: 'var(--neon-cyan)' }}>
-          📋 DAFTAR LENGKAP GAME & BADGE
+          📋 DAFTAR ARCADE GAME & SKILL BADGE
         </h2>
 
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
@@ -211,61 +215,59 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
       </div>
 
       {/* ============================================================
-          BLOK 1: ARCADE GAMES (12 GAMES) - DIPISAH TERPISAH
+          ARCADE GAME (12 GAMES)
          ============================================================ */}
       <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
         <div className="card-header-flex">
           <h3 className="card-title-arcade" style={{ color: 'var(--neon-yellow)' }}>
-            🎮 BLOK 1 — ARCADE GAMES ({completedGameMap.size} / 12 SELESAI)
+            🎮 ARCADE GAME ({completedGameMap.size} / 12 SELESAI)
           </h3>
           <span className="badge-tag badge-tag-warning">1 GAME = 1 POIN ARCADE</span>
         </div>
 
         <p style={{ marginBottom: '18px', fontSize: '0.88rem' }}>
-          Arcade Games memiliki periode pengerjaan bulanan. Game bulan lewat bersifat dikunci (tutup), namun <strong>game bulan Juli yang telah selesai TETAP DIHITUNG POIN</strong>.
+          Arcade Game dirilis bulanan. Game bulan lewat ditutup untuk pengerjakan baru, namun <strong>game Juli yang sudah selesai TETAP DIHITUNG POINNYA</strong>.
         </p>
 
-        {gameGroups.map(group => (
-          <div key={group.month} style={{ marginBottom: '24px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '8px 14px',
-                background: group.isClosed ? 'rgba(106, 106, 128, 0.15)' : 'rgba(255, 214, 0, 0.12)',
-                border: group.isClosed ? '1px solid var(--border)' : '1px solid var(--neon-yellow)',
-                borderRadius: 'var(--radius-sm)',
-                marginBottom: '12px'
-              }}
-            >
-              <strong style={{ fontSize: '0.88rem', color: group.isClosed ? 'var(--text-muted)' : 'var(--neon-yellow)' }}>
-                {group.isClosed ? '🔒' : '🔥'} SUB-GRUP: {group.title}
-              </strong>
-            </div>
+        {/* --- AGUSTUS (Terbuka, default tampil) --- */}
+        <div style={{ marginBottom: '20px', border: '1px solid var(--neon-yellow)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+          <div
+            onClick={() => toggleMonth('2026-08')}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '12px 16px',
+              background: 'rgba(255, 214, 0, 0.12)',
+              cursor: 'pointer'
+            }}
+          >
+            <strong style={{ fontSize: '0.95rem', color: 'var(--neon-yellow)' }}>
+              {openMonths['2026-08'] ? '▾' : '▸'} Agustus
+            </strong>
+            <span className="badge-tag badge-tag-done">
+              {augustDoneCount} / {augustGames.length} Selesai — AKTIF
+            </span>
+          </div>
 
-            <div className="arcade-table-wrapper">
+          {openMonths['2026-08'] && (
+            <div className="arcade-table-wrapper" style={{ borderTop: '1px solid var(--border)' }}>
               <table className="arcade-table">
                 <thead>
                   <tr>
                     <th>STATUS</th>
                     <th>NAMA GAME</th>
-                    <th>MONTH</th>
                     <th>ACCESS CODE</th>
                     <th>AKSI / LINK</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {group.games.map(game => (
+                  {augustGames.map(game => (
                     <tr key={game.id} className={game.isDone ? 'row-active-highlight' : ''}>
                       <td>
                         {game.isDone ? (
                           <span className="badge-tag badge-tag-done">
-                            ✓ SELESAI {game.earnedDate ? `(${game.earnedDate})` : ''} {game.isClosed ? '• Sudah Ditutup' : ''}
-                          </span>
-                        ) : game.isClosed ? (
-                          <span className="badge-tag badge-tag-pending">
-                            🔒 SUDAH DITUTUP
+                            ✓ SELESAI {game.earnedDate ? `(${game.earnedDate})` : ''}
                           </span>
                         ) : (
                           <span className="badge-tag badge-tag-warning">
@@ -274,43 +276,92 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
                         )}
                       </td>
                       <td style={{ fontWeight: 700 }}>{game.name}</td>
-                      <td>{game.month}</td>
                       <td>
-                        {game.isClosed && !game.isDone ? (
-                          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Code disembunyikan (tutup)</span>
-                        ) : (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <code style={{ background: 'var(--bg-base)', padding: '2px 6px', borderRadius: '4px', color: 'var(--neon-yellow)' }}>
-                              {game.accessCode}
-                            </code>
-                            <button
-                              type="button"
-                              onClick={() => copyCode(game.accessCode)}
-                              style={{ background: 'none', border: 'none', color: 'var(--neon-cyan)', cursor: 'pointer', fontSize: '0.78rem' }}
-                            >
-                              {copiedCode === game.accessCode ? '✓ Copied' : '📋 Copy'}
-                            </button>
-                          </div>
-                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <code style={{ background: 'var(--bg-base)', padding: '2px 6px', borderRadius: '4px', color: 'var(--neon-yellow)' }}>
+                            {game.accessCode}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={() => copyCode(game.accessCode)}
+                            style={{ background: 'none', border: 'none', color: 'var(--neon-cyan)', cursor: 'pointer', fontSize: '0.78rem' }}
+                          >
+                            {copiedCode === game.accessCode ? '✓ Copied' : '📋 Copy'}
+                          </button>
+                        </div>
                       </td>
                       <td>
-                        {game.isClosed && !game.isDone ? (
-                          <span
-                            className="btn-arcade btn-arcade-outline"
-                            style={{ padding: '4px 10px', fontSize: '0.78rem', opacity: 0.5, pointerEvents: 'none' }}
-                          >
-                            Tutup 🔒
+                        <a
+                          href={game.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`btn-arcade ${game.isDone ? 'btn-arcade-outline' : 'btn-arcade-primary'}`}
+                          style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                        >
+                          {game.isDone ? 'Buka Game ↗' : 'Kerjakan Game ➔'}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* --- JULI (Tertutup / Collapsed, Link Mati, Poin Selesai Tetap Dihitung) --- */}
+        <div style={{ marginBottom: '20px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+          <div
+            onClick={() => toggleMonth('2026-07')}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '12px 16px',
+              background: 'rgba(106, 106, 128, 0.15)',
+              cursor: 'pointer'
+            }}
+          >
+            <strong style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+              {openMonths['2026-07'] ? '▾' : '▸'} Juli — {julyDoneCount}/{julyGames.length} selesai
+            </strong>
+            <span className="badge-tag badge-tag-pending">
+              SUDAH DITUTUP
+            </span>
+          </div>
+
+          {openMonths['2026-07'] && (
+            <div className="arcade-table-wrapper" style={{ borderTop: '1px solid var(--border)' }}>
+              <table className="arcade-table">
+                <thead>
+                  <tr>
+                    <th>STATUS</th>
+                    <th>NAMA GAME</th>
+                    <th>KETERANGAN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {julyGames.map(game => (
+                    <tr key={game.id} className={game.isDone ? 'row-active-highlight' : ''}>
+                      <td>
+                        {game.isDone ? (
+                          <span className="badge-tag badge-tag-done">
+                            ✅ SELESAI ({game.earnedDate || 'Juli'}) — POIN DIHITUNG
                           </span>
                         ) : (
-                          <a
-                            href={game.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`btn-arcade ${game.isDone ? 'btn-arcade-outline' : 'btn-arcade-primary'}`}
-                            style={{ padding: '6px 14px', fontSize: '0.8rem' }}
-                          >
-                            {game.isDone ? 'Buka Game ↗' : 'Kerjakan Game ➔'}
-                          </a>
+                          <span className="badge-tag badge-tag-pending">
+                            🔒 DITUTUP
+                          </span>
+                        )}
+                      </td>
+                      <td style={{ color: game.isDone ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: game.isDone ? 700 : 400 }}>
+                        {game.name}
+                      </td>
+                      <td>
+                        {game.isDone ? (
+                          <span style={{ color: 'var(--state-done)', fontSize: '0.8rem' }}>Poin telah ditambahkan ke total</span>
+                        ) : (
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'not-allowed' }}>Game Juli sudah tidak dapat dikerjakan</span>
                         )}
                       </td>
                     </tr>
@@ -318,23 +369,51 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
                 </tbody>
               </table>
             </div>
+          )}
+        </div>
+
+        {/* --- SEPTEMBER (Tertutup / Collapsed + Gembok) --- */}
+        <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+          <div
+            onClick={() => toggleMonth('2026-09')}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '12px 16px',
+              background: 'rgba(106, 106, 128, 0.1)',
+              cursor: 'pointer'
+            }}
+          >
+            <strong style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+              {openMonths['2026-09'] ? '▾' : '▸'} 🔒 September
+            </strong>
+            <span className="badge-tag badge-tag-pending">
+              BELUM DIRILIS
+            </span>
           </div>
-        ))}
+
+          {openMonths['2026-09'] && (
+            <div style={{ padding: '20px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+              🔒 Game September belum dirilis. Nantikan awal September.
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ============================================================
-          BLOK 2: SKILL BADGES (51 BADGES) - DIPISAH TERPISAH
+          SKILL BADGE (51 BADGES)
          ============================================================ */}
       <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
         <div className="card-header-flex">
           <h3 className="card-title-arcade">
-            📘 BLOK 2 — SKILL BADGES ({doneSyllabusCount} / 51 SELESAI)
+            📘 SKILL BADGE ({doneSyllabusCount} / 51 SELESAI)
           </h3>
           <span className="badge-tag badge-tag-done">2 BADGES = 1 POIN ARCADE</span>
         </div>
 
         <p style={{ marginBottom: '18px', fontSize: '0.88rem' }}>
-          Semua 51 Skill Badge silabus aktif hingga 14 September 2026. Dikembangkan dalam 3 sub-grup tingkat kesulitan.
+          Semua 51 Skill Badge silabus aktif hingga 14 September 2026.
         </p>
 
         {skillTiers.map(tierGroup => (
@@ -365,7 +444,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
                   <tr>
                     <th>STATUS</th>
                     <th>NAMA SKILL BADGE</th>
-                    <th>METADATA LAB</th>
+                    <th>LABS</th>
                     <th>CREDITS</th>
                     <th>AKSI / LINK</th>
                   </tr>
@@ -409,20 +488,18 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
         ))}
       </div>
 
-      {/* ============================================================
-          BLOK 3: BADGE TAMBAHAN (DI LUAR SILABUS)
-         ============================================================ */}
+      {/* BADGE TAMBAHAN */}
       {scrapedData && scrapedData.validExtraBadges.length > 0 && (
         <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
           <div className="card-header-flex">
             <h3 className="card-title-arcade" style={{ color: 'var(--neon-cyan)' }}>
-              🌟 BLOK 3 — BADGE TAMBAHAN (DI LUAR SILABUS)
+              🌟 BADGE TAMBAHAN (DI LUAR SILABUS)
             </h3>
             <span className="badge-tag badge-tag-done">DIHITUNG POIN</span>
           </div>
 
           <p style={{ marginBottom: '14px', fontSize: '0.88rem' }}>
-            Badge katalog umum yang diperoleh dalam periode program (maksimal 15 badge tambahan untuk mendukung Ultimate Milestone).
+            Semua Skill Badge katalog umum yang diperoleh dalam periode program (mulai 13 Juli 2026) dihitung masuk ke total poin Arcade.
           </p>
 
           <div className="arcade-table-wrapper">
@@ -448,20 +525,18 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
         </div>
       )}
 
-      {/* ============================================================
-          BLOK 4: TIDAK DIHITUNG (EXCLUDED PANEL)
-         ============================================================ */}
+      {/* BADGE TIDAK DIHITUNG */}
       {scrapedData && scrapedData.excludedItems.length > 0 && (
         <div className="bento-card col-span-12 bento-card-magenta">
           <div className="card-header-flex">
             <h3 className="card-title-arcade" style={{ color: 'var(--neon-magenta)' }}>
-              🚫 BLOK 4 — BADGE TIDAK DIHITUNG
+              🚫 BADGE TIDAK DIHITUNG
             </h3>
             <span className="badge-tag badge-tag-excluded">{scrapedData.excludedItems.length} ITEMS EXCLUDED</span>
           </div>
 
           <p style={{ marginBottom: '14px', fontSize: '0.88rem' }}>
-            Daftar badge yang terdeteksi di profil Anda namun tidak dihitung poin beserta alasan ketentuannya.
+            Daftar badge yang terdeteksi di profil Anda namun tidak memenuhi syarat periode atau silabus.
           </p>
 
           <div className="arcade-table-wrapper">

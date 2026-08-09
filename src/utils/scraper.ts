@@ -6,8 +6,8 @@ import {
   TIERS,
   ARCADE_GAMES,
   SKILL_BADGES,
-  EXTRA_BADGES_ALLOWED,
-  EXTRA_BADGES_MAX,
+  GEAR_BADGES,
+  BONUS_MILESTONE_POINTS,
   ArcadeGame,
   SkillBadge
 } from '../config/program'
@@ -66,9 +66,9 @@ export function normalizeTitle(str: string): string {
     .trim()
 }
 
-// Regex matching
-const RE_COURSE_TEMPLATE = /course_templates\/(\d+)/
-const RE_GAME = /games\/(\d+)/
+// Regex matching for URLs
+const RE_COURSE_TEMPLATE = /(?:course_templates|paths)\/(\d+)/i
+const RE_GAME = /(?:games|game_templates|events|quests)\/(\d+)/i
 
 export interface RawExtractedBadge {
   title: string
@@ -98,7 +98,11 @@ export function parseEarnedDate(dateStr: string): { date: Date | null; unknown: 
   const engMatch = englishMonthRegex.exec(clean)
   if (engMatch) {
     const d = new Date(`${engMatch[1]} ${engMatch[2]}, ${engMatch[3]}`)
-    if (!isNaN(d.getTime())) return { date: d, unknown: false }
+    if (!isNaN(d.getTime())) {
+      // Zero out time component to start of day (00:00:00)
+      d.setHours(0, 0, 0, 0)
+      return { date: d, unknown: false }
+    }
   }
 
   const indonesianMonthRegex = /(?:Diperoleh\s+)?(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/i
@@ -111,10 +115,99 @@ export function parseEarnedDate(dateStr: string): { date: Date | null; unknown: 
     }
     const mName = monthNames[indoMatch[2].toLowerCase()] || indoMatch[2]
     const d = new Date(`${mName} ${indoMatch[1]}, ${indoMatch[3]}`)
-    if (!isNaN(d.getTime())) return { date: d, unknown: false }
+    if (!isNaN(d.getTime())) {
+      d.setHours(0, 0, 0, 0)
+      return { date: d, unknown: false }
+    }
   }
 
   return { date: null, unknown: true }
+}
+
+// Helper to match Arcade Games by ID or Title/Keywords (with matchedGameIds check for disambiguation)
+export function findArcadeGameMatch(raw: RawExtractedBadge, matchedGameIds?: Set<number>): ArcadeGame | null {
+  if (raw.gameId) {
+    const gameById = ARCADE_GAMES.find(g => g.id === raw.gameId)
+    if (gameById) return gameById
+  }
+
+  const norm = normalizeTitle(raw.title)
+  const isJuly = norm.includes('july') || norm.includes('juli') || raw.earnedDateRaw.toLowerCase().includes('jul')
+  const isAugust = norm.includes('august') || norm.includes('agustus') || raw.earnedDateRaw.toLowerCase().includes('aug')
+
+  // Specific game titles (Juli)
+  if (norm.includes('safe space') || norm.includes('safe spaces')) {
+    return ARCADE_GAMES.find(g => g.id === 7318) || null
+  }
+
+  if (norm.includes('data mesh') || norm.includes('datamesh')) {
+    return ARCADE_GAMES.find(g => g.id === 7317) || null
+  }
+
+  // Base Camp
+  if (norm.includes('base camp') || norm.includes('basecamp')) {
+    if (isJuly) return ARCADE_GAMES.find(g => g.id === 7313) || null
+    if (isAugust) return ARCADE_GAMES.find(g => g.id === 7394) || null
+    return isAugust ? ARCADE_GAMES.find(g => g.id === 7394)! : ARCADE_GAMES.find(g => g.id === 7313)!
+  }
+
+  // Adventure / Level 1 (August: Level 1: Data Management & Analytics / 1q-datamgt-92372)
+  if (norm.includes('adventure') || norm.includes('level 1') || norm.includes('level1') || norm.includes('data management') || norm.includes('datamgt') || norm.includes('lowcode')) {
+    if (isJuly || norm.includes('lowcode')) return ARCADE_GAMES.find(g => g.id === 7314) || null
+    return ARCADE_GAMES.find(g => g.id === 7395) || null
+  }
+
+  // Trail / Level 2 (August: Level 2: Delivery & Operations / 1q-delivery-31058)
+  if (norm.includes('trail') || norm.includes('level 2') || norm.includes('level2') || norm.includes('delivery') || norm.includes('workspace')) {
+    if (isJuly || norm.includes('workspace')) return ARCADE_GAMES.find(g => g.id === 7316) || null
+    return ARCADE_GAMES.find(g => g.id === 7396) || null
+  }
+
+  // Simulator / Level 3 (August: Level 3: Networking & Security / 1q-network-51470)
+  if (norm.includes('level 3') || norm.includes('level3') || norm.includes('networking') || norm.includes('network')) {
+    return ARCADE_GAMES.find(g => g.id === 7397) || null
+  }
+
+  if (norm.includes('simulator')) {
+    if (isJuly || norm.includes('data mesh')) return ARCADE_GAMES.find(g => g.id === 7317) || null
+    return ARCADE_GAMES.find(g => g.id === 7397) || null
+  }
+
+  // Voyage / Trivia 1 (August: Trivia: Google Sheets / 1q-sheets-29185)
+  if (norm.includes('voyage') || norm.includes('google sheets') || norm.includes('sheets') || norm.includes('bucket')) {
+    if (isJuly || norm.includes('bucket')) return ARCADE_GAMES.find(g => g.id === 7315) || null
+    return ARCADE_GAMES.find(g => g.id === 7398) || null
+  }
+
+  // Disambiguate August Trivia 1 (7398) vs Trivia 2 / Special Game (7399)
+  if (norm.includes('special game') || norm.includes('schema') || norm.includes('database schema') || norm.includes('trivia')) {
+    if (matchedGameIds) {
+      if (!matchedGameIds.has(7398) && norm.includes('sheets')) return ARCADE_GAMES.find(g => g.id === 7398) || null
+      if (!matchedGameIds.has(7399)) return ARCADE_GAMES.find(g => g.id === 7399) || null
+      if (!matchedGameIds.has(7398)) return ARCADE_GAMES.find(g => g.id === 7398) || null
+    }
+    return ARCADE_GAMES.find(g => g.id === 7399) || null
+  }
+
+  // Fallback Catch-All for generic Arcade game titles (arcade, game, level, trivia, sprint, challenge, etc.)
+  if (
+    norm.includes('arcade') ||
+    norm.includes('game') ||
+    norm.includes('level') ||
+    norm.includes('trivia') ||
+    norm.includes('sprint') ||
+    norm.includes('challenge') ||
+    norm.includes('zone') ||
+    norm.includes('completion') ||
+    norm.includes('certification')
+  ) {
+    if (matchedGameIds) {
+      const openGame = ARCADE_GAMES.find(g => !matchedGameIds.has(g.id))
+      if (openGame) return openGame
+    }
+  }
+
+  return null
 }
 
 export interface ParsedProfileResult {
@@ -131,6 +224,8 @@ export interface ParsedProfileResult {
   totalArcadePoints: number
   highestMilestone: typeof MILESTONES[number] | null
   milestoneBonus: number
+  hasGearBonus: boolean
+  gearBonus: number
   totalPointsWithBonus: number
   currentTier: typeof TIERS[number] | null
   nextMilestoneNeeds: { label: string; neededGames: number; neededBadges: number } | null
@@ -147,12 +242,12 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       const doc = new DOMParser().parseFromString(html, 'text/html')
       profileName = doc.querySelector('h1.ql-display-small, h1')?.textContent?.trim() || profileName
 
-      const elements = doc.querySelectorAll('.profile-badge, [class*="badge-card"], [class*="BadgeCard"], .quest-card')
+      const elements = doc.querySelectorAll('.profile-badge, .public-profile-badge, [class*="badge-card"], [class*="BadgeCard"], .quest-card, [data-badge-id]')
       elements.forEach((card) => {
-        const linkEl = card.querySelector('a[href*="course_templates"], a[href*="games"]')
+        const linkEl = card.querySelector('a[href*="course_templates"], a[href*="games"], a[href*="quests"], a[href*="badges"]')
         const href = linkEl?.getAttribute('href') || card.getAttribute('href') || ''
-        const title = card.querySelector('.ql-title-medium, [class*="title"], h3, h4')?.textContent?.trim() || card.getAttribute('aria-label') || ''
-        const dateStr = card.querySelector('time, .ql-body-medium, [class*="date"], [class*="earned"]')?.textContent?.trim() || ''
+        const title = card.querySelector('.ql-title-medium, [class*="title"], h3, h4, span')?.textContent?.trim() || card.getAttribute('aria-label') || card.getAttribute('title') || ''
+        const dateStr = card.querySelector('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]')?.textContent?.trim() || ''
 
         if (title) {
           const courseMatch = RE_COURSE_TEMPLATE.exec(href)
@@ -174,7 +269,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         }
       })
     } catch {
-      // Ignore DOMParser error & fallback to cheerio
+      // Fallback to Cheerio if DOMParser fails
     }
   }
 
@@ -183,12 +278,12 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     const $ = cheerio.load(html)
     profileName = $('h1.ql-display-small, h1').first().text().trim() || profileName
 
-    $('.profile-badge, [class*="badge-card"], [class*="BadgeCard"], .quest-card').each((_, el) => {
+    $('.profile-badge, .public-profile-badge, [class*="badge-card"], [class*="BadgeCard"], .quest-card, [data-badge-id]').each((_, el) => {
       const card = $(el)
-      const linkEl = card.find('a[href*="course_templates"], a[href*="games"]').first()
+      const linkEl = card.find('a[href*="course_templates"], a[href*="games"], a[href*="quests"], a[href*="badges"]').first()
       const href = linkEl.attr('href') || card.attr('href') || ''
-      const title = card.find('.ql-title-medium, [class*="title"], h3, h4').first().text().trim() || card.attr('aria-label') || ''
-      const dateStr = card.find('time, .ql-body-medium, [class*="date"], [class*="earned"]').first().text().trim() || card.find('time').attr('datetime') || ''
+      const title = card.find('.ql-title-medium, [class*="title"], h3, h4, span').first().text().trim() || card.attr('aria-label') || card.attr('title') || ''
+      const dateStr = card.find('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]').first().text().trim() || card.find('time').attr('datetime') || ''
 
       if (title) {
         const courseMatch = RE_COURSE_TEMPLATE.exec(href)
@@ -212,7 +307,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     })
 
     if (extractedBadges.length === 0) {
-      $('a[href*="course_templates"], a[href*="games"]').each((_, el) => {
+      $('a[href*="course_templates"], a[href*="games"], a[href*="quests"], a[href*="badges"]').each((_, el) => {
         const link = $(el)
         const href = link.attr('href') || ''
         const title = link.text().trim() || link.attr('aria-label') || ''
@@ -238,7 +333,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     }
   }
 
-  const pStartDate = new Date(PROGRAM.startDate)
+  const pStartDate = new Date(PROGRAM.startDate) // 2026-07-13T00:00:00+07:00
+  pStartDate.setHours(0, 0, 0, 0)
   const pEndDate = new Date(PROGRAM.endDate)
 
   const validGames: (ArcadeGame & { earnedDate: string; dateUnknown: boolean })[] = []
@@ -251,7 +347,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
   const matchedGameIds = new Set<number>()
 
   for (const raw of extractedBadges) {
-    // ATURAN #2: Date Filtering
+    // ATURAN #2: Date Filtering (Diperoleh dari 13 Juli 2026 - 14 Sep 2026)
     if (!raw.dateUnknown && raw.parsedDate) {
       if (raw.parsedDate < pStartDate) {
         excludedItems.push({
@@ -273,24 +369,17 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       unknownDateCount++
     }
 
-    // Match Arcade Games
-    if (raw.gameId) {
-      const officialGame = ARCADE_GAMES.find(g => g.id === raw.gameId)
-      if (officialGame && !matchedGameIds.has(officialGame.id)) {
-        matchedGameIds.add(officialGame.id)
-        validGames.push({ ...officialGame, earnedDate: raw.earnedDateRaw, dateUnknown: raw.dateUnknown })
-        continue
-      } else if (!officialGame) {
-        excludedItems.push({
-          title: raw.title,
-          dateStr: raw.earnedDateRaw,
-          reason: 'Game di luar silabus program 2026'
-        })
-        continue
+    // 1. Check Arcade Game Match (ID or Title/Keywords)
+    const arcadeGame = findArcadeGameMatch(raw, matchedGameIds)
+    if (arcadeGame) {
+      if (!matchedGameIds.has(arcadeGame.id)) {
+        matchedGameIds.add(arcadeGame.id)
+        validGames.push({ ...arcadeGame, earnedDate: raw.earnedDateRaw, dateUnknown: raw.dateUnknown })
       }
+      continue
     }
 
-    // Match Skill Badges by ID
+    // 2. Match Skill Badges by ID
     if (raw.courseId) {
       const syllabusBadge = SKILL_BADGES.find(b => b.id === raw.courseId)
       if (syllabusBadge && !matchedSkillIds.has(syllabusBadge.id)) {
@@ -305,7 +394,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       }
     }
 
-    // Fallback: Match by normalized title if ID missing
+    // 3. Match Skill Badges by Title
     const normTitle = normalizeTitle(raw.title)
     const titleMatchedBadge = SKILL_BADGES.find(b => normalizeTitle(b.name) === normTitle)
     if (titleMatchedBadge && !matchedSkillIds.has(titleMatchedBadge.id)) {
@@ -319,27 +408,19 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       continue
     }
 
-    // Extra Badges (catalog badges outside syllabus)
-    if (EXTRA_BADGES_ALLOWED && validExtraBadges.length < EXTRA_BADGES_MAX) {
-      validExtraBadges.push({
-        id: raw.courseId,
-        name: raw.title,
-        earnedDate: raw.earnedDateRaw,
-        dateUnknown: raw.dateUnknown
-      })
-    } else if (!titleMatchedBadge && !raw.courseId) {
-      excludedItems.push({
-        title: raw.title,
-        dateStr: raw.earnedDateRaw,
-        reason: 'Badge di luar silabus program'
-      })
-    }
+    // 4. All Other Skill Badges earned during the program (Included as Extra Skill Badges)
+    validExtraBadges.push({
+      id: raw.courseId,
+      name: raw.title,
+      earnedDate: raw.earnedDateRaw,
+      dateUnknown: raw.dateUnknown
+    })
   }
 
   // ATURAN #4: Rumus Poin & Milestones
   const pointsFromGames = validGames.length * POINTS.perGame
   const totalSkillBadgesCount = validSyllabusBadges.length + validExtraBadges.length
-  const pointsFromSkillBadges = Math.floor(totalSkillBadgesCount / POINTS.skillBadgesPerPoint)
+  const pointsFromSkillBadges = totalSkillBadgesCount * 0.5
 
   const totalArcadePoints = pointsFromGames + pointsFromSkillBadges
 
@@ -352,7 +433,20 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
   }
 
   const milestoneBonus = highestMilestone ? highestMilestone.bonus : 0
-  const totalPointsWithBonus = totalArcadePoints + milestoneBonus
+
+  // Check Bonus Milestone (4 GEAR Badges)
+  const gearCompletedCount = GEAR_BADGES.filter(gb => {
+    return extractedBadges.some(b => {
+      if (gb.id && b.courseId === gb.id) return true
+      const normB = normalizeTitle(b.title)
+      const normG = normalizeTitle(gb.name)
+      return normB.includes(normG) || normG.includes(normB)
+    })
+  }).length
+
+  const hasGearBonus = gearCompletedCount >= 4
+  const gearBonus = hasGearBonus ? BONUS_MILESTONE_POINTS : 0
+  const totalPointsWithBonus = totalArcadePoints + milestoneBonus + gearBonus
 
   // Current Tier
   let currentTier: typeof TIERS[number] | null = null
@@ -387,6 +481,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     totalArcadePoints,
     highestMilestone,
     milestoneBonus,
+    hasGearBonus,
+    gearBonus,
     totalPointsWithBonus,
     currentTier,
     nextMilestoneNeeds

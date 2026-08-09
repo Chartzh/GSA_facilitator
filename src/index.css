@@ -3,6 +3,9 @@
    ============================================================ */
 
 :root {
+  /* Dynamic Navbar Height */
+  --navbar-height: 76px;
+
   /* Color Palette */
   --bg-base:      #0A0A12;   /* Main background: almost black-blue */
   --bg-card:      #14141F;   /* Bento card surface */
@@ -35,6 +38,12 @@
   --glow-green:   0 0 12px rgba(0, 255, 157, 0.4);
 }
 
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 92px;
+  }
+}
+
 /* Reset & Base HTML Settings */
 * {
   box-sizing: border-box;
@@ -49,6 +58,11 @@ html {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Anchor Link Scroll Margin Fix */
+[id] {
+  scroll-margin-top: calc(var(--navbar-height) + 24px);
 }
 
 body {
@@ -112,16 +126,24 @@ p {
   padding: 0 20px;
 }
 
-/* --- Sticky Header Navigation --- */
+#main-content-area {
+  padding-top: calc(var(--navbar-height) + 24px) !important;
+}
+
+/* --- Fixed Header Navigation --- */
 .header-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--navbar-height);
   z-index: 1000;
-  background: rgba(10, 10, 18, 0.92);
+  background: rgba(10, 10, 18, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  padding: 14px 0;
+  display: flex;
+  align-items: center;
 }
 
 .nav-flex {

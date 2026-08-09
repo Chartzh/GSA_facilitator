@@ -9,7 +9,7 @@ export const PROGRAM = {
   name: 'Google Skills Arcade Facilitator 2026',
   facilitatorCode: 'GCAF26-ID-UAQ-MFC',
   // ATURAN RESMI: badge di luar rentang ini TIDAK dihitung.
-  startDate: '2026-07-13T09:00:00+07:00',
+  startDate: '2026-07-13T00:00:00+07:00',
   endDate:   '2026-09-14T23:59:59+07:00',
   timezone:  'Asia/Jakarta',
 } as const
@@ -22,9 +22,9 @@ export const POINTS = {
 
 // Bonus milestone TIDAK kumulatif - hanya milestone tertinggi yang dihitung.
 export const MILESTONES = [
-  { key: 'M1',       label: 'Milestone 1',       games: 6,  badges: 14, bonus: 0 },
-  { key: 'M2',       label: 'Milestone 2',       games: 8,  badges: 28, bonus: 0 },
-  { key: 'M3',       label: 'Milestone 3',       games: 10, badges: 42, bonus: 0 },
+  { key: 'M1',       label: 'Milestone 1',       games: 6,  badges: 14, bonus: 7 },
+  { key: 'M2',       label: 'Milestone 2',       games: 8,  badges: 28, bonus: 18 },
+  { key: 'M3',       label: 'Milestone 3',       games: 10, badges: 42, bonus: 29 },
   { key: 'ULTIMATE', label: 'Ultimate Milestone', games: 12, badges: 56, bonus: 40 },
 ] as const
 
@@ -143,7 +143,7 @@ export const SKILL_BADGES: SkillBadge[] = [
 // dari katalog umum, di luar 51 badge silabus.
 // Set true = badge di luar silabus tetap dihitung ASAL lulus filter tanggal.
 export const EXTRA_BADGES_ALLOWED = true
-export const EXTRA_BADGES_MAX = 15
+export const EXTRA_BADGES_MAX = 999
 
 // ---- 4 GEAR BADGE (syarat Bonus Milestone +10 poin) ----
 export const GEAR_BADGES = [

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { validateProfileUrl, parseProfileHtml, ParsedProfileResult } from '../utils/scraper'
 import LabChecklist from './LabChecklist'
 
@@ -15,6 +15,27 @@ export default function PointsCalculator() {
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [resultData, setResultData] = useState<ParsedProfileResult | null>(null)
+
+  // Load cached input URL and result from localStorage when mounting / returning to page
+  useEffect(() => {
+    try {
+      const savedUrl = localStorage.getItem('gsa_calc_url')
+      const savedData = localStorage.getItem('gsa_calc_data')
+      if (savedUrl) setInputUrl(savedUrl)
+      if (savedData) setResultData(JSON.parse(savedData))
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [])
+
+  const saveToStorage = (url: string, data: ParsedProfileResult) => {
+    try {
+      localStorage.setItem('gsa_calc_url', url)
+      localStorage.setItem('gsa_calc_data', JSON.stringify(data))
+    } catch {
+      // Ignore localStorage errors
+    }
+  }
 
   const handleCheckProfile = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,6 +62,7 @@ export default function PointsCalculator() {
     const cached = profileCache.get(cleanUrl)
     if (cached && now - cached.timestamp < CACHE_TTL_MS) {
       setResultData(cached.data)
+      saveToStorage(cleanUrl, cached.data)
       return
     }
 
@@ -52,6 +74,7 @@ export default function PointsCalculator() {
         const json: ParsedProfileResult = await res.json()
         profileCache.set(cleanUrl, { timestamp: Date.now(), data: json })
         setResultData(json)
+        saveToStorage(cleanUrl, json)
       } else {
         // Fallback: client fetch if API fails or local dev proxy
         const clientRes = await fetch(cleanUrl, {
@@ -67,6 +90,7 @@ export default function PointsCalculator() {
         const parsed = parseProfileHtml(html, cleanUrl)
         profileCache.set(cleanUrl, { timestamp: Date.now(), data: parsed })
         setResultData(parsed)
+        saveToStorage(cleanUrl, parsed)
       }
     } catch (err: any) {
       setErrorMsg(
@@ -114,7 +138,7 @@ export default function PointsCalculator() {
         </form>
 
         <div style={{ fontSize: '0.8rem', color: 'var(--neon-cyan)', fontWeight: 500 }}>
-          💡 Gratis, tanpa batas, tidak perlu daftar. Cek poin kapan saja!
+          💡 Hasil perhitungan tersimpan otomatis (cached) dan tidak akan hilang saat berpindah halaman.
         </div>
 
         {/* Error Message */}
@@ -154,18 +178,20 @@ export default function PointsCalculator() {
             )}
           </div>
 
-          {/* Unknown Date Warning */}
+          {/* Unknown Date Info */}
           {resultData.unknownDateCount > 0 && (
-            <div className="badge-tag badge-tag-warning" style={{ width: '100%', margin: '16px 0', padding: '12px 16px' }}>
-              ⚠️ Tanggal {resultData.unknownDateCount} badge tidak terbaca — poin bisa berbeda dari perhitungan resmi.
+            <div className="badge-tag badge-tag-done" style={{ width: '100%', margin: '16px 0', padding: '12px 16px', background: 'rgba(0, 255, 157, 0.08)', color: 'var(--state-done)' }}>
+              ℹ️ Ada {resultData.unknownDateCount} badge tanpa pembacaan string tanggal — <strong>TETAP DIHITUNG MASUK</strong> ke total poin Anda.
             </div>
           )}
 
           {/* Giant Stat Numbers */}
           <div className="bento-grid" style={{ margin: '20px 0', gap: '16px' }}>
             <div className="stat-box col-span-3">
-              <div className="stat-value-giant" style={{ fontSize: '2.2rem' }}>{resultData.totalPointsWithBonus}</div>
-              <div className="stat-label-muted">TOTAL POIN (+BONUS)</div>
+              <div className="stat-value-giant" style={{ fontSize: '2.2rem', color: 'var(--neon-cyan)' }}>
+                {resultData.totalPointsWithBonus} PT
+              </div>
+              <div className="stat-label-muted">TOTAL POIN AKHIR (+BONUS)</div>
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--neon-yellow)' }}>
@@ -175,16 +201,31 @@ export default function PointsCalculator() {
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--state-done)' }}>
-                {resultData.validSyllabusBadges.length + resultData.validExtraBadges.length} / 51
+                {resultData.validSyllabusBadges.length + resultData.validExtraBadges.length} Badges
               </div>
               <div className="stat-label-muted">SKILL BADGES ({resultData.pointsFromSkillBadges} PT)</div>
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--neon-magenta)' }}>
-                +{resultData.milestoneBonus}
+                +{resultData.milestoneBonus} PT
               </div>
               <div className="stat-label-muted">BONUS MILESTONE</div>
             </div>
+          </div>
+
+          {/* Final Formula Breakdown */}
+          <div
+            style={{
+              padding: '12px 16px',
+              background: 'rgba(0, 240, 255, 0.06)',
+              border: '1px solid var(--neon-cyan)',
+              borderRadius: 'var(--radius-sm)',
+              marginBottom: '16px',
+              fontSize: '0.86rem',
+              color: 'var(--text-primary)'
+            }}
+          >
+            🧮 <strong>Rincian Perhitungan Akhir:</strong> {resultData.pointsFromGames} PT (Game) + {resultData.pointsFromSkillBadges} PT (Skill Badges) + {resultData.milestoneBonus} PT (Bonus {resultData.highestMilestone?.label || 'Milestone'}) {resultData.gearBonus ? `+ ${resultData.gearBonus} PT (Bonus Milestone GEAR)` : ''} = <strong>{resultData.totalPointsWithBonus} Poin Arcade</strong>
           </div>
 
           {/* Milestone Status & Gap */}
