@@ -4,7 +4,7 @@
 
 :root {
   /* Dynamic Navbar Height */
-  --navbar-height: 76px;
+  --navbar-height: 64px;
 
   /* Color Palette */
   --bg-base:      #0A0A12;   /* Main background: almost black-blue */
@@ -40,7 +40,7 @@
 
 @media (max-width: 768px) {
   :root {
-    --navbar-height: 92px;
+    --navbar-height: 56px;
   }
 }
 
@@ -151,16 +151,25 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  width: 100%;
 }
 
 .brand-logo {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
   text-decoration: none;
   font-family: var(--font-arcade);
-  font-size: 0.95rem;
+  font-size: 0.72rem;
+  line-height: 1.25;
   color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.brand-logo .logo-title-sub {
+  font-size: 0.62rem;
+  color: var(--neon-cyan);
+  letter-spacing: 0.05em;
 }
 
 .brand-arcade-badge {
@@ -183,8 +192,11 @@ p {
 .nav-link {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
   transition: var(--transition);
   cursor: pointer;
 }
@@ -195,14 +207,15 @@ p {
   text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
 }
 
-.nav-badge-fire {
-  background: linear-gradient(135deg, var(--neon-magenta) 0%, var(--neon-yellow) 100%);
-  color: #000;
-  font-size: 0.6rem;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 4px;
+.nav-dot-magenta {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--neon-magenta);
   margin-left: 4px;
+  vertical-align: super;
+  box-shadow: 0 0 6px var(--neon-magenta);
 }
 
 /* Mobile Nav Toggle */
@@ -214,6 +227,26 @@ p {
   padding: 8px;
   border-radius: var(--radius-sm);
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 992px) {
+  .nav-links {
+    gap: 12px;
+  }
+  .nav-link {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-nav-toggle {
+    display: flex !important;
+  }
 }
 
 /* --- Bento Grid Layout --- */

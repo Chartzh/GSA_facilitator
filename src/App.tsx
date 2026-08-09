@@ -234,23 +234,30 @@ export default function App() {
       <header className="header-nav" id="main-header">
         <div className="container nav-flex">
           <a href="#home" className="brand-logo" onClick={() => setActiveTab('home')}>
-            <span>🎮</span> GSA FASILITATOR 2026
-            <span className="brand-arcade-badge">{CONFIG.REFERRAL_CODE}</span>
+            <span>GSA ARCADE</span>
+            <span className="logo-title-sub">FASILITATOR 2026</span>
           </a>
 
           {/* Desktop Nav */}
-          <nav>
+          <nav className="desktop-nav">
             <ul className="nav-links">
-              <li><span className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>Home</span></li>
-              <li><span className={`nav-link ${activeTab === 'kalkulator' ? 'active' : ''}`} onClick={() => setActiveTab('kalkulator')}>Kalkulator</span></li>
-              <li><span className={`nav-link ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>Leaderboard</span></li>
+              <li>
+                <span className={`nav-link ${activeTab === 'kalkulator' ? 'active' : ''}`} onClick={() => setActiveTab('kalkulator')}>
+                  Kalkulator
+                </span>
+              </li>
+              <li>
+                <span className={`nav-link ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>
+                  Leaderboard
+                </span>
+              </li>
               <li>
                 <span 
                   className={`nav-link ${activeTab === 'weekly-challenge' ? 'active' : ''}`} 
                   onClick={() => setActiveTab('weekly-challenge')}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                  style={{ display: 'inline-flex', alignItems: 'center' }}
                 >
-                  Weekly Challenge <span className="nav-badge-fire">🔥 NEW</span>
+                  Weekly Challenge <span className="nav-dot-magenta" />
                 </span>
               </li>
               <li 
@@ -258,20 +265,21 @@ export default function App() {
                 onMouseEnter={() => setIsDropdownOpen(true)}
                 onMouseLeave={() => setIsDropdownOpen(false)}
               >
-                <span className={`nav-link ${(activeTab === 'skills' || activeTab === 'gear') ? 'active' : ''}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                <span 
+                  className={`nav-link ${['cara', 'faq', 'komunitas', 'tentang', 'skills', 'gear'].includes(activeTab) ? 'active' : ''}`} 
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                >
                   Panduan <ChevronDown size={14} style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
                 </span>
                 {isDropdownOpen && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '8px 0', minWidth: '180px', zIndex: 100 }}>
-                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('skills'); setIsDropdownOpen(false); }}>Panduan Google Skills</div>
-                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('gear'); setIsDropdownOpen(false); }}>Panduan GEAR</div>
+                  <div style={{ position: 'absolute', top: '100%', left: 0, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '8px 0', minWidth: '180px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('cara'); setIsDropdownOpen(false); }}>Cara Bermain</div>
+                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('faq'); setIsDropdownOpen(false); }}>FAQ</div>
+                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('komunitas'); setIsDropdownOpen(false); }}>Komunitas</div>
+                    <div className="nav-link" style={{ padding: '8px 16px', display: 'block' }} onClick={() => { setActiveTab('tentang'); setIsDropdownOpen(false); }}>Tentang</div>
                   </div>
                 )}
               </li>
-              <li><span className={`nav-link ${activeTab === 'tentang' ? 'active' : ''}`} onClick={() => setActiveTab('tentang')}>Tentang</span></li>
-              <li><span className={`nav-link ${activeTab === 'cara' ? 'active' : ''}`} onClick={() => setActiveTab('cara')}>Cara Bermain</span></li>
-              <li><span className={`nav-link ${activeTab === 'faq' ? 'active' : ''}`} onClick={() => setActiveTab('faq')}>FAQ</span></li>
-              <li><span className={`nav-link ${activeTab === 'komunitas' ? 'active' : ''}`} onClick={() => setActiveTab('komunitas')}>Komunitas</span></li>
             </ul>
           </nav>
 
@@ -281,7 +289,7 @@ export default function App() {
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-arcade btn-arcade-primary"
-              style={{ padding: '8px 16px', fontSize: '0.82rem' }}
+              style={{ padding: '8px 16px', fontSize: '0.82rem', whiteSpace: 'nowrap' }}
             >
               Daftar
             </a>
@@ -298,16 +306,13 @@ export default function App() {
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
           <div style={{ padding: '16px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div className="nav-link" onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}>Home</div>
             <div className="nav-link" onClick={() => { setActiveTab('kalkulator'); setIsMobileMenuOpen(false); }}>Kalkulator Poin</div>
             <div className="nav-link" onClick={() => { setActiveTab('leaderboard'); setIsMobileMenuOpen(false); }}>Leaderboard</div>
-            <div className="nav-link" onClick={() => { setActiveTab('weekly-challenge'); setIsMobileMenuOpen(false); }}>Weekly Challenge 🔥</div>
-            <div className="nav-link" onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }}>Tentang</div>
+            <div className="nav-link" onClick={() => { setActiveTab('weekly-challenge'); setIsMobileMenuOpen(false); }}>Weekly Challenge</div>
             <div className="nav-link" onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }}>Cara Bermain</div>
             <div className="nav-link" onClick={() => { setActiveTab('faq'); setIsMobileMenuOpen(false); }}>FAQ</div>
             <div className="nav-link" onClick={() => { setActiveTab('komunitas'); setIsMobileMenuOpen(false); }}>Komunitas</div>
-            <div className="nav-link" onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }}>Panduan Google Skills</div>
-            <div className="nav-link" onClick={() => { setActiveTab('gear'); setIsMobileMenuOpen(false); }}>Panduan GEAR</div>
+            <div className="nav-link" onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }}>Tentang</div>
           </div>
         )}
       </header>
