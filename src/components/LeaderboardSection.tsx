@@ -103,7 +103,7 @@ export default function LeaderboardSection() {
         <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <h2 className="card-title-arcade">
-              <span>🏆</span> TOP 10 — {snapshotDateLabel}
+              TOP 10 — {snapshotDateLabel}
             </h2>
             <p style={{ margin: '4px 0 0 0' }}>
               Data peringkat resmi diperbarui mingguan. Papan peringkat publik hanya menampilkan TOP 10.
@@ -126,7 +126,7 @@ export default function LeaderboardSection() {
               className="btn-arcade btn-arcade-outline"
               style={{ padding: '6px 12px', fontSize: '0.78rem' }}
             >
-              ⚙️ Area Admin
+              Area Admin
             </button>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function LeaderboardSection() {
                           }`}
                           style={{ fontFamily: 'var(--font-arcade)', fontSize: '0.75rem' }}
                         >
-                          #{user.rank} {user.rank === 1 ? '👑' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : ''}
+                          #{user.rank}
                         </span>
                       </td>
                       <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -197,13 +197,13 @@ export default function LeaderboardSection() {
         </div>
       </div>
 
-      {/* Private Rank Lookup Box (STRICT PRIVACY - ONLY RETURNS SINGLE RANK NUMBER) */}
+      {/* Private Rank Lookup Box */}
       <div className="bento-card col-span-12 bento-card-magenta" style={{ marginTop: '24px' }}>
         <h3 className="card-title-arcade" style={{ fontSize: '0.95rem', marginBottom: '8px', color: 'var(--neon-magenta)' }}>
-          🔒 CEK PERINGKAT PRIBADI KAMU
+          CEK PERINGKAT PRIBADI
         </h3>
         <p style={{ fontSize: '0.88rem', marginBottom: '16px' }}>
-          Periksa posisi peringkat Anda saat ini di antara 256+ peserta secara privat tanpa membuka daftar peserta lain ke publik.
+          Periksa peringkat Anda.
         </p>
 
         <form onSubmit={handlePrivateLookup} className="input-arcade-group" style={{ marginBottom: '12px' }}>
@@ -216,13 +216,13 @@ export default function LeaderboardSection() {
             required
           />
           <button type="submit" className="btn-arcade btn-arcade-magenta" disabled={lookupLoading}>
-            {lookupLoading ? 'MENGECEK...' : 'CEK PERINGKAT SAYA 🔍'}
+            {lookupLoading ? 'MENGECEK...' : 'CEK PERINGKAT SAYA'}
           </button>
         </form>
 
         {lookupError && (
           <div className="badge-tag badge-tag-excluded" style={{ marginTop: '12px', padding: '8px 14px' }}>
-            ❌ {lookupError}
+            {lookupError}
           </div>
         )}
 

@@ -365,7 +365,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
                             </span>
                           ) : (
                             <span className="badge-tag badge-tag-warning">
-                              🔥 AKTIF — BELUM
+                              AKTIF — BELUM
                             </span>
                           )}
                         </td>
@@ -445,7 +445,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
                             </span>
                           ) : (
                             <span className="badge-tag badge-tag-pending">
-                              🔒 DITUTUP
+                              DITUTUP
                             </span>
                           )}
                         </td>
@@ -490,7 +490,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
 
             {openMonths['2026-09'] && (
               <div style={{ padding: '20px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                🔒 Game September belum dirilis. Akses akan dibuka saat masa pengerjaan September dimulai.
+                Game September belum dirilis. Akses akan dibuka saat masa pengerjaan September dimulai.
               </div>
             )}
           </div>

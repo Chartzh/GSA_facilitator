@@ -118,20 +118,36 @@ export default function PointsCalculator() {
       
       {/* Step 1: Input Form Card (Only shown when NO profile result is active) */}
       {!resultData && (
-        <div className="bento-card bento-card-large col-span-12">
-          <div className="card-header-flex">
-            <h2 className="card-title-arcade">
-              ⚡ KALKULATOR POIN ARCADE 2026
-            </h2>
-            <span className="badge-tag badge-tag-done">ID-MATCHING ENGINE</span>
+        <div 
+          className="bento-card" 
+          style={{ 
+            maxWidth: '520px', 
+            margin: '40px auto', 
+            padding: '36px 32px', 
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <h2 style={{ fontFamily: 'var(--font-arcade)', fontSize: '1.35rem', color: 'var(--text-primary)', marginBottom: '6px', letterSpacing: '0.04em' }}>
+            KALKULATOR ARCADE
+          </h2>
+
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '20px' }}>
+            GOOGLE CLOUD SKILLS BOOST
           </div>
 
-          <p style={{ marginBottom: '16px' }}>
-            Masukkan URL Public Profile Google Skills Anda untuk mengkalkulasi poin, milestone, dan status pengerjaan secara otomatis.
+          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: '1.6', marginBottom: '28px', maxWidth: '420px' }}>
+            Cukup masukkan URL profil Google Cloud Skills Boost Anda yang sudah disetel ke <strong>Publik</strong>. Nama diambil otomatis dari profil.
           </p>
 
           {/* Input Form */}
-          <form onSubmit={handleCheckProfile} className="input-arcade-group" style={{ marginBottom: '12px' }}>
+          <form onSubmit={handleCheckProfile} style={{ width: '100%', textAlign: 'left' }}>
+            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
+              URL PROFIL SKILLS BOOST
+            </label>
+
             <input
               type="url"
               className="input-arcade"
@@ -139,13 +155,16 @@ export default function PointsCalculator() {
               value={inputUrl}
               onChange={(e) => setInputUrl(e.target.value)}
               required
+              style={{ width: '100%', marginBottom: '16px', padding: '12px 14px', fontSize: '0.85rem' }}
             />
+
             <button
               type="submit"
               className="btn-arcade btn-arcade-primary"
               disabled={loading}
+              style={{ width: '100%', padding: '14px', fontSize: '0.9rem', fontWeight: 800, background: 'var(--neon-yellow)', color: '#000', borderColor: 'var(--neon-yellow)' }}
             >
-              {loading ? 'MEMPROSES PROFIL...' : 'HITUNG POIN SAYA 🚀'}
+              {loading ? 'MEMPROSES PROFIL...' : 'ENTER THE ARCADE'}
             </button>
           </form>
 
@@ -153,9 +172,9 @@ export default function PointsCalculator() {
           {errorMsg && (
             <div
               className="badge-tag badge-tag-excluded"
-              style={{ padding: '12px 16px', width: '100%', marginTop: '16px', lineHeight: '1.5' }}
+              style={{ padding: '12px 16px', width: '100%', marginTop: '16px', lineHeight: '1.5', textAlign: 'center' }}
             >
-              ❌ {errorMsg}
+              {errorMsg}
             </div>
           )}
         </div>
@@ -196,13 +215,6 @@ export default function PointsCalculator() {
               </button>
             </div>
           </div>
-
-          {/* Unknown Date Info */}
-          {resultData.unknownDateCount > 0 && (
-            <div className="badge-tag badge-tag-done" style={{ width: '100%', margin: '16px 0', padding: '12px 16px', background: 'rgba(0, 255, 157, 0.08)', color: 'var(--state-done)' }}>
-              ℹ️ Ada {resultData.unknownDateCount} badge tanpa pembacaan string tanggal — <strong>TETAP DIHITUNG MASUK</strong> ke total poin Anda.
-            </div>
-          )}
 
           {/* Giant Stat Numbers */}
           <div className="bento-grid" style={{ margin: '20px 0', gap: '16px' }}>
@@ -278,8 +290,8 @@ export default function PointsCalculator() {
         </div>
       )}
 
-      {/* Step 4: 2-Block Lab & Badges Checklist (Rendered directly on same page below summary) */}
-      <LabChecklist scrapedData={resultData} />
+      {/* Step 4: 2-Block Lab & Badges Checklist (Only rendered when profile is loaded) */}
+      {resultData && <LabChecklist scrapedData={resultData} />}
 
     </div>
   )
