@@ -224,8 +224,10 @@ export function parseProfileHtml(html, profileUrl) {
     }
 
     let matchedBadge = SKILL_BADGES.find(sb => {
-      const sbName = normalizeTitle(sb.name)
-      return normTitle === sbName || normTitle.includes(sbName) || sbName.includes(normTitle)
+      const sbNameIndo = normalizeTitle(sb.name)
+      const sbNameEng = sb.nameEn ? normalizeTitle(sb.nameEn) : ''
+      return normTitle === sbNameIndo || normTitle.includes(sbNameIndo) || sbNameIndo.includes(normTitle) ||
+             (sbNameEng && (normTitle === sbNameEng || normTitle.includes(sbNameEng) || sbNameEng.includes(normTitle)))
     })
     if (matchedBadge) {
       if (dateValid) {

@@ -20,6 +20,7 @@ export default function PointsCalculator() {
 
   const handleLogout = () => {
     setResultData(null)
+    profileCache.clear()
     try {
       localStorage.removeItem('gsa_calc_data')
     } catch {
@@ -79,7 +80,7 @@ export default function PointsCalculator() {
 
     setLoading(true)
     try {
-      const res = await fetch(`/api/check-profile?profileUrl=${encodeURIComponent(cleanUrl)}`)
+      const res = await fetch(`/api/check-profile?profileUrl=${encodeURIComponent(cleanUrl)}&_t=${now}`)
       const json = await res.json().catch(() => null)
 
       if (res.ok && json && !json.error) {

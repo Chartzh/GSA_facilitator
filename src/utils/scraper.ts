@@ -131,88 +131,16 @@ export function parseEarnedDate(dateStr: string): { date: Date | null; unknown: 
   return { date: null, unknown: true }
 }
 
-// Helper to match Arcade Games by ID or Title/Keywords (with matchedGameIds check for disambiguation)
-export function findArcadeGameMatch(raw: RawExtractedBadge, matchedGameIds?: Set<number>): ArcadeGame | null {
+export function findArcadeGameMatch(raw: RawExtractedBadge, _matchedGameIds?: Set<number>): ArcadeGame | null {
   if (raw.gameId) {
     const gameById = ARCADE_GAMES.find(g => g.id === raw.gameId)
     if (gameById) return gameById
   }
 
   const norm = normalizeTitle(raw.title)
-  const isJuly = norm.includes('july') || norm.includes('juli') || raw.earnedDateRaw.toLowerCase().includes('jul')
-  const isAugust = norm.includes('august') || norm.includes('agustus') || raw.earnedDateRaw.toLowerCase().includes('aug')
 
-  // Specific game titles (Juli)
-  if (norm.includes('safe space') || norm.includes('safe spaces')) {
-    return ARCADE_GAMES.find(g => g.id === 7318) || null
-  }
-
-  if (norm.includes('data mesh') || norm.includes('datamesh')) {
-    return ARCADE_GAMES.find(g => g.id === 7317) || null
-  }
-
-  // Base Camp
-  if (norm.includes('base camp') || norm.includes('basecamp')) {
-    if (isJuly) return ARCADE_GAMES.find(g => g.id === 7313) || null
-    if (isAugust) return ARCADE_GAMES.find(g => g.id === 7394) || null
-    return isAugust ? ARCADE_GAMES.find(g => g.id === 7394)! : ARCADE_GAMES.find(g => g.id === 7313)!
-  }
-
-  // Adventure / Level 1 (August: Level 1: Data Management & Analytics / 1q-datamgt-92372)
-  if (norm.includes('adventure') || norm.includes('level 1') || norm.includes('level1') || norm.includes('data management') || norm.includes('datamgt') || norm.includes('lowcode')) {
-    if (isJuly || norm.includes('lowcode')) return ARCADE_GAMES.find(g => g.id === 7314) || null
-    return ARCADE_GAMES.find(g => g.id === 7395) || null
-  }
-
-  // Trail / Level 2 (August: Level 2: Delivery & Operations / 1q-delivery-31058)
-  if (norm.includes('trail') || norm.includes('level 2') || norm.includes('level2') || norm.includes('delivery') || norm.includes('workspace')) {
-    if (isJuly || norm.includes('workspace')) return ARCADE_GAMES.find(g => g.id === 7316) || null
-    return ARCADE_GAMES.find(g => g.id === 7396) || null
-  }
-
-  // Simulator / Level 3 (August: Level 3: Networking & Security / 1q-network-51470)
-  if (norm.includes('level 3') || norm.includes('level3') || norm.includes('networking') || norm.includes('network')) {
-    return ARCADE_GAMES.find(g => g.id === 7397) || null
-  }
-
-  if (norm.includes('simulator')) {
-    if (isJuly || norm.includes('data mesh')) return ARCADE_GAMES.find(g => g.id === 7317) || null
-    return ARCADE_GAMES.find(g => g.id === 7397) || null
-  }
-
-  // Voyage / Trivia 1 (August: Trivia: Google Sheets / 1q-sheets-29185)
-  if (norm.includes('voyage') || norm.includes('google sheets') || norm.includes('sheets') || norm.includes('bucket')) {
-    if (isJuly || norm.includes('bucket')) return ARCADE_GAMES.find(g => g.id === 7315) || null
-    return ARCADE_GAMES.find(g => g.id === 7398) || null
-  }
-
-  // Disambiguate August Trivia 1 (7398) vs Trivia 2 / Special Game (7399)
-  if (norm.includes('special game') || norm.includes('schema') || norm.includes('database schema') || norm.includes('trivia')) {
-    if (matchedGameIds) {
-      if (!matchedGameIds.has(7398) && norm.includes('sheets')) return ARCADE_GAMES.find(g => g.id === 7398) || null
-      if (!matchedGameIds.has(7399)) return ARCADE_GAMES.find(g => g.id === 7399) || null
-      if (!matchedGameIds.has(7398)) return ARCADE_GAMES.find(g => g.id === 7398) || null
-    }
-    return ARCADE_GAMES.find(g => g.id === 7399) || null
-  }
-
-  // Fallback Catch-All for generic Arcade game titles (arcade, game, level, trivia, sprint, challenge, etc.)
-  if (
-    norm.includes('arcade') ||
-    norm.includes('game') ||
-    norm.includes('level') ||
-    norm.includes('trivia') ||
-    norm.includes('sprint') ||
-    norm.includes('challenge') ||
-    norm.includes('zone') ||
-    norm.includes('completion') ||
-    norm.includes('certification')
-  ) {
-    if (matchedGameIds) {
-      const openGame = ARCADE_GAMES.find(g => !matchedGameIds.has(g.id))
-      if (openGame) return openGame
-    }
-  }
+  const matched = ARCADE_GAMES.find(g => (g.match && g.match(norm)) || normalizeTitle(g.name) === norm || norm.includes(normalizeTitle(g.name)))
+  if (matched) return matched
 
   return null
 }
@@ -238,6 +166,24 @@ export interface ParsedProfileResult {
   nextMilestoneNeeds: { label: string; neededGames: number; neededBadges: number } | null
 }
 
+export function cleanBadgeText(rawText: string): { title: string; dateText: string } {
+  if (!rawText) return { title: '', dateText: '' }
+
+  let clean = rawText.replace(/\r\n/g, '\n').trim()
+  let dateText = ''
+
+  const dateMatch = clean.match(/(?:Earned|Diselesaikan)\s+([A-Za-z0-9, ]+)/i)
+  if (dateMatch) {
+    dateText = dateMatch[0].trim()
+    clean = clean.replace(dateMatch[0], '').trim()
+  }
+
+  const lines = clean.split('\n').map(l => l.trim()).filter(Boolean)
+  const title = lines[0] || ''
+
+  return { title, dateText }
+}
+
 export function parseProfileHtml(html: string, profileUrl: string): ParsedProfileResult {
   let profileName = 'Peserta Google Skills'
   const extractedBadges: RawExtractedBadge[] = []
@@ -249,12 +195,13 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       const doc = new DOMParser().parseFromString(html, 'text/html')
       profileName = doc.querySelector('h1.ql-display-small, h1')?.textContent?.trim() || profileName
 
-      const elements = doc.querySelectorAll('.profile-badge, .public-profile-badge, [class*="badge-card"], [class*="BadgeCard"], .quest-card, [data-badge-id]')
+      const elements = doc.querySelectorAll('.profile-badge, .badge-card, .public-profile-badge')
       elements.forEach((card) => {
+        const rawText = card.textContent || ''
+        const { title, dateText: embeddedDate } = cleanBadgeText(rawText)
         const linkEl = card.querySelector('a[href*="course_templates"], a[href*="games"], a[href*="quests"], a[href*="badges"]')
         const href = linkEl?.getAttribute('href') || card.getAttribute('href') || ''
-        const title = card.querySelector('.ql-title-medium, [class*="title"], h3, h4, span')?.textContent?.trim() || card.getAttribute('aria-label') || card.getAttribute('title') || ''
-        const dateStr = card.querySelector('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]')?.textContent?.trim() || ''
+        const dateStr = card.querySelector('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]')?.textContent?.trim() || embeddedDate
         const imgEl = card.querySelector('img')
         const imageUrl = imgEl?.getAttribute('src') || null
 
@@ -288,12 +235,13 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     const $ = cheerio.load(html)
     profileName = $('h1.ql-display-small, h1').first().text().trim() || profileName
 
-    $('.profile-badge, .public-profile-badge, [class*="badge-card"], [class*="BadgeCard"], .quest-card, [data-badge-id]').each((_, el) => {
+    $('.profile-badge, .badge-card, .public-profile-badge').each((_, el) => {
       const card = $(el)
+      const rawText = card.text()
+      const { title, dateText: embeddedDate } = cleanBadgeText(rawText)
       const linkEl = card.find('a[href*="course_templates"], a[href*="games"], a[href*="quests"], a[href*="badges"]').first()
       const href = linkEl.attr('href') || card.attr('href') || ''
-      const title = card.find('.ql-title-medium, [class*="title"], h3, h4, span').first().text().trim() || card.attr('aria-label') || card.attr('title') || ''
-      const dateStr = card.find('time, .ql-body-medium, [class*="date"], [class*="earned"], [class*="description"]').first().text().trim() || card.find('time').attr('datetime') || ''
+      const dateStr = card.find('.badge-date, .earned-date, span[class*="date"]').text().trim() || embeddedDate
       const imgEl = card.find('img').first()
       const imageUrl = imgEl.attr('src') || null
 
@@ -318,34 +266,6 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         }
       }
     })
-
-    if (extractedBadges.length === 0) {
-      $('a[href*="course_templates"], a[href*="games"], a[href*="quests"], a[href*="badges"]').each((_, el) => {
-        const link = $(el)
-        const href = link.attr('href') || ''
-        const title = link.text().trim() || link.attr('aria-label') || ''
-        const parentText = link.parent().text().trim()
-        const courseMatch = RE_COURSE_TEMPLATE.exec(href)
-        const gameMatch = RE_GAME.exec(href)
-        const parsed = parseEarnedDate(parentText)
-        const imageUrl = link.find('img').first().attr('src') || link.parent().find('img').first().attr('src') || null
-
-        const key = `${href}-${title}`
-        if (title && !seenHrefs.has(key)) {
-          seenHrefs.add(key)
-          extractedBadges.push({
-            title,
-            href,
-            courseId: courseMatch ? parseInt(courseMatch[1], 10) : null,
-            gameId: gameMatch ? parseInt(gameMatch[1], 10) : null,
-            earnedDateRaw: parentText,
-            parsedDate: parsed.date,
-            dateUnknown: parsed.unknown,
-            imageUrl
-          })
-        }
-      })
-    }
   }
 
   const pStartDate = new Date(PROGRAM.startDate) // 2026-07-13T00:00:00+07:00
@@ -417,9 +337,14 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       }
     }
 
-    // 3. Match Skill Badges by Title
+    // 3. Match Skill Badges by Title (Indonesian or English name)
     const normTitle = normalizeTitle(raw.title)
-    const titleMatchedBadge = SKILL_BADGES.find(b => normalizeTitle(b.name) === normTitle)
+    const titleMatchedBadge = SKILL_BADGES.find(b => {
+      const sbIndo = normalizeTitle(b.name)
+      const sbEng = b.nameEn ? normalizeTitle(b.nameEn) : ''
+      return normTitle === sbIndo || normTitle.includes(sbIndo) || sbIndo.includes(normTitle) ||
+             (sbEng && (normTitle === sbEng || normTitle.includes(sbEng) || sbEng.includes(normTitle)))
+    })
     if (titleMatchedBadge && !matchedSkillIds.has(titleMatchedBadge.id)) {
       matchedSkillIds.add(titleMatchedBadge.id)
       validSyllabusBadges.push({
