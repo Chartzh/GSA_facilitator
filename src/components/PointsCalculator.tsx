@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { validateProfileUrl, parseProfileHtml, ParsedProfileResult } from '../utils/scraper'
 import { formatPoints } from '../utils/points'
 import LabChecklist from './LabChecklist'
-import { LogOut } from 'lucide-react'
+import { LogOut, RotateCw } from 'lucide-react'
 
 // Simple 10-minute client cache per profile URL
 const profileCache = new Map<string, { timestamp: number; data: ParsedProfileResult }>()
@@ -15,7 +15,9 @@ const MAX_REQ_PER_MIN = 20
 export default function PointsCalculator() {
   const [inputUrl, setInputUrl] = useState('')
   const [loading, setLoading] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const [toastMsg, setToastMsg] = useState('')
   const [resultData, setResultData] = useState<ParsedProfileResult | null>(null)
 
   const handleLogout = () => {
@@ -25,6 +27,36 @@ export default function PointsCalculator() {
       localStorage.removeItem('gsa_calc_data')
     } catch {
       // Ignore localStorage errors
+    }
+  }
+
+  const handleRefreshProfile = async () => {
+    if (!resultData || refreshing) return
+    const cleanUrl = resultData.profileUrl
+    setRefreshing(true)
+    setToastMsg('')
+    setErrorMsg('')
+
+    try {
+      const now = Date.now()
+      profileCache.delete(cleanUrl)
+      const res = await fetch(`/api/check-profile?profileUrl=${encodeURIComponent(cleanUrl)}&_t=${now}&force=true`)
+      const json = await res.json().catch(() => null)
+
+      if (res.ok && json && !json.error) {
+        profileCache.set(cleanUrl, { timestamp: now, data: json })
+        setResultData(json)
+        saveToStorage(cleanUrl, json)
+        setToastMsg('Data profil berhasil diperbarui!')
+        setTimeout(() => setToastMsg(''), 4000)
+      } else {
+        throw new Error(json?.error || 'Gagal memperbarui profil. Pastikan profil di-set Public.')
+      }
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Gagal memperbarui profil. Coba lagi nanti.')
+      setTimeout(() => setErrorMsg(''), 4000)
+    } finally {
+      setRefreshing(false)
     }
   }
 
@@ -195,6 +227,15 @@ export default function PointsCalculator() {
 
               <button 
                 className="btn-arcade btn-arcade-outline" 
+                onClick={handleRefreshProfile} 
+                disabled={refreshing}
+                style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--neon-cyan)', borderColor: 'var(--neon-cyan)', cursor: refreshing ? 'not-allowed' : 'pointer' }}
+              >
+                <RotateCw size={14} className={refreshing ? 'spin-icon' : ''} /> {refreshing ? 'Memperbarui...' : 'Perbarui Data'}
+              </button>
+
+              <button 
+                className="btn-arcade btn-arcade-outline" 
                 onClick={handleLogout} 
                 style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--neon-magenta)', borderColor: 'var(--neon-magenta)' }}
               >
@@ -202,6 +243,25 @@ export default function PointsCalculator() {
               </button>
             </div>
           </div>
+
+          {/* Toast Message */}
+          {toastMsg && (
+            <div
+              style={{
+                marginTop: '12px',
+                padding: '10px 16px',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                borderRadius: '8px',
+                background: 'rgba(0, 255, 157, 0.12)',
+                color: 'var(--state-done)',
+                border: '1px solid var(--state-done)',
+                display: 'inline-block'
+              }}
+            >
+              ✓ {toastMsg}
+            </div>
+          )}
 
           {/* Giant Stat Numbers */}
           <div className="bento-grid" style={{ margin: '20px 0', gap: '16px' }}>
