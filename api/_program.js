@@ -32,19 +32,19 @@ export const TIERS = [
 
 export const ARCADE_GAMES = [
   // --- 2026-07 ---
-  { id: 7313, name: 'Arcade Base Camp (Juli)', accessCode: '1q-basecamp-07511', url: 'https://www.skills.google/games/7313', month: '2026-07', points: 1 },
-  { id: 7314, name: 'Arcade Adventure (Juli)', accessCode: '1q-lowcode-92316', url: 'https://www.skills.google/games/7314', month: '2026-07', points: 1 },
-  { id: 7315, name: 'Arcade Voyage (Juli)', accessCode: '1q-bucket-58231', url: 'https://www.skills.google/games/7315', month: '2026-07', points: 1 },
-  { id: 7316, name: 'Arcade Trail (Juli)', accessCode: '1q-workspace-31069', url: 'https://www.skills.google/games/7316', month: '2026-07', points: 1 },
-  { id: 7317, name: 'Arcade Simulator: Data Mesh Architect (Juli)', accessCode: '1q-datamesh-16451', url: 'https://www.skills.google/games/7317', month: '2026-07', points: 1 },
-  { id: 7318, name: 'Safe Spaces (Juli)', accessCode: '1q-security-19110', url: 'https://www.skills.google/games/7318', month: '2026-07', points: 1 },
+  { id: 7313, name: 'Arcade Base Camp (Juli)', accessCode: '1q-basecamp-07511', url: 'https://www.skills.google/games/7313', month: '2026-07', points: 1, match: (t) => t.includes('base camp') && (t.includes('july') || t.includes('juli') || (!t.includes('august') && !t.includes('agustus'))) },
+  { id: 7314, name: 'Arcade Adventure (Juli)', accessCode: '1q-lowcode-92316', url: 'https://www.skills.google/games/7314', month: '2026-07', points: 1, match: (t) => t.includes('adventure') && (t.includes('low code') || t.includes('july') || t.includes('juli')) },
+  { id: 7315, name: 'Arcade Voyage (Juli)', accessCode: '1q-bucket-58231', url: 'https://www.skills.google/games/7315', month: '2026-07', points: 1, match: (t) => t.includes('voyage') && (t.includes('cloud storage') || t.includes('governance') || t.includes('july') || t.includes('juli')) },
+  { id: 7316, name: 'Arcade Trail (Juli)', accessCode: '1q-workspace-31069', url: 'https://www.skills.google/games/7316', month: '2026-07', points: 1, match: (t) => t.includes('trail') && (t.includes('workspace') || t.includes('july') || t.includes('juli')) },
+  { id: 7317, name: 'Arcade Simulator: Data Mesh Architect (Juli)', accessCode: '1q-datamesh-16451', url: 'https://www.skills.google/games/7317', month: '2026-07', points: 1, match: (t) => t.includes('data mesh') || (t.includes('simulator') && t.includes('data mesh')) },
+  { id: 7318, name: 'Safe Spaces (Juli)', accessCode: '1q-security-19110', url: 'https://www.skills.google/games/7318', month: '2026-07', points: 1, match: (t) => t.includes('safe spaces') },
   // --- 2026-08 ---
-  { id: 7394, name: 'Arcade Base Camp (Agustus)', accessCode: '1q-basecamp-10219', url: 'https://www.skills.google/games/7394', month: '2026-08', points: 1 },
-  { id: 7395, name: 'Arcade Adventure (Agustus)', accessCode: '1q-datamgt-92372', url: 'https://www.skills.google/games/7395', month: '2026-08', points: 1 },
-  { id: 7396, name: 'Arcade Trail (Agustus)', accessCode: '1q-delivery-31058', url: 'https://www.skills.google/games/7396', month: '2026-08', points: 1 },
-  { id: 7397, name: 'Arcade Simulator (Agustus)', accessCode: '1q-network-51470', url: 'https://www.skills.google/games/7397', month: '2026-08', points: 1 },
-  { id: 7398, name: 'Arcade Voyage (Agustus)', accessCode: '1q-sheets-29185', url: 'https://www.skills.google/games/7398', month: '2026-08', points: 1 },
-  { id: 7399, name: 'Arcade Special Game (Agustus)', accessCode: '1q-schema-27083', url: 'https://www.skills.google/games/7399', month: '2026-08', points: 1 },
+  { id: 7394, name: 'Arcade Base Camp (Agustus)', accessCode: '1q-basecamp-10219', url: 'https://www.skills.google/games/7394', month: '2026-08', points: 1, match: (t) => t.includes('base camp') && (t.includes('august') || t.includes('agustus')) },
+  { id: 7395, name: 'Arcade Adventure (Agustus)', accessCode: '1q-datamgt-92372', url: 'https://www.skills.google/games/7395', month: '2026-08', points: 1, match: (t) => t.includes('adventure') && (t.includes('data vault') || t.includes('data management') || t.includes('august') || t.includes('agustus')) },
+  { id: 7396, name: 'Arcade Trail (Agustus)', accessCode: '1q-delivery-31058', url: 'https://www.skills.google/games/7396', month: '2026-08', points: 1, match: (t) => t.includes('trail') && (t.includes('cloud delivery') || t.includes('delivery') || t.includes('august') || t.includes('agustus')) },
+  { id: 7397, name: 'Arcade Simulator (Agustus)', accessCode: '1q-network-51470', url: 'https://www.skills.google/games/7397', month: '2026-08', points: 1, match: (t) => t.includes('simulator') && (t.includes('network security') || t.includes('networking') || t.includes('august') || t.includes('agustus')) },
+  { id: 7398, name: 'Arcade Voyage (Agustus)', accessCode: '1q-sheets-29185', url: 'https://www.skills.google/games/7398', month: '2026-08', points: 1, match: (t) => t.includes('voyage') && (t.includes('sheets') || t.includes('august') || t.includes('agustus')) },
+  { id: 7399, name: 'Arcade Special Game (Agustus)', accessCode: '1q-schema-27083', url: 'https://www.skills.google/games/7399', month: '2026-08', points: 1, match: (t) => t.includes('spans and plans') || t.includes('special game') || (t.includes('special') && t.includes('arcade')) },
 ]
 
 export const ARCHIVED_GAME_IDS = []

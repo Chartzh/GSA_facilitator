@@ -65,6 +65,9 @@ export function normalizeTitle(str) {
 const RE_COURSE_TEMPLATE = /(?:course_templates|paths)\/(\d+)/i
 const RE_GAME = /(?:games|game_templates|events|quests)\/(\d+)/i
 
+const PROGRAM_START = Date.UTC(2026, 6, 12, 17, 0, 0)
+const PROGRAM_END   = Date.UTC(2026, 8, 14, 16, 59, 59)
+
 export function parseEarnedDate(dateStr) {
   if (!dateStr || !dateStr.trim()) {
     return { date: null, unknown: true }
@@ -90,9 +93,27 @@ export function parseEarnedDate(dateStr) {
 
 export function isDateWithinProgram(parsedDate, dateUnknown) {
   if (dateUnknown || !parsedDate) return true
-  const start = new Date(PROGRAM.startDate)
-  const end = new Date(PROGRAM.endDate)
-  return parsedDate >= start && parsedDate <= end
+  const t = parsedDate.getTime()
+  if (isNaN(t)) return true
+  return t >= PROGRAM_START && t <= PROGRAM_END
+}
+
+export function cleanBadgeText(rawText) {
+  if (!rawText) return { title: '', dateText: '' }
+
+  let clean = rawText.replace(/\r\n/g, '\n').trim()
+  let dateText = ''
+
+  const dateMatch = clean.match(/(?:Earned|Diselesaikan)\s+([A-Za-z0-9, ]+)/i)
+  if (dateMatch) {
+    dateText = dateMatch[0].trim()
+    clean = clean.replace(dateMatch[0], '').trim()
+  }
+
+  const lines = clean.split('\n').map(l => l.trim()).filter(Boolean)
+  const title = lines[0] || ''
+
+  return { title, dateText }
 }
 
 export function parseProfileHtml(html, profileUrl) {
@@ -113,9 +134,10 @@ export function parseProfileHtml(html, profileUrl) {
   }
 
   const rawBadges = []
-  $('.profile-badge, .badge-card, .public-profile-badge, div[class*="badge"]').each((_, el) => {
+  $('.profile-badge, .badge-card, .public-profile-badge').each((_, el) => {
     const $el = $(el)
-    const title = $el.find('h4, .badge-title, strong, a').first().text().trim() || $el.text().trim()
+    const rawText = $el.text()
+    const { title, dateText: embeddedDate } = cleanBadgeText(rawText)
     const href = $el.find('a').attr('href') || ''
     const imgSrc = $el.find('img').attr('src') || $el.find('img').attr('data-src') || null
 
@@ -128,16 +150,17 @@ export function parseProfileHtml(html, profileUrl) {
     const matchGame = href.match(RE_GAME)
     if (matchGame) gameId = parseInt(matchGame[1], 10)
 
-    const dateText = $el.find('.badge-date, .earned-date, span[class*="date"]').text().trim()
-    const { date, unknown } = parseEarnedDate(dateText)
+    const domDateText = $el.find('.badge-date, .earned-date, span[class*="date"]').text().trim()
+    const finalDateText = domDateText || embeddedDate
+    const { date, unknown } = parseEarnedDate(finalDateText)
 
-    if (title && (courseId || gameId || title.length > 3)) {
+    if (title && (courseId || gameId || title.length > 2)) {
       rawBadges.push({
         title,
         href,
         courseId,
         gameId,
-        earnedDateRaw: dateText,
+        earnedDateRaw: finalDateText,
         parsedDate: date,
         dateUnknown: unknown,
         imageUrl: imgSrc
@@ -188,7 +211,9 @@ export function parseProfileHtml(html, profileUrl) {
     }
 
     const normTitle = normalizeTitle(b.title)
-    let matchedGame = ARCADE_GAMES.find(g => normalizeTitle(g.name) === normTitle || normTitle.includes(normalizeTitle(g.name)))
+
+    // Match Game by custom match function or title substring
+    let matchedGame = ARCADE_GAMES.find(g => (g.match && g.match(normTitle)) || normalizeTitle(g.name) === normTitle || normTitle.includes(normalizeTitle(g.name)))
     if (matchedGame) {
       if (dateValid) {
         validGames.push({ ...matchedGame, earnedDate: b.earnedDateRaw || 'Selesai', imageUrl: b.imageUrl })
@@ -198,7 +223,10 @@ export function parseProfileHtml(html, profileUrl) {
       return
     }
 
-    let matchedBadge = SKILL_BADGES.find(sb => normalizeTitle(sb.name) === normTitle || normTitle.includes(normalizeTitle(sb.name)))
+    let matchedBadge = SKILL_BADGES.find(sb => {
+      const sbName = normalizeTitle(sb.name)
+      return normTitle === sbName || normTitle.includes(sbName) || sbName.includes(normTitle)
+    })
     if (matchedBadge) {
       if (dateValid) {
         validSyllabusBadges.push({ ...matchedBadge, earnedDate: b.earnedDateRaw || 'Selesai', imageUrl: b.imageUrl })
@@ -212,7 +240,7 @@ export function parseProfileHtml(html, profileUrl) {
       validExtraBadges.push({
         id: b.courseId || b.gameId || Math.floor(Math.random() * 100000),
         name: b.title,
-        url: b.href ? `https://www.skills.google${b.href}` : profileUrl,
+        url: b.href ? (b.href.startsWith('http') ? b.href : `https://www.skills.google${b.href}`) : profileUrl,
         tier: 'beginner',
         labs: 1,
         credits: 0,

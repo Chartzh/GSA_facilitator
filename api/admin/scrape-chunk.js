@@ -57,7 +57,11 @@ export async function processChunkInternal(offset, limit, jobIdInput) {
 
     try {
       const res = await fetch(cleanUrl, {
-        headers: { 'accept': 'text/html,application/xhtml+xml' },
+        headers: {
+          'Accept-Language': 'en-US,en;q=0.9',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 (GCAF-Tracker/2026)',
+          'accept': 'text/html,application/xhtml+xml'
+        },
         signal: controller.signal
       })
 
