@@ -27,31 +27,31 @@ export const supabase = (function() {
 
 export const isDbConfigured = () => dbReady
 
-// Fetch Top 10 ONLY (Enforced via Supabase Query & Total Points Sorting)
-export async function getTop10() {
+// Fetch Top 10 for a given date or latest date if dateParam not specified
+export async function getTop10(dateParam) {
   if (!dbReady || !supabase) {
-    return { top10: [], lastUpdated: null, dbReady: false }
+    return { top10: [], lastUpdated: null, availableDates: [], dbReady: false }
   }
 
   try {
-    const { data: latest, error: latestErr } = await supabase
+    const { data: dateRows } = await supabase
       .from('snapshots')
       .select('snapshot_date')
       .order('snapshot_date', { ascending: false })
-      .limit(1)
-      .maybeSingle()
 
-    if (latestErr || !latest) {
-      return { top10: [], lastUpdated: null, dbReady: true }
-    }
+    const availableDates = Array.from(new Set(dateRows?.map(r => r.snapshot_date).filter(Boolean) || []))
+
+    const targetDate = (dateParam && availableDates.includes(dateParam))
+      ? dateParam
+      : (availableDates[0] || new Date().toISOString().slice(0, 10))
 
     const { data, error } = await supabase
       .from('snapshots')
       .select('points, bonus_points, milestone, games, skill_badges, participants(nama)')
-      .eq('snapshot_date', latest.snapshot_date)
+      .eq('snapshot_date', targetDate)
 
     if (error || !data) {
-      return { top10: [], lastUpdated: latest.snapshot_date, dbReady: true }
+      return { top10: [], lastUpdated: targetDate, availableDates, dbReady: true }
     }
 
     // Sort by Total Points (points + bonus_points) DESC, bonus_points DESC, skill_badges DESC, games DESC
@@ -93,12 +93,13 @@ export async function getTop10() {
 
     return {
       top10,
-      lastUpdated: latest.snapshot_date,
+      lastUpdated: targetDate,
+      availableDates,
       dbReady: true
     }
   } catch (err) {
     console.warn('getTop10 unexpected error:', err?.message || err)
-    return { top10: [], lastUpdated: null, dbReady: true }
+    return { top10: [], lastUpdated: null, availableDates: [], dbReady: true }
   }
 }
 

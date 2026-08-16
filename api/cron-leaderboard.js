@@ -14,37 +14,48 @@ export default async function handler(req, res) {
     return
   }
 
-  const offset = Number(req.query.offset || req.body?.offset || 0)
   const limit = Number(req.query.limit || req.body?.limit || 20)
+  const todayDate = new Date().toISOString().slice(0, 10)
+  const jobId = `cron_${todayDate}_${Date.now()}`
 
-  console.log(`[CRON-LEADERBOARD] Executing chunk at offset ${offset} (limit ${limit})...`)
+  console.log(`[CRON-LEADERBOARD] Starting full automatic cron run for date ${todayDate}...`)
+
+  let currentOffset = 0
+  let totalProcessed = 0
+  let totalSucceeded = 0
+  let totalFailed = 0
+  const allErrors = []
 
   try {
-    const chunkResult = await processChunkInternal(offset, limit, 'cron_job')
+    while (currentOffset !== null) {
+      console.log(`[CRON-LEADERBOARD] Processing chunk at offset ${currentOffset}...`)
+      const chunkResult = await processChunkInternal(currentOffset, limit, jobId)
 
-    if (chunkResult.nextOffset !== null) {
-      const host = req.headers['x-forwarded-host'] || req.headers.host || process.env.VERCEL_URL || 'localhost:3000'
-      const protocol = host.includes('localhost') ? 'http' : 'https'
-      const baseUrl = `${protocol}://${host}`
+      totalProcessed += chunkResult.processed
+      totalSucceeded += chunkResult.succeeded
+      totalFailed += chunkResult.failed
+      if (chunkResult.errors) allErrors.push(...chunkResult.errors)
 
-      console.log(`[CRON-LEADERBOARD] Triggering next chunk at offset ${chunkResult.nextOffset}...`)
+      currentOffset = chunkResult.nextOffset
 
-      fetch(`${baseUrl}/api/cron-leaderboard?offset=${chunkResult.nextOffset}`, {
-        headers: {
-          'Authorization': `Bearer ${cronSecret || ''}`
-        }
-      }).catch((err) => {
-        console.warn('[CRON-BACKGROUND-TRIGGER] Background trigger warning:', err?.message)
-      })
+      if (currentOffset !== null) {
+        await new Promise(r => setTimeout(r, 400))
+      }
     }
+
+    console.log(`[CRON-LEADERBOARD] Finished full cron run. Processed: ${totalProcessed}, Succeeded: ${totalSucceeded}, Failed: ${totalFailed}`)
 
     res.status(200).json({
       status: 'success',
-      timestamp: new Date().toISOString(),
-      chunkResult
+      snapshotDate: todayDate,
+      processed: totalProcessed,
+      succeeded: totalSucceeded,
+      failed: totalFailed,
+      errors: allErrors,
+      timestamp: new Date().toISOString()
     })
   } catch (err) {
-    console.error('[CRON-ERROR] Failed to execute cron chunk:', err?.message)
-    res.status(500).json({ error: err?.message || 'Gagal menjalankan cron chunk.' })
+    console.error('[CRON-ERROR] Failed to execute cron run:', err?.message)
+    res.status(500).json({ error: err?.message || 'Gagal menjalankan cron leaderboard.' })
   }
 }

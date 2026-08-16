@@ -17,12 +17,14 @@ export default async function handler(req, res) {
 
     // GET TOP 10 (Strictly 10 rows from Server)
     if (action === 'get_top10') {
+      const requestedDate = req.query.date || req.body?.date || ''
       const dbReady = isDbConfigured()
-      const { top10, lastUpdated } = await getTop10()
+      const { top10, lastUpdated, availableDates } = await getTop10(requestedDate)
 
       res.status(200).json({
         dbReady,
         lastUpdated,
+        availableDates: availableDates || [],
         top10: top10 || [],
         totalParticipantsCount: (top10 && top10.length > 0) ? 256 : 0
       })

@@ -13,18 +13,33 @@ interface Top10User {
   badges: number
 }
 
+export function formatIndoDate(dateStr: string): string {
+  if (!dateStr) return ''
+  const parts = dateStr.split('-')
+  if (parts.length !== 3) return dateStr
+  const year = parts[0]
+  const monthIdx = parseInt(parts[1], 10) - 1
+  const day = parseInt(parts[2], 10)
+
+  const monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ]
+
+  if (monthIdx >= 0 && monthIdx < 12) {
+    return `${day} ${monthNames[monthIdx]} ${year}`
+  }
+  return dateStr
+}
+
 export default function LeaderboardSection() {
-  const [selectedDate, setSelectedDate] = useState('2026-08-09')
-  const [snapshotDateLabel, setSnapshotDateLabel] = useState('9 Agustus 2026')
-  const [top10Data, setTop10Data] = useState<Top10User[]>(() => {
-    try {
-      const cached = localStorage.getItem('gsa_top10_cache_2026-08-09')
-      if (cached) return JSON.parse(cached)
-    } catch {}
-    return []
-  })
+  const [selectedDate, setSelectedDate] = useState('')
+  const [availableDates, setAvailableDates] = useState<string[]>([])
+  const [snapshotDateLabel, setSnapshotDateLabel] = useState('Memuat...')
+  const [top10Data, setTop10Data] = useState<Top10User[]>([])
   const [dbReady, setDbReady] = useState<boolean>(true)
-  const [loading, setLoading] = useState<boolean>(() => top10Data.length === 0)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   // Private Rank Lookup states
   const [lookupUrl, setLookupUrl] = useState('')
@@ -35,33 +50,25 @@ export default function LeaderboardSection() {
   // Admin Modal toggle state
   const [showAdminModal, setShowAdminModal] = useState(false)
 
-  // Fetch Top 10 from Server with background sync
+  // Fetch Top 10 from Server with dynamic date options
   useEffect(() => {
     let isMounted = true
-    try {
-      const cached = localStorage.getItem(`gsa_top10_cache_${selectedDate}`)
-      if (cached) {
-        setTop10Data(JSON.parse(cached))
-        setLoading(false)
-      } else {
-        setLoading(true)
-      }
-    } catch {
-      setLoading(true)
-    }
+    setLoading(true)
 
-    fetch(`/api/leaderboard?action=get_top10&date=${selectedDate}`)
+    fetch(`/api/leaderboard?action=get_top10&date=${selectedDate}&_t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         if (isMounted) {
           const list = data.top10 || []
+          const dates: string[] = data.availableDates || []
           setTop10Data(list)
           setDbReady(Boolean(data.dbReady))
-          if (data.lastUpdated) setSnapshotDateLabel(data.lastUpdated)
-          try {
-            localStorage.setItem(`gsa_top10_cache_${selectedDate}`, JSON.stringify(list))
-          } catch {
-            // Ignore localStorage error
+          setAvailableDates(dates)
+
+          const activeDate = data.lastUpdated || selectedDate || dates[0] || ''
+          if (activeDate) {
+            setSelectedDate(prev => prev || activeDate)
+            setSnapshotDateLabel(formatIndoDate(activeDate))
           }
         }
       })
@@ -72,7 +79,7 @@ export default function LeaderboardSection() {
         if (isMounted) setLoading(false)
       })
     return () => { isMounted = false }
-  }, [selectedDate])
+  }, [selectedDate, refreshTrigger])
 
   const handlePrivateLookup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -115,10 +122,21 @@ export default function LeaderboardSection() {
               className="input-arcade"
               style={{ padding: '6px 12px', fontSize: '0.82rem', width: 'auto' }}
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value
+                setSelectedDate(val)
+                setSnapshotDateLabel(formatIndoDate(val))
+              }}
             >
-              <option value="2026-08-09">Update 9 Agustus 2026</option>
-              <option value="2026-08-02">Update 2 Agustus 2026</option>
+              {availableDates.length > 0 ? (
+                availableDates.map(d => (
+                  <option key={d} value={d}>
+                    Update {formatIndoDate(d)}
+                  </option>
+                ))
+              ) : (
+                <option value={selectedDate}>Update {snapshotDateLabel}</option>
+              )}
             </select>
 
             <button
@@ -250,7 +268,12 @@ export default function LeaderboardSection() {
       </div>
 
       {/* Admin Panel Modal */}
-      {showAdminModal && <AdminPanel onClose={() => setShowAdminModal(false)} />}
+      {showAdminModal && (
+        <AdminPanel
+          onClose={() => setShowAdminModal(false)}
+          onScrapeFinished={() => setRefreshTrigger(t => t + 1)}
+        />
+      )}
 
     </div>
   )

@@ -2,9 +2,10 @@ import React, { useState, useRef } from 'react'
 
 interface AdminPanelProps {
   onClose: () => void
+  onScrapeFinished?: () => void
 }
 
-export default function AdminPanel({ onClose }: AdminPanelProps) {
+export default function AdminPanel({ onClose, onScrapeFinished }: AdminPanelProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [passwordInput, setPasswordInput] = useState('')
   const [loginError, setLoginError] = useState('')
@@ -165,7 +166,9 @@ export default function AdminPanel({ onClose }: AdminPanelProps) {
 
         currentOffset = nextOff
 
-        if (currentOffset !== null && !cancelRef.current) {
+        if (currentOffset === null) {
+          onScrapeFinished?.()
+        } else if (!cancelRef.current) {
           // Polite 1-second delay between chunks
           await new Promise(r => setTimeout(r, 1000))
         }
