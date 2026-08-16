@@ -192,14 +192,32 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
     }))
   }, [scrapedData])
 
+function parseDateForSort(dateStr: string): number {
+  if (!dateStr) return 0
+  const match = dateStr.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),?\s+(\d{4})/i)
+  if (match) {
+    const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+    const mIdx = monthNames.indexOf(match[1].toLowerCase())
+    const day = parseInt(match[2], 10)
+    const year = parseInt(match[3], 10)
+    if (mIdx !== -1) {
+      return new Date(year, mIdx, day).getTime()
+    }
+  }
+  return 0
+}
+
   const allAssets = useMemo(() => {
     return [...currentAssets, ...historicalAssets]
   }, [currentAssets, historicalAssets])
 
   const displayedAssets = useMemo(() => {
-    if (assetFilter === 'current') return currentAssets
-    if (assetFilter === 'historical') return historicalAssets
-    return allAssets
+    let list = []
+    if (assetFilter === 'current') list = [...currentAssets]
+    else if (assetFilter === 'historical') list = [...historicalAssets]
+    else list = [...allAssets]
+
+    return [...list].sort((a, b) => parseDateForSort(b.earnedDate) - parseDateForSort(a.earnedDate))
   }, [assetFilter, currentAssets, historicalAssets, allAssets])
 
   const copyCode = (code: string) => {
