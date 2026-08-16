@@ -192,8 +192,7 @@ export async function saveSnapshotChunk(results, snapshotDateInput) {
           bonus_points: mb,
           milestone: mObj ? mObj.label : null,
           games: r.games,
-          skill_badges: r.skillBadges,
-          created_at: new Date().toISOString()
+          skill_badges: r.skillBadges
         }
       })
 
