@@ -47,18 +47,52 @@ export async function getTop10(dateParam) {
 
     const { data, error } = await supabase
       .from('snapshots')
-      .select('points, bonus_points, milestone, games, skill_badges, participants(nama)')
+      .select('participant_id, points, bonus_points, milestone, games, skill_badges, snapshot_date, participants(nama)')
       .eq('snapshot_date', targetDate)
 
     if (error || !data) {
       return { top10: [], lastUpdated: targetDate, availableDates, dbReady: true }
     }
 
-    // Sort by Total Points (points + bonus_points) DESC, bonus_points DESC, skill_badges DESC, games DESC
+    // Fetch all historical snapshots to determine the earliest date/time each participant achieved their score
+    const { data: allHistory } = await supabase
+      .from('snapshots')
+      .select('participant_id, points, bonus_points, snapshot_date')
+      .order('snapshot_date', { ascending: true })
+
+    const earliestMap = new Map()
+    if (allHistory) {
+      allHistory.forEach(h => {
+        const pid = h.participant_id
+        if (!pid) return
+        const score = (Number(h.points) || 0) + (Number(h.bonus_points) || 0)
+        const timestamp = new Date(h.snapshot_date).getTime()
+        if (!earliestMap.has(pid)) {
+          earliestMap.set(pid, new Map())
+        }
+        const pScores = earliestMap.get(pid)
+        if (!pScores.has(score) || timestamp < pScores.get(score)) {
+          pScores.set(score, timestamp)
+        }
+      })
+    }
+
+    data.forEach(p => {
+      const tot = (Number(p.points) || 0) + (Number(p.bonus_points) || 0)
+      const pMap = earliestMap.get(p.participant_id)
+      p.earliestTime = pMap?.get(tot) || new Date(p.snapshot_date || '2026-08-21').getTime()
+    })
+
+    // Sort by Total Points (points + bonus_points) DESC, Earliest Achieved Timestamp ASC (whoever got score first ranks higher!), bonus_points DESC, skill_badges DESC, games DESC
     const sorted = [...data].sort((a, b) => {
       const totalA = (Number(a.points) || 0) + (Number(a.bonus_points) || 0)
       const totalB = (Number(b.points) || 0) + (Number(b.bonus_points) || 0)
       if (totalB !== totalA) return totalB - totalA
+
+      // Tie-breaker: Earliest Achieved Timestamp ASC (Yang duluan dapet poin tersebut!)
+      const timeA = Number(a.earliestTime) || 0
+      const timeB = Number(b.earliestTime) || 0
+      if (timeA !== timeB) return timeA - timeB
 
       const bonusA = Number(a.bonus_points) || 0
       const bonusB = Number(b.bonus_points) || 0
@@ -70,7 +104,9 @@ export async function getTop10(dateParam) {
 
       const gamesA = Number(a.games) || 0
       const gamesB = Number(b.games) || 0
-      return gamesB - gamesA
+      if (gamesB !== gamesA) return gamesB - gamesA
+
+      return String(a.participant_id || '').localeCompare(String(b.participant_id || ''))
     }).slice(0, 10)
 
     const top10 = sorted.map((r, idx) => {
