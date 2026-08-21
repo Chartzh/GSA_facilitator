@@ -193,7 +193,7 @@ export default function PointsCalculator() {
                 Sistem ini melakukan ekstraksi data otomatis berdasarkan profil publik. <strong>Bisa saja terjadi kesalahan atau ketidaksesuaian perhitungan poin</strong> akibat perbedaan judul badge, tanggal pencapaian, delay scraping, atau peraturan program.
               </p>
               <p style={{ margin: 0, fontWeight: 600, color: 'var(--neon-yellow)' }}>
-                💡 <strong>Saran Penting:</strong> Sangat disarankan untuk <strong>SELALU MELAKUKAN PERHITUNGAN & CROSS-CHECK SECARA MANUAL</strong> dengan membandingkan profil resmi Google Skills Anda terhadap syarat program & pengumuman mingguan resmi.
+                💡 <strong>Saran Penting:</strong> Sangat disarankan untuk <strong>SELALU MELAKUKAN PERHITUNGAN & CROSS-CHECK SECARA MANUAL</strong>.
               </p>
             </div>
 
