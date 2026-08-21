@@ -384,14 +384,21 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
         "build infrastructure with terraform on google cloud": "Build Infrastructure with Terraform in Google Cloud"
       }
       const canonicalName = canonicalMap[normTitleStr] || matchedExtra
-
-      validExtraBadges.push({
-        id: raw.courseId,
-        name: canonicalName,
-        earnedDate: raw.earnedDateRaw,
-        dateUnknown: raw.dateUnknown,
-        imageUrl: raw.imageUrl
+      const isAlreadyInSyllabus = validSyllabusBadges.some(sb => {
+        const sbNorm = normalizeTitle(sb.name)
+        const cNorm = normalizeTitle(canonicalName)
+        return sbNorm === cNorm || sbNorm.includes(cNorm) || cNorm.includes(sbNorm)
       })
+
+      if (!isAlreadyInSyllabus) {
+        validExtraBadges.push({
+          id: raw.courseId,
+          name: canonicalName,
+          earnedDate: raw.earnedDateRaw,
+          dateUnknown: raw.dateUnknown,
+          imageUrl: raw.imageUrl
+        })
+      }
     } else {
       excludedItems.push({
         title: raw.title,

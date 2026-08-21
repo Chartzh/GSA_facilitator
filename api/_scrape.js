@@ -263,20 +263,27 @@ export function parseProfileHtml(html, profileUrl) {
         "build infrastructure with terraform on google cloud": "Build Infrastructure with Terraform in Google Cloud"
       }
       const canonicalName = canonicalMap[normTitle] || matchedExtra
+      const isAlreadyInSyllabus = validSyllabusBadges.some(sb => {
+        const sbNorm = normalizeTitle(sb.name)
+        const cNorm = normalizeTitle(canonicalName)
+        return sbNorm === cNorm || sbNorm.includes(cNorm) || cNorm.includes(sbNorm)
+      })
 
-      if (dateValid) {
-        validExtraBadges.push({
-          id: b.courseId || b.gameId || Math.floor(Math.random() * 100000),
-          name: canonicalName,
-          url: b.href ? (b.href.startsWith('http') ? b.href : `https://www.skills.google${b.href}`) : profileUrl,
-          tier: 'beginner',
-          labs: 1,
-          credits: 0,
-          earnedDate: b.earnedDateRaw || 'Selesai',
-          imageUrl: b.imageUrl
-        })
-      } else {
-        excludedItems.push({ title: b.title, reason: 'Badge katalog tambahan di luar periode program', date: b.earnedDateRaw })
+      if (!isAlreadyInSyllabus) {
+        if (dateValid) {
+          validExtraBadges.push({
+            id: b.courseId || b.gameId || Math.floor(Math.random() * 100000),
+            name: canonicalName,
+            url: b.href ? (b.href.startsWith('http') ? b.href : `https://www.skills.google${b.href}`) : profileUrl,
+            tier: 'beginner',
+            labs: 1,
+            credits: 0,
+            earnedDate: b.earnedDateRaw || 'Selesai',
+            imageUrl: b.imageUrl
+          })
+        } else {
+          excludedItems.push({ title: b.title, reason: 'Badge katalog tambahan di luar periode program', date: b.earnedDateRaw })
+        }
       }
     } else {
       excludedItems.push({ title: b.title, reason: 'Skill Badge tidak masuk dalam daftar 93 Katalog Resmi Arcade 2026', date: b.earnedDateRaw })
