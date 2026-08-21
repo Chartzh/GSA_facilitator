@@ -357,17 +357,55 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
   }, [scrapedData])
 
 function parseDateForSort(dateStr: string): number {
-  if (!dateStr) return 0
-  const match = dateStr.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),?\s+(\d{4})/i)
-  if (match) {
-    const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-    const mIdx = monthNames.indexOf(match[1].toLowerCase())
-    const day = parseInt(match[2], 10)
-    const year = parseInt(match[3], 10)
-    if (mIdx !== -1) {
+  if (!dateStr || typeof dateStr !== 'string') return 0
+  const clean = dateStr.trim()
+
+  // Try parsing ISO Date
+  const dIso = new Date(clean)
+  if (!isNaN(dIso.getTime()) && clean.length >= 8) {
+    return dIso.getTime()
+  }
+
+  // Month map for Indonesian & English
+  const monthMap: Record<string, number> = {
+    jan: 0, januari: 0, january: 0,
+    feb: 1, februari: 1, february: 1,
+    mar: 2, maret: 2, march: 2,
+    apr: 3, april: 3,
+    may: 4, mei: 4,
+    jun: 5, juni: 5, june: 5,
+    jul: 6, juli: 6, july: 6,
+    aug: 7, agust: 7, agustus: 7, august: 7, agu: 7, ags: 7,
+    sep: 8, september: 8, sept: 8,
+    oct: 9, oktober: 9, october: 9, okt: 9,
+    nov: 10, november: 10,
+    dec: 11, des: 11, desember: 11, december: 11
+  }
+
+  // 1. Day Month Year regex e.g. "15 Juli 2026", "15 Jul 2026", "Earned 15 Aug 2026"
+  const dmyMatch = /(\d{1,2})?\s*([A-Za-z]+)\s*,?\s*(\d{4})/i.exec(clean)
+  if (dmyMatch) {
+    const day = dmyMatch[1] ? parseInt(dmyMatch[1], 10) : 15
+    const mStr = dmyMatch[2].toLowerCase()
+    const year = parseInt(dmyMatch[3], 10)
+    const mIdx = monthMap[mStr] ?? monthMap[mStr.slice(0, 3)]
+    if (mIdx !== undefined) {
       return new Date(year, mIdx, day).getTime()
     }
   }
+
+  // 2. Month Day Year regex e.g. "Jul 15, 2026", "Agustus 2026"
+  const mdyMatch = /([A-Za-z]+)\s*(\d{1,2})?,?\s*(\d{4})/i.exec(clean)
+  if (mdyMatch) {
+    const mStr = mdyMatch[1].toLowerCase()
+    const day = mdyMatch[2] ? parseInt(mdyMatch[2], 10) : 15
+    const year = parseInt(mdyMatch[3], 10)
+    const mIdx = monthMap[mStr] ?? monthMap[mStr.slice(0, 3)]
+    if (mIdx !== undefined) {
+      return new Date(year, mIdx, day).getTime()
+    }
+  }
+
   return 0
 }
 
@@ -381,7 +419,14 @@ function parseDateForSort(dateStr: string): number {
     else if (assetFilter === 'historical') list = [...historicalAssets]
     else list = [...allAssets]
 
-    return [...list].sort((a, b) => parseDateForSort(b.earnedDate) - parseDateForSort(a.earnedDate))
+    return [...list].sort((a, b) => {
+      const timeA = parseDateForSort(a.earnedDate)
+      const timeB = parseDateForSort(b.earnedDate)
+      if (timeA !== timeB) {
+        return timeB - timeA // Descending: newest date at top
+      }
+      return 0
+    })
   }, [assetFilter, currentAssets, historicalAssets, allAssets])
 
   const copyCode = (code: string) => {

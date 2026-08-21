@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { validateProfileUrl, parseProfileHtml, ParsedProfileResult } from '../utils/scraper'
 import { formatPoints } from '../utils/points'
 import LabChecklist from './LabChecklist'
-import { LogOut, RotateCw } from 'lucide-react'
+import { LogOut, RotateCw, AlertTriangle, CheckCircle2, ShieldAlert, Info, ChevronDown, ChevronUp } from 'lucide-react'
 
 // Simple 10-minute client cache per profile URL
 const profileCache = new Map<string, { timestamp: number; data: ParsedProfileResult }>()
@@ -19,6 +19,8 @@ export default function PointsCalculator() {
   const [errorMsg, setErrorMsg] = useState('')
   const [toastMsg, setToastMsg] = useState('')
   const [resultData, setResultData] = useState<ParsedProfileResult | null>(null)
+  const [showDisclaimerModal, setShowDisclaimerModal] = useState(false)
+  const [expandedMilestone, setExpandedMilestone] = useState<string | null>(null)
 
   const handleLogout = () => {
     setResultData(null)
@@ -48,6 +50,7 @@ export default function PointsCalculator() {
         setResultData(json)
         saveToStorage(cleanUrl, json)
         setToastMsg('Data profil berhasil diperbarui!')
+        setShowDisclaimerModal(true)
         setTimeout(() => setToastMsg(''), 4000)
       } else {
         throw new Error(json?.error || 'Gagal memperbarui profil. Pastikan profil di-set Public.')
@@ -66,7 +69,9 @@ export default function PointsCalculator() {
       const savedUrl = localStorage.getItem('gsa_calc_url')
       const savedData = localStorage.getItem('gsa_calc_data')
       if (savedUrl) setInputUrl(savedUrl)
-      if (savedData) setResultData(JSON.parse(savedData))
+      if (savedData) {
+        setResultData(JSON.parse(savedData))
+      }
     } catch {
       // Ignore localStorage errors
     }
@@ -107,6 +112,7 @@ export default function PointsCalculator() {
     if (cached && now - cached.timestamp < CACHE_TTL_MS) {
       setResultData(cached.data)
       saveToStorage(cleanUrl, cached.data)
+      setShowDisclaimerModal(true)
       return
     }
 
@@ -119,6 +125,7 @@ export default function PointsCalculator() {
         profileCache.set(cleanUrl, { timestamp: Date.now(), data: json })
         setResultData(json)
         saveToStorage(cleanUrl, json)
+        setShowDisclaimerModal(true)
       } else {
         throw new Error(json?.error || 'Gagal membaca profil. Pastikan profil di-set Public.')
       }
@@ -135,6 +142,86 @@ export default function PointsCalculator() {
   return (
     <div style={{ marginTop: '20px' }}>
       
+      {/* Disclaimer Modal Dialog */}
+      {showDisclaimerModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(5, 5, 12, 0.85)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div
+            className="bento-card"
+            style={{
+              maxWidth: '560px',
+              width: '100%',
+              background: 'var(--bg-card)',
+              border: '2px solid var(--neon-magenta)',
+              boxShadow: '0 0 35px rgba(255, 0, 128, 0.3)',
+              padding: '28px 24px',
+              borderRadius: 'var(--radius)',
+              position: 'relative'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <ShieldAlert size={32} style={{ color: 'var(--neon-magenta)', flexShrink: 0 }} />
+              <div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--neon-magenta)', margin: 0 }}>
+                  PERINGATAN KALKULATOR TIDAK RESMI
+                </h3>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Unofficial Disclaimer Warning
+                </span>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', lineHeight: '1.65', marginBottom: '20px' }}>
+              <p style={{ marginBottom: '12px' }}>
+                ⚠️ <strong>Harap Diperhatikan:</strong> Kalkulator & facilitator tracker ini <strong>BUKAN MERUPAKAN ALAT RESMI</strong> dari Google Cloud maupun Google Skills Boost.
+              </p>
+              <p style={{ marginBottom: '12px', background: 'rgba(255, 0, 128, 0.08)', padding: '12px', borderRadius: '8px', borderLeft: '3px solid var(--neon-magenta)' }}>
+                Sistem ini melakukan ekstraksi data otomatis berdasarkan profil publik. <strong>Bisa saja terjadi kesalahan atau ketidaksesuaian perhitungan poin</strong> akibat perbedaan judul badge, tanggal pencapaian, delay scraping, atau peraturan program.
+              </p>
+              <p style={{ margin: 0, fontWeight: 600, color: 'var(--neon-yellow)' }}>
+                💡 <strong>Saran Penting:</strong> Sangat disarankan untuk <strong>SELALU MELAKUKAN PERHITUNGAN & CROSS-CHECK SECARA MANUAL</strong> dengan membandingkan profil resmi Google Skills Anda terhadap syarat program & pengumuman mingguan resmi.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button
+                className="btn-arcade btn-arcade-primary"
+                onClick={() => setShowDisclaimerModal(false)}
+                style={{
+                  width: '100%',
+                  padding: '12px 20px',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
+                  background: 'var(--neon-magenta)',
+                  borderColor: 'var(--neon-magenta)',
+                  color: '#fff',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
+                <CheckCircle2 size={18} /> SAYA MENGERTI & LANJUTKAN
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Step 1: Input Form Card (Only shown when NO profile result is active) */}
       {!resultData && (
         <div 
@@ -203,6 +290,36 @@ export default function PointsCalculator() {
       {resultData && (
         <div className="bento-card col-span-12 bento-card-highlight">
           
+          {/* Top Warning Banner */}
+          <div
+            style={{
+              padding: '10px 14px',
+              background: 'rgba(255, 0, 128, 0.08)',
+              border: '1px solid rgba(255, 0, 128, 0.3)',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '10px',
+              fontSize: '0.82rem',
+              color: 'var(--text-primary)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={16} style={{ color: 'var(--neon-magenta)', flexShrink: 0 }} />
+              <span>
+                <strong>Perhatian:</strong> Kalkulator ini tidak resmi (unofficial). Disarankan selalu <strong>hitung & periksa poin secara manual</strong>.
+              </span>
+            </div>
+            <button
+              onClick={() => setShowDisclaimerModal(true)}
+              style={{ background: 'none', border: 'none', color: 'var(--neon-magenta)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              Detail Peringatan
+            </button>
+          </div>
+
           <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '12px' }}>
             <div>
               <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)' }}>
@@ -345,3 +462,4 @@ export default function PointsCalculator() {
     </div>
   )
 }
+

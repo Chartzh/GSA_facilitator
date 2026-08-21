@@ -396,42 +396,178 @@ export default function App() {
               </div>
             </div>
 
-            {/* Milestone Strategy Card */}
+            {/* Clean Modern Target Milestone Section */}
             <div className="bento-card col-span-12" style={{ marginTop: '32px' }}>
-              <h3 className="card-title-arcade" style={{ fontSize: '1.1rem', marginBottom: '16px' }}>
-                <Award size={20} className="text-yellow" /> ESTIMASI STRATEGI PENYELESAIAN (ATURAN RESMI)
-              </h3>
+              <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+                <div>
+                  <h3 className="card-title-arcade" style={{ fontSize: '1.2rem', color: 'var(--neon-yellow)' }}>
+                    🏆 TINGKATAN TARGET MILESTONE
+                  </h3>
+                  <p style={{ marginTop: '4px', fontSize: '0.86rem', color: 'var(--text-muted)' }}>
+                    Perincian poin perolehan Arcade Games, Skill Badges, dan Bonus Milestone resmi.
+                  </p>
+                </div>
+                <span className="badge-tag badge-tag-warning">ATURAN RESMI 2026</span>
+              </div>
 
-              <div className="bento-grid" style={{ gap: '20px' }}>
-                <div className="bento-card col-span-6" style={{ background: 'rgba(10, 10, 18, 0.6)' }}>
-                  <h4 style={{ color: 'var(--neon-cyan)', marginBottom: '12px', fontSize: '0.95rem' }}>✨ Konversi Lencana ke Poin</h4>
-                  <div style={{ fontSize: '0.88rem', lineHeight: '1.7' }}>
-                    <p>• <strong>1 Game Badge</strong> = 1 Poin (Selesaikan ~4-6 Labs)</p>
-                    <p>• <strong>2 Skill Badges</strong> = 1 Poin (Selesaikan 2 Challenge Labs)</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                
+                {/* Milestone 1 */}
+                <div
+                  style={{
+                    padding: '20px',
+                    background: 'rgba(10, 10, 18, 0.7)',
+                    border: '1px solid var(--neon-yellow)',
+                    borderRadius: 'var(--radius)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--neon-yellow)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      🏆 Milestone 1
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎮 6 Arcade Games</span>
+                        <strong>6 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🏅 14 Badge Keahlian</span>
+                        <strong>7 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎁 Bonus Milestone</span>
+                        <strong>7 Poin</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--neon-yellow)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)' }}>Total:</span>
+                    <strong style={{ fontSize: '1.2rem', color: 'var(--neon-yellow)' }}>20 Poin</strong>
                   </div>
                 </div>
 
-                <div className="bento-card col-span-6" style={{ background: 'rgba(10, 10, 18, 0.6)' }}>
-                  <h4 style={{ color: 'var(--state-done)', marginBottom: '12px', fontSize: '0.95rem' }}>🏆 Target Milestone Swag</h4>
-                  <div style={{ fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Milestone 1 (6 Game + 14 Skill Badges):</span>
-                      <strong style={{ color: 'var(--state-done)' }}>30 Poin*</strong>
+                {/* Milestone 2 */}
+                <div
+                  style={{
+                    padding: '20px',
+                    background: 'rgba(10, 10, 18, 0.7)',
+                    border: '1px solid var(--neon-cyan)',
+                    borderRadius: 'var(--radius)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--neon-cyan)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      🏆 Milestone 2
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Milestone 2 (8 Game + 28 Skill Badges):</span>
-                      <strong style={{ color: 'var(--neon-cyan)' }}>50 Poin*</strong>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Milestone 3 (10 Game + 42 Skill Badges):</span>
-                      <strong style={{ color: 'var(--neon-yellow)' }}>70 Poin*</strong>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Ultimate Milestone (12 Game + 56 Skill Badges):</span>
-                      <strong style={{ color: 'var(--neon-magenta)' }}>90 Poin*</strong>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎮 8 Arcade Games</span>
+                        <strong>8 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🏅 28 Badge Keahlian</span>
+                        <strong>14 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎁 Bonus Milestone</span>
+                        <strong>18 Poin</strong>
+                      </div>
                     </div>
                   </div>
+
+                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--neon-cyan)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)' }}>Total:</span>
+                    <strong style={{ fontSize: '1.2rem', color: 'var(--neon-cyan)' }}>40 Poin</strong>
+                  </div>
                 </div>
+
+                {/* Milestone 3 */}
+                <div
+                  style={{
+                    padding: '20px',
+                    background: 'rgba(10, 10, 18, 0.7)',
+                    border: '1px solid var(--neon-magenta)',
+                    borderRadius: 'var(--radius)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--neon-magenta)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      🏆 Milestone 3
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎮 10 Arcade Games</span>
+                        <strong>10 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🏅 42 Badge Keahlian</span>
+                        <strong>21 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎁 Bonus Milestone</span>
+                        <strong>29 Poin</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--neon-magenta)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)' }}>Total:</span>
+                    <strong style={{ fontSize: '1.2rem', color: 'var(--neon-magenta)' }}>60 Poin</strong>
+                  </div>
+                </div>
+
+                {/* Ultimate Milestone */}
+                <div
+                  style={{
+                    padding: '20px',
+                    background: 'rgba(10, 10, 18, 0.7)',
+                    border: '1px solid var(--state-done)',
+                    borderRadius: 'var(--radius)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--state-done)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      🏆 Ultimate Milestone
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎮 12 Arcade Games</span>
+                        <strong>12 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🏅 56 Badge Keahlian</span>
+                        <strong>28 Poin</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
+                        <span>🎁 Bonus Milestone</span>
+                        <strong>40 Poin</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--state-done)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)' }}>Total:</span>
+                    <strong style={{ fontSize: '1.2rem', color: 'var(--state-done)' }}>80 Poin</strong>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
