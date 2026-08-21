@@ -11,6 +11,7 @@ import {
   ArcadeGame,
   SkillBadge
 } from '../config/program'
+import { CATALOG_SKILL_BADGES } from '../config/catalogData'
 import {
   basePoints as calcBasePoints,
   milestoneBonus as calcMilestoneBonus,
@@ -153,6 +154,7 @@ export interface ParsedProfileResult {
   validGames: (ArcadeGame & { earnedDate: string; dateUnknown: boolean; imageUrl?: string | null })[]
   validSyllabusBadges: (SkillBadge & { earnedDate: string; dateUnknown: boolean; matchMethod: 'id' | 'title'; imageUrl?: string | null })[]
   validExtraBadges: { id: number | null; name: string; earnedDate: string; dateUnknown: boolean; imageUrl?: string | null }[]
+  totalSkillBadgesCount: number
   excludedItems: { title: string; dateStr: string; reason: string; imageUrl?: string | null }[]
   unknownDateCount: number
   pointsFromGames: number
@@ -412,8 +414,71 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
   // ATURAN #4: Rumus Poin & Milestones dari points.ts
   const pointsFromGames = validGames.length * POINTS.perGame
   const uniqueExtraBadges = Array.from(new Map(validExtraBadges.map(b => [normalizeTitle(b.name), b])).values())
-  const rawSkillBadgesCount = validSyllabusBadges.length + uniqueExtraBadges.length
-  const totalSkillBadgesCount = Math.min(93, rawSkillBadgesCount)
+
+  // Unified catalog matching engine matching LabChecklist.tsx exactly
+  const normNoSpace = (s: string) => (s || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '')
+  const allEarnedMap = new Map()
+  validSyllabusBadges.forEach(b => allEarnedMap.set(normNoSpace(b.name), b.earnedDate || 'Selesai'))
+  validExtraBadges.forEach(b => allEarnedMap.set(normNoSpace(b.name), b.earnedDate || 'Selesai'))
+  extractedBadges.forEach(b => allEarnedMap.set(normNoSpace(b.title), b.earnedDateRaw || 'Selesai'))
+
+  const catalogAliases = new Map([
+    ["get started with sensitive data protection", ["implement sensitive data protection on google cloud", "discover and protect sensitive data across your ecosystem"]],
+    ["discover and protect sensitive data across your ecosystem", ["get started with sensitive data protection", "implement sensitive data protection on google cloud"]],
+    ["get started with app development using gemini code assist", ["kickstarting application development with gemini code assist"]],
+    ["build useful ai applications with gemini and imagen", ["build real world ai applications with gemini and imagen"]],
+    ["organize and manage data with dataplex", ["claim skill badge: organize and manage data with dataplex", "organize and govern data with knowledge catalog", "build a data mesh with knowledge catalog"]],
+    ["build a data mesh with knowledge catalog", ["organize and manage data with dataplex", "organize and govern data with knowledge catalog"]],
+    ["use apis to manage cloud storage", ["use apis to work with cloud storage"]],
+    ["connect cloud networks with ncc", ["connecting cloud networks with ncc"]],
+    ["get started with api gateway", ["deploy and secure serverless apis with api gateway"]],
+    ["using functions, formulas, and charts in google sheets", ["use functions, formulas, and charts in google sheets"]],
+    ["implement cloud security fundamentals in google cloud", ["implement cloud security fundamentals on google cloud"]],
+    ["develop serverless apps on cloud run", ["develop serverless applications on cloud run"]],
+    ["implement ci/cd pipelines in google cloud", ["implement ci/cd pipelines on google cloud"]],
+    ["build infrastructure with terraform in google cloud", ["build infrastructure with terraform on google cloud"]]
+  ])
+
+  let matchedCatalogCount = 0
+  if (Array.isArray(EXTRA_BADGES_ALLOWED)) {
+    const catalog93 = CATALOG_SKILL_BADGES.map(b => b.name)
+    const matchedSet = new Set()
+    catalog93.forEach(catName => {
+      const cNorm = normNoSpace(catName)
+      let found = allEarnedMap.has(cNorm)
+      if (!found) {
+        for (const [key] of allEarnedMap.entries()) {
+          if (key.includes(cNorm) || cNorm.includes(key) || (cNorm.length > 12 && key.slice(0, 15) === cNorm.slice(0, 15))) {
+            found = true
+            break
+          }
+        }
+      }
+      if (!found) {
+        const catKey = catName.toLowerCase().trim()
+        const aliasList = catalogAliases.get(catKey) || []
+        for (const al of aliasList) {
+          const alNorm = normNoSpace(al)
+          found = allEarnedMap.has(alNorm)
+          if (!found) {
+            for (const [key] of allEarnedMap.entries()) {
+              if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
+                found = true
+                break
+              }
+            }
+          }
+          if (found) break
+        }
+      }
+      if (found) {
+        matchedSet.add(cNorm)
+      }
+    })
+    matchedCatalogCount = matchedSet.size
+  }
+
+  const totalSkillBadgesCount = Math.min(93, matchedCatalogCount > 0 ? matchedCatalogCount : (validSyllabusBadges.length + uniqueExtraBadges.length))
   const pointsFromSkillBadges = totalSkillBadgesCount * 0.5
 
   const totalArcadePoints = calcBasePoints(validGames.length, totalSkillBadgesCount)
@@ -461,6 +526,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     validGames,
     validSyllabusBadges,
     validExtraBadges,
+    totalSkillBadgesCount,
     excludedItems,
     unknownDateCount,
     pointsFromGames,

@@ -117,6 +117,102 @@ export function cleanBadgeText(rawText) {
   return { title, dateText }
 }
 
+export const CATALOG_93_BADGES = [
+  "Create Your First Gemini Enterprise Application",
+  "Develop AI-Powered Prototypes in Google AI Studio",
+  "The Basics of Google Cloud Compute",
+  "Implement Event-Driven Messaging and Automation Workflows",
+  "Implement Cloud Storage and Data Protection Solutions",
+  "Create a Streaming Data Lake on Cloud Storage",
+  "Deploy and Manage Applications on Google App Engine",
+  "Implement Speech and Language Solutions with Pre-trained APIs",
+  "Using the Google Cloud Speech API",
+  "Analyze Speech and Language with Google APIs",
+  "Store, Process, and Manage Data on Google Cloud - Console",
+  "Store, Process, and Manage Data on Google Cloud - Command Line",
+  "Migrate MySQL Data to Cloud SQL Using Database Migration Service",
+  "Get Started with Sensitive Data Protection",
+  "Analyze Images with the Cloud Vision API",
+  "Build Event-Driven Applications with Eventarc",
+  "Configure Service Accounts and IAM Roles for Google Cloud",
+  "Get Started with App Development using Gemini Code Assist",
+  "Implement Cloud Security Fundamentals in Google Cloud",
+  "Engineer AI Agents with Agent Development Kit (ADK)",
+  "Build Useful AI Applications with Gemini and Imagen",
+  "Build a Smart Cloud Application with Vibe Coding and MCP",
+  "Implement Cloud Collaboration and Productivity Workflows",
+  "Analyze BigQuery Data in Connected Sheets",
+  "Streaming Analytics into BigQuery",
+  "Create a Secure Data Lake on Cloud Storage",
+  "Secure Lakehouse Data",
+  "Enrich Metadata and Discovery of Lakehouse Data",
+  "Monitor and Manage Google Cloud Resources",
+  "Monitor and Log with Google Cloud Observability",
+  "Set Up a Google Cloud Network",
+  "Integrate BigQuery Data and Google Workspace using Apps Script",
+  "Engineer Data for Predictive Modeling with BigQuery ML",
+  "Implement DevOps Workflows in Google Cloud",
+  "Create ML Models with BigQuery ML",
+  "Build a Website on Google Cloud",
+  "Manage Kubernetes in Google Cloud",
+  "Share Data Using Google Data Cloud",
+  "Use Machine Learning APIs on Google Cloud",
+  "Monitor Environments with Google Cloud Managed Service for Prometheus",
+  "Organize and Manage Data with Dataplex",
+  "Analyze Sentiment with Natural Language API",
+  "Develop with Apps Script and AppSheet",
+  "Use APIs to Manage Cloud Storage",
+  "Monitoring in Google Cloud",
+  "Orchestrate Multi-agent Workflows with Gemini Enterprise",
+  "Connect Cloud Networks with NCC",
+  "Privileged Access with IAM",
+  "Enhance Gemini Model Capabilities",
+  "Analyze and Reason on Multimodal Data with Gemini",
+  "Implement Multimodal Vector Search with BigQuery",
+  "Protect Cloud Traffic with Chrome Enterprise Premium Security",
+  "Discover and Protect Sensitive Data Across Your Ecosystem",
+  "Secure Software Delivery",
+  "Create and Manage AlloyDB Instances",
+  "Create and Manage Cloud SQL for PostgreSQL Instances",
+  "Deploy and Manage Apigee X",
+  "Develop Serverless Apps on Cloud Run",
+  "Build a Data Warehouse with BigQuery",
+  "Prepare Data for ML APIs on Google Cloud",
+  "Build Serverless Applications with Cloud Run Functions",
+  "Get Started with API Gateway",
+  "App Building with AppSheet",
+  "Build Google Cloud Infrastructure for AWS Professionals",
+  "Create and Manage Bigtable Instances",
+  "Implement CI/CD Pipelines in Google Cloud",
+  "Using Functions, Formulas, and Charts in Google Sheets",
+  "Create and Manage Cloud Spanner Instances",
+  "Build Infrastructure with Terraform in Google Cloud",
+  "Perform Predictive Data Analysis in BigQuery",
+  "Automate Data Capture at Scale with Document AI",
+  "Develop and Secure APIs with Apigee X",
+  "Explore Generative AI in Agent Platform",
+  "Implementing Cloud Load Balancing for Compute Engine",
+  "Prompt Design in Agent Platform",
+  "Inspect Rich Documents with Gemini Multimodality and Multimodal RAG",
+  "Develop Gen AI Apps with Gemini and Streamlit",
+  "Set Up an App Dev Environment on Google Cloud",
+  "Develop Your Google Cloud Network",
+  "Build a Secure Google Cloud Network",
+  "Deploy Kubernetes Applications on Google Cloud",
+  "Derive Insights from BigQuery Data",
+  "Build LookML Objects in Looker",
+  "Manage Data Models in Looker",
+  "Prepare Data for Looker Dashboards and Reports",
+  "Develop Serverless Apps with Firebase",
+  "Cloud Architecture: Design, Implement, and Manage",
+  "Build Global and Regional Load Balancing Solutions",
+  "Google DeepMind: Train A Small Language Model",
+  "Mitigate Threats and Vulnerabilities with Security Command Center",
+  "Build a Data Mesh with Knowledge Catalog",
+  "Deploy Multi-Agent Architectures",
+  "Optimize Costs for Google Kubernetes Engine"
+];
+
 export function parseProfileHtml(html, profileUrl) {
   const $ = cheerio.load(html)
   let profileName = 'Peserta Google Skills'
@@ -294,8 +390,71 @@ export function parseProfileHtml(html, profileUrl) {
   const uniqueSyllabusBadges = Array.from(new Map(validSyllabusBadges.map(b => [b.id, b])).values())
   const uniqueExtraBadges = Array.from(new Map(validExtraBadges.map(b => [normalizeTitle(b.name), b])).values())
 
-  const rawBadgesCount = uniqueSyllabusBadges.length + uniqueExtraBadges.length
-  const totalBadgesCount = Math.min(93, rawBadgesCount)
+  // Unified catalog matching engine matching LabChecklist.tsx exactly
+  const normNoSpace = (s) => (s || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '')
+  const allEarnedMap = new Map()
+  validSyllabusBadges.forEach(b => allEarnedMap.set(normNoSpace(b.name), b.earnedDate || 'Selesai'))
+  validExtraBadges.forEach(b => allEarnedMap.set(normNoSpace(b.name), b.earnedDate || 'Selesai'))
+  rawBadges.forEach(b => allEarnedMap.set(normNoSpace(b.title), b.earnedDateRaw || 'Selesai'))
+
+  const catalogAliases = new Map([
+    ["get started with sensitive data protection", ["implement sensitive data protection on google cloud", "discover and protect sensitive data across your ecosystem"]],
+    ["discover and protect sensitive data across your ecosystem", ["get started with sensitive data protection", "implement sensitive data protection on google cloud"]],
+    ["get started with app development using gemini code assist", ["kickstarting application development with gemini code assist"]],
+    ["build useful ai applications with gemini and imagen", ["build real world ai applications with gemini and imagen"]],
+    ["organize and manage data with dataplex", ["claim skill badge: organize and manage data with dataplex", "organize and govern data with knowledge catalog", "build a data mesh with knowledge catalog"]],
+    ["build a data mesh with knowledge catalog", ["organize and manage data with dataplex", "organize and govern data with knowledge catalog"]],
+    ["use apis to manage cloud storage", ["use apis to work with cloud storage"]],
+    ["connect cloud networks with ncc", ["connecting cloud networks with ncc"]],
+    ["get started with api gateway", ["deploy and secure serverless apis with api gateway"]],
+    ["using functions, formulas, and charts in google sheets", ["use functions, formulas, and charts in google sheets"]],
+    ["implement cloud security fundamentals in google cloud", ["implement cloud security fundamentals on google cloud"]],
+    ["develop serverless apps on cloud run", ["develop serverless applications on cloud run"]],
+    ["implement ci/cd pipelines in google cloud", ["implement ci/cd pipelines on google cloud"]],
+    ["build infrastructure with terraform in google cloud", ["build infrastructure with terraform on google cloud"]]
+  ])
+
+  // Count unique catalog badges matched from CATALOG_SKILL_BADGES
+  let matchedCatalogCount = 0
+  if (Array.isArray(EXTRA_BADGES_ALLOWED)) {
+    const catalog93 = CATALOG_93_BADGES
+    const matchedSet = new Set()
+    catalog93.forEach(catName => {
+      const cNorm = normNoSpace(catName)
+      let found = allEarnedMap.has(cNorm)
+      if (!found) {
+        for (const [key] of allEarnedMap.entries()) {
+          if (key.includes(cNorm) || cNorm.includes(key) || (cNorm.length > 12 && key.slice(0, 15) === cNorm.slice(0, 15))) {
+            found = true
+            break
+          }
+        }
+      }
+      if (!found) {
+        const catKey = catName.toLowerCase().trim()
+        const aliasList = catalogAliases.get(catKey) || []
+        for (const al of aliasList) {
+          const alNorm = normNoSpace(al)
+          found = allEarnedMap.has(alNorm)
+          if (!found) {
+            for (const [key] of allEarnedMap.entries()) {
+              if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
+                found = true
+                break
+              }
+            }
+          }
+          if (found) break
+        }
+      }
+      if (found) {
+        matchedSet.add(cNorm)
+      }
+    })
+    matchedCatalogCount = matchedSet.size
+  }
+
+  const totalBadgesCount = Math.min(93, matchedCatalogCount > 0 ? matchedCatalogCount : (uniqueSyllabusBadges.length + uniqueExtraBadges.length))
 
   const baseP = calcBasePoints(uniqueGames.length, totalBadgesCount)
   const milestone = calcCurrentMilestone(uniqueGames.length, totalBadgesCount)
@@ -321,6 +480,7 @@ export function parseProfileHtml(html, profileUrl) {
     validGames: uniqueGames,
     validSyllabusBadges: uniqueSyllabusBadges,
     validExtraBadges: uniqueExtraBadges,
+    totalSkillBadgesCount: totalBadgesCount,
     excludedItems,
     pointsFromGames: uniqueGames.length * POINTS.perGame,
     pointsFromSkillBadges: totalBadgesCount / POINTS.skillBadgesPerPoint,

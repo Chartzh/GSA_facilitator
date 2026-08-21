@@ -43,11 +43,26 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
 
   const handleOpenGameModal = (gameName: string, accessCode: string, gameUrl: string) => {
     const allCatalogGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES]
-    const found = allCatalogGames.find(g => 
-      g.name.toLowerCase().trim() === gameName.toLowerCase().trim() || 
-      gameName.toLowerCase().includes(g.name.toLowerCase().trim()) || 
-      g.name.toLowerCase().includes(gameName.toLowerCase().trim())
-    )
+    const normAccess = (accessCode || '').toLowerCase().trim()
+    const normName = (gameName || '').toLowerCase().trim()
+
+    let found = allCatalogGames.find(g => {
+      const gCode = ((g as any).accessCode || (g as any).code || '').toLowerCase().trim()
+      if (gCode && normAccess && gCode === normAccess) return true
+      return false
+    })
+
+    if (!found) {
+      found = allCatalogGames.find(g => {
+        const gName = g.name.toLowerCase().trim()
+        return gName === normName || normName.includes(gName) || gName.includes(normName) ||
+          (normName.includes('adventure') && gName.includes('adventure')) ||
+          (normName.includes('base camp') && gName.includes('base camp')) ||
+          (normName.includes('voyage') && gName.includes('voyage')) ||
+          (normName.includes('trail') && gName.includes('trail')) ||
+          (normName.includes('simulator') && gName.includes('simulator'))
+      })
+    }
 
     const labs = found ? found.labs : []
     setActiveGameModal({
@@ -454,7 +469,7 @@ function parseDateForSort(dateStr: string): number {
           onClick={() => setActiveSubTab('track_badge')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <History size={16} /> Track Badge ({scrapedData ? scrapedData.validGames.length + scrapedData.validSyllabusBadges.length + scrapedData.validExtraBadges.length : 0})
+          <History size={16} /> Track Badge ({scrapedData ? scrapedData.validGames.length + ((scrapedData as any).totalSkillBadgesCount ?? Math.min(93, scrapedData.validSyllabusBadges.length + scrapedData.validExtraBadges.length)) : 0})
         </button>
 
         <button

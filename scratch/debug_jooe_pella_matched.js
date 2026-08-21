@@ -1,20 +1,21 @@
 import fs from 'fs';
 
-if (fs.existsSync('.env.local')) {
-  const envText = fs.readFileSync('.env.local', 'utf8');
-  envText.split('\n').forEach(line => {
-    const match = line.match(/^([^=]+)=(.*)$/);
-    if (match) {
-      const key = match[1].trim();
-      let val = match[2].trim();
-      if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
-      process.env[key] = val;
-    }
-  });
+const url = 'https://www.skills.google/public_profiles/1fcf5233-8a16-4e8b-ac88-e09a64908981';
+
+const catText = fs.readFileSync('src/config/catalogData.ts', 'utf8');
+const startIdx = catText.indexOf('export const CATALOG_SKILL_BADGES');
+const section = catText.slice(startIdx);
+
+const catalog93Names = [];
+const matches = section.matchAll(/"name":\s*"([^"]+)"/g);
+for (const m of matches) {
+  if (!catalog93Names.includes(m[1]) && !m[1].startsWith('http') && !m[1].startsWith('game-') && !m[1].startsWith('Lab ')) {
+    catalog93Names.push(m[1]);
+  }
 }
 
 async function test() {
-  const res = await fetch('https://www.skills.google/public_profiles/e80a907c-d02d-4646-b199-1197c380068f', {
+  const res = await fetch(url, {
     headers: {
       'Accept-Language': 'en-US,en;q=0.9',
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -23,24 +24,13 @@ async function test() {
   const html = await res.text();
 
   const { parseProfileHtml } = await import('../api/_scrape.js');
-  const scrapedData = parseProfileHtml(html, 'https://www.skills.google/public_profiles/e80a907c-d02d-4646-b199-1197c380068f');
-
-  const catText = fs.readFileSync('src/config/catalogData.ts', 'utf8');
-  const startIdx = catText.indexOf('export const CATALOG_SKILL_BADGES');
-  const section = catText.slice(startIdx);
-
-  const catalog93Names = [];
-  const matches = section.matchAll(/"name":\s*"([^"]+)"/g);
-  for (const m of matches) {
-    if (!catalog93Names.includes(m[1]) && !m[1].startsWith('http') && !m[1].startsWith('game-') && !m[1].startsWith('Lab ')) {
-      catalog93Names.push(m[1]);
-    }
-  }
+  const parsed = parseProfileHtml(html, url);
 
   const normalize = (t) => (t || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '');
-  const earnedMap = new Set();
-  scrapedData.validSyllabusBadges.forEach(b => earnedMap.add(normalize(b.name)));
-  scrapedData.validExtraBadges.forEach(b => earnedMap.add(normalize(b.name)));
+
+  const earnedSet = new Map();
+  parsed.validSyllabusBadges.forEach(b => earnedSet.set(normalize(b.name), b.earnedDate || 'Selesai'));
+  parsed.validExtraBadges.forEach(b => earnedSet.set(normalize(b.name), b.earnedDate || 'Selesai'));
 
   const aliases = new Map([
     ["get started with sensitive data protection", ["implement sensitive data protection on google cloud", "discover and protect sensitive data across your ecosystem"]],
@@ -59,33 +49,33 @@ async function test() {
     ["build infrastructure with terraform in google cloud", ["build infrastructure with terraform on google cloud"]]
   ]);
 
+  const missing = [];
   let doneCount = 0;
-  const missingInUI = [];
-
   catalog93Names.forEach((catName, idx) => {
     const normName = normalize(catName);
-    let isDone = earnedMap.has(normName);
+    let isDone = earnedSet.has(normName);
+
     if (!isDone) {
-      for (const key of earnedMap) {
+      for (const [key] of earnedSet.entries()) {
         if (key.includes(normName) || normName.includes(key) || (normName.length > 12 && key.slice(0, 15) === normName.slice(0, 15))) {
           isDone = true;
           break;
         }
       }
     }
+
     if (!isDone) {
       const catKey = catName.toLowerCase().trim();
       const aliasList = aliases.get(catKey) || [];
       for (const al of aliasList) {
         const alNorm = normalize(al);
-        if (earnedMap.has(alNorm)) {
-          isDone = true;
-          break;
-        }
-        for (const key of earnedMap) {
-          if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
-            isDone = true;
-            break;
+        isDone = earnedSet.has(alNorm);
+        if (!isDone) {
+          for (const [key] of earnedSet.entries()) {
+            if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
+              isDone = true;
+              break;
+            }
           }
         }
         if (isDone) break;
@@ -95,14 +85,13 @@ async function test() {
     if (isDone) {
       doneCount++;
     } else {
-      missingInUI.push({ idx: idx + 1, catName });
+      missing.push({ idx: idx + 1, catName });
     }
   });
 
-  console.log(`=== UI CHECKLIST DONE COUNT FOR NEISYA: ${doneCount} / ${catalog93Names.length} ===`);
-  if (missingInUI.length > 0) {
-    console.log('Missing in UI checklist:', missingInUI);
-  }
+  console.log('--- LABCHECKLIST UI CHECKLIST MATCHING FOR JOOE PELLA ---');
+  console.log(`Done Count in UI Checklist: ${doneCount} / 93`);
+  console.log('Missing items in UI Checklist:', missing);
 }
 
 test().catch(console.error);
