@@ -6,6 +6,7 @@ import {
   ARCADE_GAMES,
   SKILL_BADGES,
   GEAR_BADGES,
+  EXTRA_BADGES_ALLOWED,
   BONUS_MILESTONE_POINTS
 } from './_program.js'
 import {
@@ -238,29 +239,60 @@ export function parseProfileHtml(html, profileUrl) {
       return
     }
 
-    if (dateValid) {
-      validExtraBadges.push({
-        id: b.courseId || b.gameId || Math.floor(Math.random() * 100000),
-        name: b.title,
-        url: b.href ? (b.href.startsWith('http') ? b.href : `https://www.skills.google${b.href}`) : profileUrl,
-        tier: 'beginner',
-        labs: 1,
-        credits: 0,
-        earnedDate: b.earnedDateRaw || 'Selesai',
-        imageUrl: b.imageUrl
-      })
+    const matchedExtra = Array.isArray(EXTRA_BADGES_ALLOWED) && EXTRA_BADGES_ALLOWED.find(extraName => {
+      const eNorm = normalizeTitle(extraName)
+      return normTitle === eNorm || normTitle.includes(eNorm) || eNorm.includes(normTitle)
+    })
+
+    if (matchedExtra) {
+      const canonicalMap = {
+        "implement sensitive data protection on google cloud": "Get Started with Sensitive Data Protection",
+        "discover and protect sensitive data across your ecosystem": "Get Started with Sensitive Data Protection",
+        "kickstarting application development with gemini code assist": "Get Started with App Development using Gemini Code Assist",
+        "build real world ai applications with gemini and imagen": "Build Useful AI Applications with Gemini and Imagen",
+        "claim skill badge: organize and manage data with dataplex": "Organize and Manage Data with Dataplex",
+        "organize and govern data with knowledge catalog": "Organize and Manage Data with Dataplex",
+        "build a data mesh with knowledge catalog": "Organize and Manage Data with Dataplex",
+        "use apis to work with cloud storage": "Use APIs to Manage Cloud Storage",
+        "connecting cloud networks with ncc": "Connect Cloud Networks with NCC",
+        "deploy and secure serverless apis with api gateway": "Get Started with API Gateway",
+        "use functions, formulas, and charts in google sheets": "Using Functions, Formulas, and Charts in Google Sheets",
+        "implement cloud security fundamentals on google cloud": "Implement Cloud Security Fundamentals in Google Cloud",
+        "develop serverless applications on cloud run": "Develop Serverless Apps on Cloud Run",
+        "implement ci/cd pipelines on google cloud": "Implement CI/CD Pipelines in Google Cloud",
+        "build infrastructure with terraform on google cloud": "Build Infrastructure with Terraform in Google Cloud"
+      }
+      const canonicalName = canonicalMap[normTitle] || matchedExtra
+
+      if (dateValid) {
+        validExtraBadges.push({
+          id: b.courseId || b.gameId || Math.floor(Math.random() * 100000),
+          name: canonicalName,
+          url: b.href ? (b.href.startsWith('http') ? b.href : `https://www.skills.google${b.href}`) : profileUrl,
+          tier: 'beginner',
+          labs: 1,
+          credits: 0,
+          earnedDate: b.earnedDateRaw || 'Selesai',
+          imageUrl: b.imageUrl
+        })
+      } else {
+        excludedItems.push({ title: b.title, reason: 'Badge katalog tambahan di luar periode program', date: b.earnedDateRaw })
+      }
     } else {
-      excludedItems.push({ title: b.title, reason: 'Badge katalog tambahan di luar periode program', date: b.earnedDateRaw })
+      excludedItems.push({ title: b.title, reason: 'Skill Badge tidak masuk dalam daftar 93 Katalog Resmi Arcade 2026', date: b.earnedDateRaw })
     }
   })
 
   const uniqueGames = Array.from(new Map(validGames.map(g => [g.id, g])).values())
   const uniqueSyllabusBadges = Array.from(new Map(validSyllabusBadges.map(b => [b.id, b])).values())
-  const uniqueExtraBadges = Array.from(new Map(validExtraBadges.map(b => [b.name, b])).values())
+  const uniqueExtraBadges = Array.from(new Map(validExtraBadges.map(b => [normalizeTitle(b.name), b])).values())
 
-  const baseP = calcBasePoints(uniqueGames.length, uniqueSyllabusBadges.length + uniqueExtraBadges.length)
-  const milestone = calcCurrentMilestone(uniqueGames.length, uniqueSyllabusBadges.length + uniqueExtraBadges.length)
-  const milestoneBonusP = calcMilestoneBonus(uniqueGames.length, uniqueSyllabusBadges.length + uniqueExtraBadges.length)
+  const rawBadgesCount = uniqueSyllabusBadges.length + uniqueExtraBadges.length
+  const totalBadgesCount = Math.min(93, rawBadgesCount)
+
+  const baseP = calcBasePoints(uniqueGames.length, totalBadgesCount)
+  const milestone = calcCurrentMilestone(uniqueGames.length, totalBadgesCount)
+  const milestoneBonusP = calcMilestoneBonus(uniqueGames.length, totalBadgesCount)
   const totalPointsWithBonus = baseP + milestoneBonusP
 
   const currentTier = TIERS.slice().reverse().find(t => totalPointsWithBonus >= t.minPoints) || null
@@ -272,7 +304,7 @@ export function parseProfileHtml(html, profileUrl) {
     nextMilestoneNeeds = {
       label: nextM.label,
       neededGames: Math.max(0, nextM.games - uniqueGames.length),
-      neededBadges: Math.max(0, nextM.badges - (uniqueSyllabusBadges.length + uniqueExtraBadges.length))
+      neededBadges: Math.max(0, nextM.badges - totalBadgesCount)
     }
   }
 
@@ -284,7 +316,7 @@ export function parseProfileHtml(html, profileUrl) {
     validExtraBadges: uniqueExtraBadges,
     excludedItems,
     pointsFromGames: uniqueGames.length * POINTS.perGame,
-    pointsFromSkillBadges: (uniqueSyllabusBadges.length + uniqueExtraBadges.length) / POINTS.skillBadgesPerPoint,
+    pointsFromSkillBadges: totalBadgesCount / POINTS.skillBadgesPerPoint,
     basePoints: baseP,
     milestoneBonus: milestoneBonusP,
     totalPointsWithBonus,

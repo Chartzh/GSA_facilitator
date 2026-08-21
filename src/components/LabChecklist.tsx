@@ -1,20 +1,62 @@
 import React, { useState, useMemo } from 'react'
 import { SKILL_BADGES, ARCADE_GAMES, TOTALS, SkillBadge, ArcadeGame } from '../config/program'
 import { ParsedProfileResult } from '../utils/scraper'
-import { Gamepad2, Award, Zap, Copy, Check, ExternalLink, Download, Clock, ShieldCheck, History } from 'lucide-react'
+import { CATALOG_SKILL_BADGES, JULY_ARCADE_GAMES, AUGUST_ARCADE_GAMES } from '../config/catalogData'
+import { Gamepad2, Award, Zap, Copy, Check, ExternalLink, Download, Clock, ShieldCheck, History, Play, X, Code, FileText } from 'lucide-react'
 
 interface LabChecklistProps {
   scrapedData: ParsedProfileResult | null
 }
 
+const ADUAN_FORM_URL = 'https://forms.gle/a1Bi7qs5QfZAnvVEA'
+
 export default function LabChecklist({ scrapedData }: LabChecklistProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'arcade_track' | 'skill_badge_track' | 'fasttrack' | 'track_badge'>('arcade_track')
+  const [activeSubTab, setActiveSubTab] = useState<'arcade_track' | 'skill_badge_track' | 'track_badge'>('arcade_track')
   const [statusFilter, setStatusFilter] = useState<'all' | 'done' | 'pending'>('all')
   const [tierFilter, setTierFilter] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
+  const [onlyFasttrack, setOnlyFasttrack] = useState(false)
   const [sortBy, setSortBy] = useState<'default' | 'labs_asc' | 'credits_asc'>('default')
-  const [fasttrackSearch, setFasttrackSearch] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [assetFilter, setAssetFilter] = useState<'current' | 'all' | 'historical'>('current')
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
+
+  // YouTube Solution Modal Player State
+  const [activeVideoModal, setActiveVideoModal] = useState<{
+    title: string
+    videoUrl: string
+    subLabs?: { name: string; videoUrl?: string; scriptFile?: string; lang?: string; note?: string }[]
+  } | null>(null)
+  const [activeSubLabIndex, setActiveSubLabIndex] = useState(0)
+
+  const handleOpenVideoModal = (title: string, videoUrl: string, subLabs?: any[]) => {
+    setActiveVideoModal({ title, videoUrl, subLabs })
+    setActiveSubLabIndex(0)
+  }
+
+  // Arcade Game Modal State
+  const [activeGameModal, setActiveGameModal] = useState<{
+    name: string
+    accessCode: string
+    url: string
+    labs: { name: string; videoUrl?: string; note?: string; claimUrl?: string; isClaimBadge?: boolean }[]
+  } | null>(null)
+
+  const handleOpenGameModal = (gameName: string, accessCode: string, gameUrl: string) => {
+    const allCatalogGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES]
+    const found = allCatalogGames.find(g => 
+      g.name.toLowerCase().trim() === gameName.toLowerCase().trim() || 
+      gameName.toLowerCase().includes(g.name.toLowerCase().trim()) || 
+      g.name.toLowerCase().includes(gameName.toLowerCase().trim())
+    )
+
+    const labs = found ? found.labs : []
+    setActiveGameModal({
+      name: gameName,
+      accessCode,
+      url: gameUrl,
+      labs
+    })
+  }
 
   // Accordion state for Arcade Game months
   const [openMonths, setOpenMonths] = useState<Record<string, boolean>>({
@@ -44,6 +86,28 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
     return map
   }, [scrapedData])
 
+  const catalogVideoMap = useMemo(() => {
+    const map = new Map<string, string>()
+    CATALOG_SKILL_BADGES.forEach(badge => {
+      const vUrl = badge.videoUrl || (badge.subLabs && badge.subLabs.length > 0 ? badge.subLabs[0].videoUrl : '')
+      if (vUrl) {
+        map.set(badge.name.toLowerCase().trim(), vUrl)
+      }
+    })
+    const allGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES]
+    allGames.forEach(game => {
+      if (game.labs) {
+        game.labs.forEach(lab => {
+          if (lab.videoUrl) {
+            map.set(lab.name.toLowerCase().trim(), lab.videoUrl)
+            map.set(game.name.toLowerCase().trim(), lab.videoUrl)
+          }
+        })
+      }
+    })
+    return map
+  }, [])
+
   const doneSyllabusCount = completedBadgeMap.size
 
   // Arcade Games grouped by Month
@@ -66,73 +130,158 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
   const julyDoneCount = julyGames.filter(g => g.isDone).length
   const augustDoneCount = augustGames.filter(g => g.isDone).length
 
-  // Skill Badges grouped by Tier
-  const skillTiers = useMemo(() => {
-    const tiers = ['beginner', 'intermediate', 'advanced'] as const
-    return tiers
-      .filter(tier => tierFilter === 'all' || tierFilter === tier)
-      .map(tier => {
-        const items = SKILL_BADGES.filter(b => b.tier === tier).map(b => ({
-          ...b,
-          isDone: completedBadgeMap.has(b.id),
-          earnedDate: completedBadgeMap.get(b.id) || null
-        }))
+  // 93 Catalog Skill Badges list with exact participant earned status
+  const catalogSkillBadgeList = useMemo(() => {
+    const normalize = (t: string) => (t || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '')
+    
+    // Map of earned badges from scrapedData
+    const earnedMap = new Map<string, string>()
+    if (scrapedData) {
+      scrapedData.validSyllabusBadges.forEach(b => earnedMap.set(normalize(b.name), b.earnedDate || 'Selesai'))
+      scrapedData.validExtraBadges.forEach(b => earnedMap.set(normalize(b.name), b.earnedDate || 'Selesai'))
+    }
 
-        let filtered = items.filter(item => {
-          if (statusFilter === 'done') return item.isDone
-          if (statusFilter === 'pending') return !item.isDone
-          return true
-        })
+    const aliases = new Map<string, string[]>([
+      ["get started with sensitive data protection", ["implement sensitive data protection on google cloud", "discover and protect sensitive data across your ecosystem"]],
+      ["discover and protect sensitive data across your ecosystem", ["get started with sensitive data protection", "implement sensitive data protection on google cloud"]],
+      ["get started with app development using gemini code assist", ["kickstarting application development with gemini code assist"]],
+      ["build useful ai applications with gemini and imagen", ["build real world ai applications with gemini and imagen"]],
+      ["organize and manage data with dataplex", ["claim skill badge: organize and manage data with dataplex", "organize and govern data with knowledge catalog", "build a data mesh with knowledge catalog"]],
+      ["build a data mesh with knowledge catalog", ["organize and manage data with dataplex", "organize and govern data with knowledge catalog"]],
+      ["use apis to manage cloud storage", ["use apis to work with cloud storage"]],
+      ["connect cloud networks with ncc", ["connecting cloud networks with ncc"]],
+      ["get started with api gateway", ["deploy and secure serverless apis with api gateway"]],
+      ["using functions, formulas, and charts in google sheets", ["use functions, formulas, and charts in google sheets"]],
+      ["implement cloud security fundamentals in google cloud", ["implement cloud security fundamentals on google cloud"]],
+      ["develop serverless apps on cloud run", ["develop serverless applications on cloud run"]],
+      ["implement ci/cd pipelines in google cloud", ["implement ci/cd pipelines on google cloud"]],
+      ["build infrastructure with terraform in google cloud", ["build infrastructure with terraform on google cloud"]]
+    ])
 
-        if (sortBy === 'labs_asc') {
-          filtered = [...filtered].sort((a, b) => a.labs - b.labs)
-        } else if (sortBy === 'credits_asc') {
-          filtered = [...filtered].sort((a, b) => a.credits - b.credits)
+    const list = CATALOG_SKILL_BADGES.map((badge, idx) => {
+      const normName = normalize(badge.name)
+      let earnedDate = earnedMap.get(normName)
+
+      if (!earnedDate) {
+        for (const [key, val] of earnedMap.entries()) {
+          if (key.includes(normName) || normName.includes(key) || (normName.length > 12 && key.slice(0, 15) === normName.slice(0, 15))) {
+            earnedDate = val
+            break
+          }
         }
+      }
 
-        const doneCount = items.filter(i => i.isDone).length
-
-        return {
-          tier,
-          title: tier === 'beginner' ? 'Beginner (17 Badges)' : tier === 'intermediate' ? 'Intermediate (17 Badges)' : 'Advanced (17 Badges)',
-          doneCount,
-          totalCount: items.length,
-          items: filtered
+      if (!earnedDate) {
+        const catKey = badge.name.toLowerCase().trim()
+        const aliasList = aliases.get(catKey) || []
+        for (const al of aliasList) {
+          const alNorm = normalize(al)
+          earnedDate = earnedMap.get(alNorm)
+          if (!earnedDate) {
+            for (const [key, val] of earnedMap.entries()) {
+              if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
+                earnedDate = val
+                break
+              }
+            }
+          }
+          if (earnedDate) break
         }
-      })
-  }, [completedBadgeMap, statusFilter, tierFilter, sortBy])
+      }
 
-  // Fasttrack List
-  const fasttrackList = useMemo(() => {
-    let items = SKILL_BADGES.map(b => ({
-      ...b,
-      isDone: completedBadgeMap.has(b.id),
-      earnedDate: completedBadgeMap.get(b.id) || null
-    }))
+      const tier = badge.level.toLowerCase().includes('intermediate')
+        ? 'intermediate'
+        : badge.level.toLowerCase().includes('advanced')
+        ? 'advanced'
+        : 'beginner'
+
+      const labsCount = badge.subLabs && badge.subLabs.length > 0 ? badge.subLabs.length : 1
+
+      return {
+        ...badge,
+        id: `catalog-${idx}`,
+        tier,
+        labsCount,
+        isDone: Boolean(earnedDate),
+        earnedDate: earnedDate || null
+      }
+    })
+
+    let filtered = list
 
     if (tierFilter !== 'all') {
-      items = items.filter(b => b.tier === tierFilter)
+      filtered = filtered.filter(b => b.tier === tierFilter)
     }
 
     if (statusFilter === 'done') {
-      items = items.filter(b => b.isDone)
+      filtered = filtered.filter(b => b.isDone)
     } else if (statusFilter === 'pending') {
-      items = items.filter(b => !b.isDone)
+      filtered = filtered.filter(b => !b.isDone)
     }
 
-    if (fasttrackSearch.trim()) {
-      const q = fasttrackSearch.toLowerCase()
-      items = items.filter(b => b.name.toLowerCase().includes(q))
+    if (onlyFasttrack) {
+      filtered = filtered.filter(b => b.isFastTrack)
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
+      filtered = filtered.filter(b => b.name.toLowerCase().includes(q))
     }
 
     if (sortBy === 'labs_asc') {
-      items = [...items].sort((a, b) => a.labs - b.labs)
-    } else if (sortBy === 'credits_asc') {
-      items = [...items].sort((a, b) => a.credits - b.credits)
+      filtered = [...filtered].sort((a, b) => a.labsCount - b.labsCount)
     }
 
-    return items
-  }, [completedBadgeMap, statusFilter, tierFilter, fasttrackSearch, sortBy])
+    return filtered
+  }, [scrapedData, tierFilter, statusFilter, onlyFasttrack, searchQuery, sortBy])
+
+  const doneCatalogCount = useMemo(() => {
+    const normalize = (t: string) => (t || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '')
+    const earnedMap = new Set<string>()
+    if (scrapedData) {
+      scrapedData.validSyllabusBadges.forEach(b => earnedMap.add(normalize(b.name)))
+      scrapedData.validExtraBadges.forEach(b => earnedMap.add(normalize(b.name)))
+    }
+
+    const aliases = new Map<string, string[]>([
+      ["get started with sensitive data protection", ["implement sensitive data protection on google cloud", "discover and protect sensitive data across your ecosystem"]],
+      ["discover and protect sensitive data across your ecosystem", ["get started with sensitive data protection", "implement sensitive data protection on google cloud"]],
+      ["get started with app development using gemini code assist", ["kickstarting application development with gemini code assist"]],
+      ["build useful ai applications with gemini and imagen", ["build real world ai applications with gemini and imagen"]],
+      ["organize and manage data with dataplex", ["claim skill badge: organize and manage data with dataplex", "organize and govern data with knowledge catalog", "build a data mesh with knowledge catalog"]],
+      ["build a data mesh with knowledge catalog", ["organize and manage data with dataplex", "organize and govern data with knowledge catalog"]],
+      ["use apis to manage cloud storage", ["use apis to work with cloud storage"]],
+      ["connect cloud networks with ncc", ["connecting cloud networks with ncc"]],
+      ["get started with api gateway", ["deploy and secure serverless apis with api gateway"]],
+      ["using functions, formulas, and charts in google sheets", ["use functions, formulas, and charts in google sheets"]],
+      ["implement cloud security fundamentals in google cloud", ["implement cloud security fundamentals on google cloud"]],
+      ["develop serverless apps on cloud run", ["develop serverless applications on cloud run"]],
+      ["implement ci/cd pipelines in google cloud", ["implement ci/cd pipelines on google cloud"]],
+      ["build infrastructure with terraform in google cloud", ["build infrastructure with terraform on google cloud"]]
+    ])
+
+    return CATALOG_SKILL_BADGES.filter(badge => {
+      const normName = normalize(badge.name)
+      if (earnedMap.has(normName)) return true
+      for (const key of earnedMap) {
+        if (key.includes(normName) || normName.includes(key) || (normName.length > 12 && key.slice(0, 15) === normName.slice(0, 15))) {
+          return true
+        }
+      }
+      const catKey = badge.name.toLowerCase().trim()
+      const aliasList = aliases.get(catKey) || []
+      for (const al of aliasList) {
+        const alNorm = normalize(al)
+        if (earnedMap.has(alNorm)) return true
+        for (const key of earnedMap) {
+          if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
+            return true
+          }
+        }
+      }
+      return false
+    }).length
+  }, [scrapedData])
 
   // Collected Assets Data for "Track Badge" tab
   const currentAssets = useMemo(() => {
@@ -297,15 +446,7 @@ function parseDateForSort(dateStr: string): number {
           onClick={() => setActiveSubTab('skill_badge_track')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <Award size={16} /> Skill Badge Track ({doneSyllabusCount}/51)
-        </button>
-
-        <button
-          className={`btn-arcade ${activeSubTab === 'fasttrack' ? 'btn-arcade-primary' : 'btn-arcade-outline'}`}
-          onClick={() => setActiveSubTab('fasttrack')}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
-        >
-          <Zap size={16} /> Fasttrack (Catalog)
+          <Award size={16} /> Skill Badge Track ({doneCatalogCount}/93)
         </button>
 
         <button
@@ -404,15 +545,24 @@ function parseDateForSort(dateStr: string): number {
                           </div>
                         </td>
                         <td>
-                          <a
-                            href={game.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`btn-arcade ${game.isDone ? 'btn-arcade-outline' : 'btn-arcade-primary'}`}
-                            style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                          >
-                            {game.isDone ? 'Buka Game' : 'Kerjakan Game'} <ExternalLink size={12} />
-                          </a>
+                          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            <button
+                              onClick={() => handleOpenGameModal(game.name, game.accessCode, game.url)}
+                              className="btn-arcade btn-arcade-primary"
+                              style={{ padding: '6px 12px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              <Play size={12} /> Solusi & Detail Game
+                            </button>
+                            <a
+                              href={game.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`btn-arcade ${game.isDone ? 'btn-arcade-outline' : 'btn-arcade-primary'}`}
+                              style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              {game.isDone ? 'Buka Game' : 'Kerjakan Game'} <ExternalLink size={12} />
+                            </a>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -516,191 +666,32 @@ function parseDateForSort(dateStr: string): number {
       )}
 
       {/* ============================================================
-          2. SKILL BADGE TRACK (51 SYLLABUS BADGES)
+          2. SKILL BADGE TRACK (93 KATALOG RESMI ARCADE 2026)
          ============================================================ */}
       {activeSubTab === 'skill_badge_track' && (
         <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
           <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '12px' }}>
             <div>
               <h3 className="card-title-arcade" style={{ color: 'var(--neon-cyan)' }}>
-                <Award size={20} /> SKILL BADGE TRACK ({doneSyllabusCount} / 51 SILABUS SELESAI)
+                <Award size={20} /> SKILL BADGE TRACK ({doneCatalogCount} / 93 KATALOG SELESAI)
               </h3>
               <p style={{ marginTop: '4px', fontSize: '0.86rem' }}>
-                Setiap 1 Skill Badge bernilai 0.5 Poin Arcade (2 Skill Badge = 1 Poin).
+                Seluruh 93 Skill Badge resmi katalog Arcade 2026. Lengkap dengan indikator perolehan & solusi video YouTube per lab.
               </p>
             </div>
 
-            <span className="badge-tag badge-tag-done">BOBOT: 0.5 PTS / BADGE</span>
+            <span className="badge-tag badge-tag-done">BOBOT: 0.5 PTS / BADGE (MAKS 93)</span>
           </div>
 
-          {/* Filter & Sort Controls */}
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '20px 0' }}>
-            <select
-              className="input-arcade"
-              style={{ padding: '6px 12px', fontSize: '0.82rem', width: 'auto' }}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
-            >
-              <option value="all">Filter Status: Semua</option>
-              <option value="pending">Belum Dikerjakan</option>
-              <option value="done">Sudah Selesai</option>
-            </select>
-
-            <select
-              className="input-arcade"
-              style={{ padding: '6px 12px', fontSize: '0.82rem', width: 'auto' }}
-              value={tierFilter}
-              onChange={(e) => setTierFilter(e.target.value as any)}
-            >
-              <option value="all">Filter Level: Semua Level</option>
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-            </select>
-
-            <select
-              className="input-arcade"
-              style={{ padding: '6px 12px', fontSize: '0.82rem', width: 'auto' }}
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-            >
-              <option value="default">Urutkan: Silabus Resmi</option>
-              <option value="labs_asc">Jumlah Lab Paling Sedikit ⚡</option>
-              <option value="credits_asc">Credit Paling Hemat 🪙</option>
-            </select>
-          </div>
-
-          {skillTiers.map(tierGroup => (
-            <div key={tierGroup.tier} style={{ marginBottom: '24px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '8px 14px',
-                  background: 'rgba(10, 10, 18, 0.7)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)',
-                  marginBottom: '12px'
-                }}
-              >
-                <strong style={{ fontSize: '0.88rem', color: 'var(--neon-cyan)' }}>
-                  {tierGroup.title}
-                </strong>
-                <span className="badge-tag badge-tag-done">
-                  {tierGroup.doneCount} / {tierGroup.totalCount} Selesai
-                </span>
-              </div>
-
-              <div className="arcade-table-wrapper">
-                <table className="arcade-table">
-                  <thead>
-                    <tr>
-                      <th>STATUS</th>
-                      <th>NAMA SKILL BADGE</th>
-                      <th>LABS</th>
-                      <th>CREDITS</th>
-                      <th>AKSI / LINK</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tierGroup.items.map(badge => (
-                      <tr key={badge.id} className={badge.isDone ? 'row-active-highlight' : ''}>
-                        <td>
-                          {badge.isDone ? (
-                            <span className="badge-tag badge-tag-done">
-                              ✓ SELESAI {badge.earnedDate ? `(${badge.earnedDate})` : ''}
-                            </span>
-                          ) : (
-                            <span className="badge-tag badge-tag-pending">
-                              ○ BELUM
-                            </span>
-                          )}
-                        </td>
-                        <td style={{ fontWeight: 600 }}>{badge.name}</td>
-                        <td style={{ fontWeight: badge.labs === 1 ? 800 : 400, color: badge.labs === 1 ? 'var(--neon-yellow)' : 'inherit' }}>
-                          {badge.labs} Lab {badge.labs === 1 ? '⚡ (1 Lab Fast)' : ''}
-                        </td>
-                        <td>{badge.credits} Cr</td>
-                        <td>
-                          <a
-                            href={badge.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-arcade btn-arcade-outline"
-                            style={{ padding: '4px 10px', fontSize: '0.78rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                          >
-                            {badge.isDone ? 'Buka Link' : 'Kerjakan'} <ExternalLink size={12} />
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-
-          {/* BADGE TAMBAHAN */}
-          {scrapedData && scrapedData.validExtraBadges.length > 0 && (
-            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--border)' }}>
-              <div className="card-header-flex" style={{ marginBottom: '12px' }}>
-                <h3 className="card-title-arcade" style={{ color: 'var(--neon-cyan)', fontSize: '1rem' }}>
-                  🌟 BADGE TAMBAHAN (DI LUAR SILABUS)
-                </h3>
-                <span className="badge-tag badge-tag-done">{scrapedData.validExtraBadges.length} BADGES</span>
-              </div>
-              <div className="arcade-table-wrapper">
-                <table className="arcade-table">
-                  <thead>
-                    <tr>
-                      <th>STATUS</th>
-                      <th>NAMA BADGE</th>
-                      <th>TANGGAL PEROLEHAN</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {scrapedData.validExtraBadges.map((ex, idx) => (
-                      <tr key={idx} className="row-active-highlight">
-                        <td><span className="badge-tag badge-tag-done">✓ SELESAI (+0.5 PT)</span></td>
-                        <td style={{ fontWeight: 600 }}>{ex.name}</td>
-                        <td>{ex.earnedDate || '-'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ============================================================
-          3. FASTTRACK (FOUNDATIONAL CATALOG)
-         ============================================================ */}
-      {activeSubTab === 'fasttrack' && (
-        <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
-          <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '12px' }}>
-            <div>
-              <h3 className="card-title-arcade" style={{ color: 'var(--state-done)' }}>
-                <Zap size={20} /> FASTTRACK FOUNDATIONAL CATALOG ({fasttrackList.length} BADGES)
-              </h3>
-              <p style={{ marginTop: '4px', fontSize: '0.86rem' }}>
-                Cari & urutkan lencana berdasarkan jumlah lab tercepat atau credit paling hemat.
-              </p>
-            </div>
-
-            <span className="badge-tag badge-tag-done">0.5 PTS / BADGE</span>
-          </div>
-
+          {/* Filter Bar */}
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '20px 0' }}>
             <div className="input-arcade-group" style={{ flex: 1, minWidth: '220px' }}>
               <input
                 type="text"
                 className="input-arcade"
-                placeholder="🔍 Cari nama badge..."
-                value={fasttrackSearch}
-                onChange={(e) => setFasttrackSearch(e.target.value)}
+                placeholder="🔍 Cari nama skill badge / lab..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 style={{ padding: '6px 12px', fontSize: '0.82rem' }}
               />
             </div>
@@ -724,9 +715,17 @@ function parseDateForSort(dateStr: string): number {
               onChange={(e) => setStatusFilter(e.target.value as any)}
             >
               <option value="all">Status: Semua</option>
-              <option value="pending">Belum Dikerjakan</option>
-              <option value="done">Sudah Selesai</option>
+              <option value="done">✓ Sudah Selesai</option>
+              <option value="pending">○ Belum Selesai</option>
             </select>
+
+            <button
+              onClick={() => setOnlyFasttrack(!onlyFasttrack)}
+              className={`btn-arcade ${onlyFasttrack ? 'btn-arcade-primary' : 'btn-arcade-outline'}`}
+              style={{ padding: '6px 12px', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+            >
+              <Zap size={14} /> {onlyFasttrack ? '⚡ FastTrack Aktif' : '⚡ Filter FastTrack'}
+            </button>
 
             <select
               className="input-arcade"
@@ -734,49 +733,100 @@ function parseDateForSort(dateStr: string): number {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
             >
-              <option value="default">Urutkan: Silabus Resmi</option>
-              <option value="labs_asc">Lab Paling Sedikit (Fastest) ⚡</option>
+              <option value="default">Urutkan: Katalog Resmi</option>
+              <option value="labs_asc">Lab Tercepat (Fastest) ⚡</option>
               <option value="credits_asc">Credit Paling Hemat 🪙</option>
             </select>
           </div>
 
+          {/* 93 Catalog Skill Badges Grid */}
           <div className="bento-grid" style={{ gap: '16px' }}>
-            {fasttrackList.map(badge => (
+            {catalogSkillBadgeList.map(badge => (
               <div 
                 key={badge.id} 
                 className="bento-card col-span-6" 
                 style={{ 
                   background: badge.isDone ? 'rgba(0, 255, 157, 0.05)' : 'var(--bg-base)', 
                   border: badge.isDone ? '1px solid var(--state-done)' : '1px solid var(--border)',
-                  padding: '16px'
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
-                  <span className={`badge-tag ${badge.tier === 'beginner' ? 'badge-tag-done' : badge.tier === 'intermediate' ? 'badge-tag-warning' : 'badge-tag-excluded'}`}>
-                    {badge.tier.toUpperCase()}
-                  </span>
-                  <span className={`badge-tag ${badge.isDone ? 'badge-tag-done' : 'badge-tag-pending'}`}>
-                    {badge.isDone ? `✓ SELESAI ${badge.earnedDate ? `(${badge.earnedDate})` : ''}` : '○ BELUM'}
-                  </span>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      <span className={`badge-tag ${badge.tier === 'beginner' ? 'badge-tag-done' : badge.tier === 'intermediate' ? 'badge-tag-warning' : 'badge-tag-excluded'}`}>
+                        {badge.tier.toUpperCase()}
+                      </span>
+                      {badge.isFastTrack && (
+                        <span className="badge-tag badge-tag-warning" style={{ background: 'rgba(255, 230, 0, 0.15)', color: 'var(--neon-yellow)' }}>
+                          ⚡ FastTrack ({badge.labsCount} Lab)
+                        </span>
+                      )}
+                    </div>
+
+                    <span className={`badge-tag ${badge.isDone ? 'badge-tag-done' : 'badge-tag-pending'}`}>
+                      {badge.isDone ? `✓ SELESAI ${badge.earnedDate ? `(${badge.earnedDate})` : ''}` : '○ BELUM'}
+                    </span>
+                  </div>
+
+                  <h4 style={{ fontSize: '0.94rem', color: 'var(--text-primary)', marginBottom: '4px', lineHeight: 1.4, fontWeight: 700 }}>
+                    {badge.name}
+                  </h4>
+
+                  {/* Sub-labs list with YouTube links */}
+                  {badge.subLabs && badge.subLabs.length > 0 && (
+                    <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--neon-cyan)', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                        📋 DAFTAR SUB-LAB & SOLUSI:
+                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {badge.subLabs.map((sub, sIdx) => (
+                          <div key={sIdx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.76rem', background: 'rgba(0,0,0,0.3)', padding: '4px 8px', borderRadius: '4px' }}>
+                            <span style={{ color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+                              {sIdx + 1}. {sub.name}
+                            </span>
+                            {sub.videoUrl && (
+                              <button
+                                onClick={() => handleOpenVideoModal(badge.name, sub.videoUrl!, badge.subLabs)}
+                                className="btn-arcade btn-arcade-primary"
+                                style={{ padding: '2px 8px', fontSize: '0.7rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                              >
+                                <Play size={10} /> YT
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <h4 style={{ fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: '8px', lineHeight: 1.4, fontWeight: 700 }}>
-                  {badge.name}
-                </h4>
+                {/* Footer Action Buttons */}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end', paddingTop: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    {badge.videoUrl && (
+                      <button
+                        onClick={() => handleOpenVideoModal(badge.name, badge.videoUrl!, badge.subLabs)}
+                        className="btn-arcade btn-arcade-primary"
+                        style={{ padding: '4px 10px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        <Play size={12} /> Solusi YT
+                      </button>
+                    )}
 
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
-                  <span>
-                    <strong style={{ color: badge.labs === 1 ? 'var(--neon-yellow)' : 'inherit' }}>{badge.labs} Lab</strong> {badge.labs === 1 ? '⚡' : ''} • {badge.credits} Cr
-                  </span>
-                  <a
-                    href={badge.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-arcade btn-arcade-outline"
-                    style={{ padding: '4px 10px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                  >
-                    {badge.isDone ? 'Buka Link' : 'Kerjakan'} <ExternalLink size={12} />
-                  </a>
+                    <a
+                      href={badge.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`btn-arcade ${badge.isDone ? 'btn-arcade-outline' : 'btn-arcade-primary'}`}
+                      style={{ padding: '4px 10px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      {badge.isDone ? 'Buka Link' : 'Kerjakan'} <ExternalLink size={12} />
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
@@ -912,6 +962,263 @@ function parseDateForSort(dateStr: string): number {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* YouTube Embedded Solution Player Modal */}
+      {activeVideoModal && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+          onClick={() => setActiveVideoModal(null)}
+        >
+          <div 
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              width: '100%',
+              maxWidth: '850px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: '24px',
+              boxShadow: '0 8px 32px rgba(0, 240, 255, 0.2)',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '16px' }}>
+              <div>
+                <span className="badge-tag badge-tag-done" style={{ marginBottom: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Play size={14} /> Solusi Video YouTube
+                </span>
+                <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', margin: 0, lineHeight: 1.3 }}>
+                  {activeVideoModal.title}
+                </h3>
+              </div>
+              <button 
+                onClick={() => setActiveVideoModal(null)}
+                className="btn-arcade btn-arcade-outline"
+                style={{ padding: '6px 10px', fontSize: '0.8rem' }}
+              >
+                <X size={16} /> Tutup
+              </button>
+            </div>
+
+            {/* Sub-labs selector tabs if multiple exist */}
+            {activeVideoModal.subLabs && activeVideoModal.subLabs.length > 1 && (
+              <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '10px', marginBottom: '14px' }}>
+                {activeVideoModal.subLabs.map((sub, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveSubLabIndex(idx)}
+                    className={`btn-arcade ${activeSubLabIndex === idx ? 'btn-arcade-primary' : 'btn-arcade-outline'}`}
+                    style={{ padding: '4px 12px', fontSize: '0.76rem', whiteSpace: 'nowrap' }}
+                  >
+                    Lab {idx + 1}: {sub.name}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* YouTube Player Frame */}
+            {(() => {
+              const currentVideo = activeVideoModal.subLabs && activeVideoModal.subLabs.length > 0
+                ? activeVideoModal.subLabs[activeSubLabIndex]?.videoUrl || activeVideoModal.videoUrl
+                : activeVideoModal.videoUrl
+
+              if (!currentVideo) {
+                return (
+                  <div style={{ padding: '24px', textAlign: 'center', background: 'var(--bg-base)', borderRadius: 'var(--radius)', color: 'var(--text-muted)' }}>
+                    Solusi video belum tersedia.
+                  </div>
+                )
+              }
+
+              return (
+                <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', borderRadius: 'var(--radius)', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                  <iframe
+                    src={currentVideo}
+                    title="YouTube Solution Player"
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              )
+            })()}
+
+            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+              <a
+                href={ADUAN_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-arcade btn-arcade-outline"
+                style={{ padding: '6px 14px', fontSize: '0.78rem', color: '#ff5555', borderColor: 'rgba(255,85,85,0.3)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                🚨 Laporkan Lab Bermasalah (Form Dicoding)
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Arcade Game Solution & Details Modal */}
+      {activeGameModal && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+          onClick={() => setActiveGameModal(null)}
+        >
+          <div 
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              width: '100%',
+              maxWidth: '850px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: '24px',
+              boxShadow: '0 8px 32px rgba(255, 230, 0, 0.2)',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '16px' }}>
+              <div>
+                <span className="badge-tag badge-tag-warning" style={{ marginBottom: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Gamepad2 size={14} /> Solusi & Guide Arcade Game
+                </span>
+                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', margin: 0, lineHeight: 1.3, fontWeight: 700 }}>
+                  {activeGameModal.name}
+                </h3>
+              </div>
+              <button 
+                onClick={() => setActiveGameModal(null)}
+                className="btn-arcade btn-arcade-outline"
+                style={{ padding: '6px 10px', fontSize: '0.8rem' }}
+              >
+                <X size={16} /> Tutup
+              </button>
+            </div>
+
+            {/* Access Code & Direct Game Link Bar */}
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-base)', border: '1px solid var(--border)', padding: '14px', borderRadius: 'var(--radius)', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '0.84rem', color: 'var(--text-muted)' }}>Access Code:</span>
+                <code style={{ background: '#0a0a12', padding: '4px 10px', borderRadius: 'var(--radius-sm)', color: 'var(--neon-yellow)', fontWeight: 700, fontFamily: 'var(--font-arcade)', fontSize: '0.95rem' }}>
+                  {activeGameModal.accessCode}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => copyCode(activeGameModal.accessCode)}
+                  className="btn-arcade btn-arcade-outline"
+                  style={{ padding: '4px 10px', fontSize: '0.74rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                >
+                  {copiedCode === activeGameModal.accessCode ? <Check size={12} /> : <Copy size={12} />}
+                  {copiedCode === activeGameModal.accessCode ? 'Tersalin' : 'Salin Kode'}
+                </button>
+              </div>
+
+              <a
+                href={activeGameModal.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-arcade btn-arcade-primary"
+                style={{ padding: '8px 18px', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+              >
+                🚀 Kerjakan Game di Google Skills <ExternalLink size={14} />
+              </a>
+            </div>
+
+            {/* List of Child Labs with YouTube Video Links */}
+            <h4 style={{ fontSize: '0.95rem', color: 'var(--neon-cyan)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              📋 DAFTAR LAB & VIDEO SOLUSI YOUTUBE ({activeGameModal.labs.length} LAB):
+            </h4>
+
+            {activeGameModal.labs.length === 0 ? (
+              <div style={{ padding: '20px', textAlign: 'center', background: 'var(--bg-base)', borderRadius: 'var(--radius)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                Gunakan tombol "Kerjakan Game di Google Skills" di atas untuk mengakses seluruh lab game ini di platform resmi.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {activeGameModal.labs.map((lab, idx) => (
+                  <div 
+                    key={idx} 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between', 
+                      gap: '12px', 
+                      background: 'var(--bg-base)', 
+                      border: '1px solid var(--border)', 
+                      padding: '12px 16px', 
+                      borderRadius: 'var(--radius)' 
+                    }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', display: 'block', marginBottom: '2px' }}>
+                        Lab {idx + 1}: {lab.name}
+                      </span>
+                      {lab.isClaimBadge && (
+                        <span className="badge-tag badge-tag-warning" style={{ fontSize: '0.7rem' }}>
+                          🎁 Claim Badge (Langsung Klaim)
+                        </span>
+                      )}
+                    </div>
+
+                    {lab.videoUrl ? (
+                      <button
+                        onClick={() => {
+                          setActiveGameModal(null)
+                          handleOpenVideoModal(`Solusi: ${lab.name}`, lab.videoUrl!)
+                        }}
+                        className="btn-arcade btn-arcade-primary"
+                        style={{ padding: '6px 14px', fontSize: '0.78rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                      >
+                        <Play size={12} /> Solusi YT
+                      </button>
+                    ) : lab.claimUrl ? (
+                      <a
+                        href={lab.claimUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-arcade btn-arcade-primary"
+                        style={{ padding: '6px 14px', fontSize: '0.78rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                      >
+                        Klaim Lencana <ExternalLink size={12} />
+                      </a>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 

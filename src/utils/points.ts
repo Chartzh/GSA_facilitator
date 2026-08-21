@@ -23,7 +23,7 @@ export const MILESTONES: readonly MilestoneDef[] = [
  */
 export function basePoints(games: number, skillBadges: number): number {
   const g = Math.max(0, Math.floor(Number(games) || 0))
-  const b = Math.max(0, Math.floor(Number(skillBadges) || 0))
+  const b = Math.min(93, Math.max(0, Math.floor(Number(skillBadges) || 0)))
   const halves = g * POINTS_PER_GAME * 2 + b   // selalu bilangan bulat
   return halves / 2                            // hasil: bilangan bulat atau .5
 }
@@ -31,7 +31,7 @@ export function basePoints(games: number, skillBadges: number): number {
 /** Milestone tertinggi yang dicapai, atau null. */
 export function currentMilestone(games: number, skillBadges: number): MilestoneDef | null {
   const g = Math.max(0, Math.floor(Number(games) || 0))
-  const b = Math.max(0, Math.floor(Number(skillBadges) || 0))
+  const b = Math.min(93, Math.max(0, Math.floor(Number(skillBadges) || 0)))
   return MILESTONES.find(m => g >= m.games && b >= m.badges) ?? null
 }
 

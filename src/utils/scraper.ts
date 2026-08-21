@@ -6,6 +6,7 @@ import {
   ARCADE_GAMES,
   SKILL_BADGES,
   GEAR_BADGES,
+  EXTRA_BADGES_ALLOWED,
   BONUS_MILESTONE_POINTS,
   ArcadeGame,
   SkillBadge
@@ -357,19 +358,55 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       continue
     }
 
-    // 4. All Other Skill Badges earned during the program (Included as Extra Skill Badges)
-    validExtraBadges.push({
-      id: raw.courseId,
-      name: raw.title,
-      earnedDate: raw.earnedDateRaw,
-      dateUnknown: raw.dateUnknown,
-      imageUrl: raw.imageUrl
+    // 4. All Other Skill Badges checked against 42 Catalog Extra Badges
+    const normTitleStr = normalizeTitle(raw.title)
+    const matchedExtra = Array.isArray(EXTRA_BADGES_ALLOWED) && EXTRA_BADGES_ALLOWED.find(extraName => {
+      const eNorm = normalizeTitle(extraName)
+      return normTitleStr === eNorm || normTitleStr.includes(eNorm) || eNorm.includes(normTitleStr)
     })
+
+    if (matchedExtra) {
+      const canonicalMap: Record<string, string> = {
+        "implement sensitive data protection on google cloud": "Get Started with Sensitive Data Protection",
+        "discover and protect sensitive data across your ecosystem": "Get Started with Sensitive Data Protection",
+        "kickstarting application development with gemini code assist": "Get Started with App Development using Gemini Code Assist",
+        "build real world ai applications with gemini and imagen": "Build Useful AI Applications with Gemini and Imagen",
+        "claim skill badge: organize and manage data with dataplex": "Organize and Manage Data with Dataplex",
+        "organize and govern data with knowledge catalog": "Organize and Manage Data with Dataplex",
+        "build a data mesh with knowledge catalog": "Organize and Manage Data with Dataplex",
+        "use apis to work with cloud storage": "Use APIs to Manage Cloud Storage",
+        "connecting cloud networks with ncc": "Connect Cloud Networks with NCC",
+        "deploy and secure serverless apis with api gateway": "Get Started with API Gateway",
+        "use functions, formulas, and charts in google sheets": "Using Functions, Formulas, and Charts in Google Sheets",
+        "implement cloud security fundamentals on google cloud": "Implement Cloud Security Fundamentals in Google Cloud",
+        "develop serverless applications on cloud run": "Develop Serverless Apps on Cloud Run",
+        "implement ci/cd pipelines on google cloud": "Implement CI/CD Pipelines in Google Cloud",
+        "build infrastructure with terraform on google cloud": "Build Infrastructure with Terraform in Google Cloud"
+      }
+      const canonicalName = canonicalMap[normTitleStr] || matchedExtra
+
+      validExtraBadges.push({
+        id: raw.courseId,
+        name: canonicalName,
+        earnedDate: raw.earnedDateRaw,
+        dateUnknown: raw.dateUnknown,
+        imageUrl: raw.imageUrl
+      })
+    } else {
+      excludedItems.push({
+        title: raw.title,
+        dateStr: raw.earnedDateRaw || 'Selesai',
+        reason: 'Skill Badge tidak masuk dalam daftar 93 Katalog Resmi Arcade 2026',
+        imageUrl: raw.imageUrl
+      })
+    }
   }
 
   // ATURAN #4: Rumus Poin & Milestones dari points.ts
   const pointsFromGames = validGames.length * POINTS.perGame
-  const totalSkillBadgesCount = validSyllabusBadges.length + validExtraBadges.length
+  const uniqueExtraBadges = Array.from(new Map(validExtraBadges.map(b => [normalizeTitle(b.name), b])).values())
+  const rawSkillBadgesCount = validSyllabusBadges.length + uniqueExtraBadges.length
+  const totalSkillBadgesCount = Math.min(93, rawSkillBadgesCount)
   const pointsFromSkillBadges = totalSkillBadgesCount * 0.5
 
   const totalArcadePoints = calcBasePoints(validGames.length, totalSkillBadgesCount)

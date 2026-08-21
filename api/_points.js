@@ -6,13 +6,13 @@ export { MILESTONES }
 
 export function basePoints(gamesCount, skillBadgesCount) {
   const g = Math.max(0, Number(gamesCount) || 0)
-  const b = Math.max(0, Number(skillBadgesCount) || 0)
+  const b = Math.min(93, Math.max(0, Number(skillBadgesCount) || 0))
   return (g * POINTS_PER_GAME) + (b / BADGES_PER_POINT)
 }
 
 export function currentMilestone(gamesCount, skillBadgesCount) {
   const g = Math.max(0, Number(gamesCount) || 0)
-  const b = Math.max(0, Number(skillBadgesCount) || 0)
+  const b = Math.min(93, Math.max(0, Number(skillBadgesCount) || 0))
   let result = null
 
   for (const m of MILESTONES) {

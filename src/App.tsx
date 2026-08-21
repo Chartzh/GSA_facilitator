@@ -115,6 +115,7 @@ export default function App() {
   const getInitialTab = () => {
     const rawHash = window.location.hash.replace('#', '').toLowerCase()
     if (rawHash === 'weekly' || rawHash === 'weekly-challenge') return 'weekly-challenge'
+    if (rawHash === 'tutorial' || rawHash === 'tutorial-lab') return 'kalkulator'
     const validTabs = ['home', 'kalkulator', 'leaderboard', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear', 'weekly-challenge']
     return validTabs.includes(rawHash) ? rawHash : 'home'
   }
@@ -135,6 +136,8 @@ export default function App() {
       const rawHash = window.location.hash.replace('#', '').toLowerCase()
       if (rawHash === 'weekly' || rawHash === 'weekly-challenge') {
         setActiveTab('weekly-challenge')
+      } else if (rawHash === 'tutorial' || rawHash === 'tutorial-lab') {
+        setActiveTab('kalkulator')
       } else {
         const validTabs = ['home', 'kalkulator', 'leaderboard', 'tentang', 'cara', 'faq', 'komunitas', 'skills', 'gear', 'weekly-challenge']
         if (validTabs.includes(rawHash)) {
@@ -434,7 +437,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 2 NEW PAGES */}
+        {/* NEW PAGES */}
         {activeTab === 'kalkulator' && <PointsCalculator />}
         {activeTab === 'leaderboard' && <LeaderboardSection />}
 
