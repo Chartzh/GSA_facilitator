@@ -393,14 +393,14 @@ export default function PointsCalculator() {
               <div className="stat-value-giant" style={{ color: 'var(--neon-yellow)' }}>
                 {resultData.validGames.length}
               </div>
-              <div className="stat-label-muted">{resultData.validGames.length} Game ({formatPoints(resultData.pointsFromGames)} PT)</div>
+              <div className="stat-label-muted">{resultData.validGames.length} Arcade Games ({formatPoints(resultData.pointsFromGames)} PT)</div>
             </div>
             <div className="stat-box col-span-3">
               <div className="stat-value-giant" style={{ color: 'var(--state-done)' }}>
                 {formatPoints(resultData.pointsFromSkillBadges)}
               </div>
               <div className="stat-label-muted">
-                {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Badge ({formatPoints(resultData.pointsFromSkillBadges)} PT)
+                {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Skill Badges ({formatPoints(resultData.pointsFromSkillBadges)} PT)
               </div>
             </div>
             <div className="stat-box col-span-3">
@@ -423,7 +423,7 @@ export default function PointsCalculator() {
               color: 'var(--text-primary)'
             }}
           >
-            🧮 <strong>Rincian Poin:</strong> {resultData.validGames.length} Game ({formatPoints(resultData.pointsFromGames)}) + {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Badge ({formatPoints(resultData.pointsFromSkillBadges)}) + Bonus {resultData.highestMilestone?.label || 'Milestone'} (+{resultData.milestoneBonus}) {resultData.gearBonus ? `+ Bonus GEAR (+${resultData.gearBonus})` : ''} = <strong>{formatPoints(resultData.totalPointsWithBonus)} Total Poin</strong>
+            🧮 <strong>Rincian Poin:</strong> {resultData.validGames.length} Arcade Games ({formatPoints(resultData.pointsFromGames)}) + {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Skill Badges ({formatPoints(resultData.pointsFromSkillBadges)}) + Bonus {resultData.highestMilestone?.label || 'Milestone'} (+{resultData.milestoneBonus}) {resultData.gearBonus ? `+ Bonus GEAR (+${resultData.gearBonus})` : ''} = <strong>{formatPoints(resultData.totalPointsWithBonus)} Total Poin</strong>
           </div>
 
           {/* Milestone Status & Gap */}
@@ -447,7 +447,7 @@ export default function PointsCalculator() {
                 <div style={{ fontSize: '0.88rem', color: 'var(--neon-cyan)' }}>
                   🎯 Target Berikutnya ({resultData.nextMilestoneNeeds.label}):{' '}
                   <strong>
-                    Butuh {resultData.nextMilestoneNeeds.neededGames} Game + {resultData.nextMilestoneNeeds.neededBadges} Skill Badge lagi.
+                    Butuh {resultData.nextMilestoneNeeds.neededGames} Arcade Games + {resultData.nextMilestoneNeeds.neededBadges} Skill Badges lagi.
                   </strong>
                 </div>
               )}

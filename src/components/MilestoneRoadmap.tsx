@@ -184,7 +184,7 @@ export default function MilestoneRoadmap({ gamesCount, skillsCount }: MilestoneR
               {/* Games Progress Bar */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                  <span>GAMES</span>
+                  <span>ARCADE GAMES</span>
                   <span style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
                     {Math.min(m.targetGames, gamesCount)} / {m.targetGames}
                   </span>
@@ -214,7 +214,7 @@ export default function MilestoneRoadmap({ gamesCount, skillsCount }: MilestoneR
               {/* Skills Progress Bar */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                  <span>SKILLS</span>
+                  <span>SKILL BADGES</span>
                   <span style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
                     {Math.min(m.targetSkills, skillsCount)} / {m.targetSkills}
                   </span>

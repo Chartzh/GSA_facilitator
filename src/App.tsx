@@ -498,7 +498,7 @@ export default function App() {
                         <strong>6 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
-                        <span>🏅 14 Badge Keahlian</span>
+                        <span>🏅 14 Skill Badges</span>
                         <strong>7 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
@@ -537,7 +537,7 @@ export default function App() {
                         <strong>8 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
-                        <span>🏅 28 Badge Keahlian</span>
+                        <span>🏅 28 Skill Badges</span>
                         <strong>14 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
@@ -576,7 +576,7 @@ export default function App() {
                         <strong>10 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
-                        <span>🏅 42 Badge Keahlian</span>
+                        <span>🏅 42 Skill Badges</span>
                         <strong>21 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
@@ -615,7 +615,7 @@ export default function App() {
                         <strong>12 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
-                        <span>🏅 56 Badge Keahlian</span>
+                        <span>🏅 56 Skill Badges</span>
                         <strong>28 Poin</strong>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dashed var(--border)', paddingBottom: '6px' }}>
