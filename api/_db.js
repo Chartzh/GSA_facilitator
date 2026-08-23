@@ -39,11 +39,27 @@ export async function getTop10(dateParam) {
       .select('snapshot_date')
       .order('snapshot_date', { ascending: false })
 
+    // Find dates with at least 200 rows to avoid showing partial/in-progress cron snapshots
+    const completeDateSet = new Set()
+    if (dateRows && dateRows.length > 0) {
+      const countsMap = new Map()
+      dateRows.forEach(r => {
+        if (r.snapshot_date) {
+          countsMap.set(r.snapshot_date, (countsMap.get(r.snapshot_date) || 0) + 1)
+        }
+      })
+      countsMap.forEach((count, dateStr) => {
+        if (count >= 200) completeDateSet.add(dateStr)
+      })
+    }
+
     const availableDates = Array.from(new Set(dateRows?.map(r => r.snapshot_date).filter(Boolean) || []))
+    const validCompleteDates = availableDates.filter(d => completeDateSet.has(d))
+    const defaultDate = validCompleteDates[0] || availableDates[0] || new Date().toISOString().slice(0, 10)
 
     const targetDate = (dateParam && availableDates.includes(dateParam))
       ? dateParam
-      : (availableDates[0] || new Date().toISOString().slice(0, 10))
+      : defaultDate
 
     const { data, error } = await supabase
       .from('snapshots')
@@ -60,27 +76,22 @@ export async function getTop10(dateParam) {
       .select('participant_id, points, bonus_points, snapshot_date')
       .order('snapshot_date', { ascending: true })
 
-    const earliestMap = new Map()
-    if (allHistory) {
-      allHistory.forEach(h => {
-        const pid = h.participant_id
-        if (!pid) return
-        const score = (Number(h.points) || 0) + (Number(h.bonus_points) || 0)
-        const timestamp = new Date(h.snapshot_date).getTime()
-        if (!earliestMap.has(pid)) {
-          earliestMap.set(pid, new Map())
-        }
-        const pScores = earliestMap.get(pid)
-        if (!pScores.has(score) || timestamp < pScores.get(score)) {
-          pScores.set(score, timestamp)
-        }
-      })
-    }
-
     data.forEach(p => {
       const tot = (Number(p.points) || 0) + (Number(p.bonus_points) || 0)
-      const pMap = earliestMap.get(p.participant_id)
-      p.earliestTime = pMap?.get(tot) || new Date(p.snapshot_date || '2026-08-21').getTime()
+      let earliestDate = p.snapshot_date || '2026-08-23'
+
+      if (allHistory) {
+        for (const h of allHistory) {
+          if (h.participant_id === p.participant_id) {
+            const hScore = (Number(h.points) || 0) + (Number(h.bonus_points) || 0)
+            if (hScore >= tot) {
+              earliestDate = h.snapshot_date
+              break
+            }
+          }
+        }
+      }
+      p.earliestTime = new Date(earliestDate).getTime()
     })
 
     // Sort by Total Points (points + bonus_points) DESC, Earliest Achieved Timestamp ASC (whoever got score first ranks higher!), bonus_points DESC, skill_badges DESC, games DESC
