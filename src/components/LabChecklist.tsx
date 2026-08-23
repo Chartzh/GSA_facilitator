@@ -498,7 +498,7 @@ function parseDateForSort(dateStr: string): number {
           onClick={() => setActiveSubTab('arcade_track')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <Gamepad2 size={16} /> Arcade Track ({completedGameMap.size}/12)
+          <Gamepad2 size={16} /> Arcade Track ({completedGameMap.size}/13)
         </button>
 
         <button
@@ -533,7 +533,7 @@ function parseDateForSort(dateStr: string): number {
         <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
           <div className="card-header-flex">
             <h3 className="card-title-arcade" style={{ color: 'var(--neon-yellow)' }}>
-              <Gamepad2 size={20} /> ARCADE TRACK ({completedGameMap.size} / 12 GAME SELESAI)
+              <Gamepad2 size={20} /> ARCADE TRACK ({completedGameMap.size} / 13 ARCADE GAMES COMPLETED)
             </h3>
             <span className="badge-tag badge-tag-warning">BOBOT: 1.0 PTS / GAME</span>
           </div>
