@@ -300,26 +300,89 @@ export default function App() {
             </a>
             
             <button 
+              type="button"
               className="mobile-nav-toggle" 
+              aria-label="Toggle navigation menu"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
             >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
-          <div style={{ padding: '16px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div className="nav-link" onClick={() => { setActiveTab('kalkulator'); setIsMobileMenuOpen(false); }}>Kalkulator Poin</div>
-            <div className="nav-link" onClick={() => { setActiveTab('leaderboard'); setIsMobileMenuOpen(false); }}>Leaderboard</div>
-            <div className="nav-link" onClick={() => { setActiveTab('weekly-challenge'); setIsMobileMenuOpen(false); }}>Weekly Challenge</div>
-            <div className="nav-link" onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }}>Cara Bermain</div>
-            <div className="nav-link" onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }}>Panduan Google Skills</div>
-            <div className="nav-link" onClick={() => { setActiveTab('gear'); setIsMobileMenuOpen(false); }}>Panduan GEAR</div>
-            <div className="nav-link" onClick={() => { setActiveTab('faq'); setIsMobileMenuOpen(false); }}>FAQ</div>
-            <div className="nav-link" onClick={() => { setActiveTab('komunitas'); setIsMobileMenuOpen(false); }}>Komunitas</div>
-            <div className="nav-link" onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }}>Tentang</div>
+          <div className="mobile-menu-drawer">
+            <div 
+              className={`mobile-nav-item ${activeTab === 'home' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}
+            >
+              <Sparkles size={18} />
+              <span>Beranda</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'kalkulator' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('kalkulator'); setIsMobileMenuOpen(false); }}
+            >
+              <Calculator size={18} />
+              <span>Kalkulator Poin</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'leaderboard' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('leaderboard'); setIsMobileMenuOpen(false); }}
+            >
+              <Trophy size={18} />
+              <span>Leaderboard</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'weekly-challenge' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('weekly-challenge'); setIsMobileMenuOpen(false); }}
+            >
+              <Flame size={18} style={{ color: 'var(--neon-magenta)' }} />
+              <span>Weekly Challenge</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'cara' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('cara'); setIsMobileMenuOpen(false); }}
+            >
+              <Target size={18} />
+              <span>Cara Bermain</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'skills' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }}
+            >
+              <Award size={18} />
+              <span>Panduan Google Skills</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'gear' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('gear'); setIsMobileMenuOpen(false); }}
+            >
+              <Laptop size={18} />
+              <span>Panduan GEAR</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'faq' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('faq'); setIsMobileMenuOpen(false); }}
+            >
+              <HelpCircle size={18} />
+              <span>FAQ</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'komunitas' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('komunitas'); setIsMobileMenuOpen(false); }}
+            >
+              <Users size={18} />
+              <span>Komunitas</span>
+            </div>
+            <div 
+              className={`mobile-nav-item ${activeTab === 'tentang' ? 'active' : ''}`} 
+              onClick={() => { setActiveTab('tentang'); setIsMobileMenuOpen(false); }}
+            >
+              <Info size={18} />
+              <span>Tentang</span>
+            </div>
           </div>
         )}
       </header>
