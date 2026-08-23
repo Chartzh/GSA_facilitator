@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { validateProfileUrl, parseProfileHtml, ParsedProfileResult } from '../utils/scraper'
 import { formatPoints } from '../utils/points'
 import LabChecklist from './LabChecklist'
+import MilestoneRoadmap from './MilestoneRoadmap'
 import { LogOut, RotateCw, AlertTriangle, CheckCircle2, ShieldAlert, Info, ChevronDown, ChevronUp } from 'lucide-react'
 
 // Simple 10-minute client cache per profile URL
@@ -452,6 +453,18 @@ export default function PointsCalculator() {
               )}
             </div>
           </div>
+
+          {/* Milestone Roadmap Cards */}
+          <MilestoneRoadmap
+            gamesCount={resultData.validGames.length}
+            skillsCount={
+              (resultData as any).totalSkillBadgesCount ??
+              (resultData.pointsFromSkillBadges
+                ? Math.round(resultData.pointsFromSkillBadges * 2)
+                : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))
+            }
+            totalPoints={resultData.totalPointsWithBonus}
+          />
 
         </div>
       )}
