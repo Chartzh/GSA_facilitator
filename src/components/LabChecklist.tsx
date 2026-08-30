@@ -506,7 +506,7 @@ function parseDateForSort(dateStr: string): number {
           onClick={() => setActiveSubTab('skill_badge_track')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <Award size={16} /> Skill Badge Track ({doneCatalogCount}/93)
+          <Award size={16} /> Skill Badge Track ({doneCatalogCount}/95)
         </button>
 
         <button
@@ -514,7 +514,7 @@ function parseDateForSort(dateStr: string): number {
           onClick={() => setActiveSubTab('track_badge')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <History size={16} /> Track Badge ({scrapedData ? scrapedData.validGames.length + ((scrapedData as any).totalSkillBadgesCount ?? Math.min(93, scrapedData.validSyllabusBadges.length + scrapedData.validExtraBadges.length)) : 0})
+          <History size={16} /> Track Badge ({scrapedData ? scrapedData.validGames.length + ((scrapedData as any).totalSkillBadgesCount ?? Math.min(95, scrapedData.validSyllabusBadges.length + scrapedData.validExtraBadges.length)) : 0})
         </button>
 
         <button
@@ -726,21 +726,21 @@ function parseDateForSort(dateStr: string): number {
       )}
 
       {/* ============================================================
-          2. SKILL BADGE TRACK (93 KATALOG RESMI ARCADE 2026)
+          2. SKILL BADGE TRACK (95 KATALOG RESMI ARCADE 2026)
          ============================================================ */}
       {activeSubTab === 'skill_badge_track' && (
         <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
           <div className="card-header-flex" style={{ flexWrap: 'wrap', gap: '12px' }}>
             <div>
               <h3 className="card-title-arcade" style={{ color: 'var(--neon-cyan)' }}>
-                <Award size={20} /> SKILL BADGE TRACK ({doneCatalogCount} / 93 KATALOG SELESAI)
+                <Award size={20} /> SKILL BADGE TRACK ({doneCatalogCount} / 95 KATALOG SELESAI)
               </h3>
               <p style={{ marginTop: '4px', fontSize: '0.86rem' }}>
-                Seluruh 93 Skill Badge resmi katalog Arcade 2026. Lengkap dengan indikator perolehan & solusi video YouTube per lab.
+                Seluruh 95 Skill Badge resmi katalog Arcade 2026. Lengkap dengan indikator perolehan & solusi video YouTube per lab.
               </p>
             </div>
 
-            <span className="badge-tag badge-tag-done">BOBOT: 0.5 PTS / BADGE (MAKS 93)</span>
+            <span className="badge-tag badge-tag-done">BOBOT: 0.5 PTS / BADGE (MAKS 95)</span>
           </div>
 
           {/* Filter Bar */}

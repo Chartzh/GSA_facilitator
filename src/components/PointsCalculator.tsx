@@ -400,7 +400,7 @@ export default function PointsCalculator() {
                 {formatPoints(resultData.pointsFromSkillBadges)}
               </div>
               <div className="stat-label-muted">
-                {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Skill Badges ({formatPoints(resultData.pointsFromSkillBadges)} PT)
+                {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(95, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Skill Badges ({formatPoints(resultData.pointsFromSkillBadges)} PT)
               </div>
             </div>
             <div className="stat-box col-span-3">
@@ -423,7 +423,7 @@ export default function PointsCalculator() {
               color: 'var(--text-primary)'
             }}
           >
-            🧮 <strong>Rincian Poin:</strong> {resultData.validGames.length} Arcade Games ({formatPoints(resultData.pointsFromGames)}) + {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Skill Badges ({formatPoints(resultData.pointsFromSkillBadges)}) + Bonus {resultData.highestMilestone?.label || 'Milestone'} (+{resultData.milestoneBonus}) {resultData.gearBonus ? `+ Bonus GEAR (+${resultData.gearBonus})` : ''} = <strong>{formatPoints(resultData.totalPointsWithBonus)} Total Poin</strong>
+            🧮 <strong>Rincian Poin:</strong> {resultData.validGames.length} Arcade Games ({formatPoints(resultData.pointsFromGames)}) + {(resultData as any).totalSkillBadgesCount ?? (resultData.pointsFromSkillBadges ? Math.round(resultData.pointsFromSkillBadges * 2) : Math.min(95, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))} Skill Badges ({formatPoints(resultData.pointsFromSkillBadges)}) + Bonus {resultData.highestMilestone?.label || 'Milestone'} (+{resultData.milestoneBonus}) {resultData.gearBonus ? `+ Bonus GEAR (+${resultData.gearBonus})` : ''} = <strong>{formatPoints(resultData.totalPointsWithBonus)} Total Poin</strong>
           </div>
 
           {/* Milestone Status & Gap */}
@@ -461,7 +461,7 @@ export default function PointsCalculator() {
               (resultData as any).totalSkillBadgesCount ??
               (resultData.pointsFromSkillBadges
                 ? Math.round(resultData.pointsFromSkillBadges * 2)
-                : Math.min(93, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))
+                : Math.min(95, resultData.validSyllabusBadges.length + resultData.validExtraBadges.length))
             }
             totalPoints={resultData.totalPointsWithBonus}
           />

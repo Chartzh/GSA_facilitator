@@ -181,13 +181,13 @@ export default function TutorialGuide() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid var(--neon-cyan)', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--neon-cyan)', marginBottom: '8px' }}>
-              <Zap size={14} /> KATALOG 93 SKILL BADGE & ARCADE LAB TUTORIAL
+              <Zap size={14} /> KATALOG 95 SKILL BADGE & ARCADE LAB TUTORIAL
             </div>
             <h2 className="section-title" style={{ fontSize: '1.5rem', marginBottom: '6px' }}>
               Tutorial Lab & Solusi Video YouTube
             </h2>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', maxWidth: '680px', margin: 0 }}>
-              Kumpulan panduan solusi lab Arcade Games & 93 Skill Badges resmi katalog 2026. Lengkap dengan link video YouTube, script otomatisasi, file drive, dan catatan penting.
+              Kumpulan panduan solusi lab Arcade Games & 95 Skill Badges resmi katalog 2026. Lengkap dengan link video YouTube, script otomatisasi, file drive, dan catatan penting.
             </p>
           </div>
 
@@ -375,11 +375,11 @@ export default function TutorialGuide() {
       </div>
 
       {/* ============================================================
-          93 SKILL BADGES CATALOG GRID SECTION
+          95 SKILL BADGES CATALOG GRID SECTION
          ============================================================ */}
       <div>
         <h3 className="section-title" style={{ fontSize: '1.15rem', color: 'var(--neon-cyan)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-          <Award size={20} /> KATALOG 93 SKILL BADGE RESMI ({filteredSkillBadges.length} TERFILTER)
+          <Award size={20} /> KATALOG 95 SKILL BADGE RESMI ({filteredSkillBadges.length} TERFILTER)
         </h3>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>

@@ -405,7 +405,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       excludedItems.push({
         title: raw.title,
         dateStr: raw.earnedDateRaw || 'Selesai',
-        reason: 'Skill Badge tidak masuk dalam daftar 93 Katalog Resmi Arcade 2026',
+        reason: 'Skill Badge tidak masuk dalam daftar 95 Katalog Resmi Arcade 2026',
         imageUrl: raw.imageUrl
       })
     }
@@ -478,7 +478,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
     matchedCatalogCount = matchedSet.size
   }
 
-  const totalSkillBadgesCount = Math.min(93, matchedCatalogCount > 0 ? matchedCatalogCount : (validSyllabusBadges.length + uniqueExtraBadges.length))
+  const totalSkillBadgesCount = Math.min(95, matchedCatalogCount > 0 ? matchedCatalogCount : (validSyllabusBadges.length + uniqueExtraBadges.length))
   const pointsFromSkillBadges = totalSkillBadgesCount * 0.5
 
   const totalArcadePoints = calcBasePoints(validGames.length, totalSkillBadgesCount)
