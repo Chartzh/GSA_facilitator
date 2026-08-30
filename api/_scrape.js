@@ -118,6 +118,8 @@ export function cleanBadgeText(rawText) {
 }
 
 export const CATALOG_93_BADGES = [
+  "Use Agent Skills with Multi-Agent Systems",
+  "Design and Implement Network Security in Google Cloud",
   "Create Your First Gemini Enterprise Application",
   "Develop AI-Powered Prototypes in Google AI Studio",
   "The Basics of Google Cloud Compute",

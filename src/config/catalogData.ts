@@ -528,6 +528,28 @@ export const AUGUST_ARCADE_GAMES: CatalogArcadeGame[] = [
 
 export const CATALOG_SKILL_BADGES: CatalogSkillBadge[] = [
   {
+    "name": "Use Agent Skills with Multi-Agent Systems",
+    "url": "https://www.skills.google/course_templates/1842?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+    "level": "Intermediate",
+    "isFastTrack": true,
+    "videoUrl": "",
+    "scriptFile": "",
+    "lang": "",
+    "note": "",
+    "driveUrl": ""
+  },
+  {
+    "name": "Design and Implement Network Security in Google Cloud",
+    "url": "https://www.skills.google/course_templates/1736?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+    "level": "Intermediate",
+    "isFastTrack": true,
+    "videoUrl": "",
+    "scriptFile": "",
+    "lang": "",
+    "note": "",
+    "driveUrl": ""
+  },
+  {
     "name": "Create Your First Gemini Enterprise Application",
     "url": "https://www.skills.google/course_templates/1586?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
     "level": "Beginner",
