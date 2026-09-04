@@ -526,6 +526,63 @@ export const AUGUST_ARCADE_GAMES: CatalogArcadeGame[] = [
   }
 ]
 
+export const SEPTEMBER_ARCADE_GAMES: CatalogArcadeGame[] = [
+  {
+    "id": "game-sept-trail",
+    "name": "Arcade Trail: Data Engineering and Security (1 Poin)",
+    "icon": "fa-solid fa-route text-yellow",
+    "url": "https://www.skills.google/games/7443",
+    "code": "1q-vpcpeering-3469",
+    "isExpired": false,
+    "labs": []
+  },
+  {
+    "id": "game-sept-simulator",
+    "name": "Arcade Simulator: DevOps Engineer (1 Poin)",
+    "icon": "fa-solid fa-terminal text-green",
+    "url": "https://www.skills.google/games/7445",
+    "code": "1q-devops-065131",
+    "isExpired": false,
+    "labs": []
+  },
+  {
+    "id": "game-sept-pitch",
+    "name": "Pitch Perfect (1 Poin)",
+    "icon": "fa-solid fa-chart-line text-blue",
+    "url": "https://www.skills.google/games/7446",
+    "code": "1q-analysis-5026",
+    "isExpired": false,
+    "labs": []
+  },
+  {
+    "id": "game-sept-voyage",
+    "name": "Arcade Voyage: App Modernization (1 Poin)",
+    "icon": "fa-solid fa-ship text-red",
+    "url": "https://www.skills.google/games/7442",
+    "code": "1q-microservice-9210",
+    "isExpired": false,
+    "labs": []
+  },
+  {
+    "id": "game-sept-basecamp",
+    "name": "Arcade Base Camp September 2026 (1 Poin)",
+    "icon": "fa-solid fa-campground text-blue",
+    "url": "https://www.skills.google/games/7444",
+    "code": "1q-basecamp-09304",
+    "isExpired": false,
+    "labs": []
+  },
+  {
+    "id": "game-sept-adventure",
+    "name": "Arcade Adventure: Modern Cloud Architecture (1 Poin)",
+    "icon": "fa-solid fa-compass text-purple",
+    "url": "https://www.skills.google/games/7441",
+    "code": "1q-architecture-01381",
+    "isExpired": false,
+    "labs": []
+  }
+]
+
 export const CATALOG_SKILL_BADGES: CatalogSkillBadge[] = [
   {
     "name": "Use Agent Skills with Multi-Agent Systems",

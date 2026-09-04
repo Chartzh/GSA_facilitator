@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { SKILL_BADGES, ARCADE_GAMES, TOTALS, SkillBadge, ArcadeGame } from '../config/program'
 import { ParsedProfileResult } from '../utils/scraper'
-import { CATALOG_SKILL_BADGES, JULY_ARCADE_GAMES, AUGUST_ARCADE_GAMES } from '../config/catalogData'
+import { CATALOG_SKILL_BADGES, JULY_ARCADE_GAMES, AUGUST_ARCADE_GAMES, SEPTEMBER_ARCADE_GAMES } from '../config/catalogData'
 import { Gamepad2, Award, Zap, Copy, Check, ExternalLink, Download, Clock, ShieldCheck, History, Play, X, Code, FileText } from 'lucide-react'
 
 interface LabChecklistProps {
@@ -42,7 +42,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
   } | null>(null)
 
   const handleOpenGameModal = (gameName: string, accessCode: string, gameUrl: string) => {
-    const allCatalogGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES]
+    const allCatalogGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES, ...SEPTEMBER_ARCADE_GAMES]
     const normAccess = (accessCode || '').toLowerCase().trim()
     const normName = (gameName || '').toLowerCase().trim()
 
@@ -75,9 +75,9 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
 
   // Accordion state for Arcade Game months
   const [openMonths, setOpenMonths] = useState<Record<string, boolean>>({
-    '2026-08': true,  // Agustus open by default
-    '2026-07': false, // Juli collapsed by default
-    '2026-09': false  // September collapsed by default
+    '2026-09': true,  // September open by default
+    '2026-08': false, // Agustus collapsed by default
+    '2026-07': false  // Juli collapsed by default
   })
 
   const toggleMonth = (monthKey: string) => {
@@ -109,7 +109,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
         map.set(badge.name.toLowerCase().trim(), vUrl)
       }
     })
-    const allGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES]
+    const allGames = [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES, ...SEPTEMBER_ARCADE_GAMES]
     allGames.forEach(game => {
       if (game.labs) {
         game.labs.forEach(lab => {
@@ -126,6 +126,14 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
   const doneSyllabusCount = completedBadgeMap.size
 
   // Arcade Games grouped by Month
+  const septemberGames = useMemo(() => {
+    return ARCADE_GAMES.filter(g => g.month === '2026-09').map(g => ({
+      ...g,
+      isDone: completedGameMap.has(g.id),
+      earnedDate: completedGameMap.get(g.id) || null
+    }))
+  }, [completedGameMap])
+
   const julyGames = useMemo(() => {
     return ARCADE_GAMES.filter(g => g.month === '2026-07').map(g => ({
       ...g,
@@ -142,6 +150,7 @@ export default function LabChecklist({ scrapedData }: LabChecklistProps) {
     }))
   }, [completedGameMap])
 
+  const septemberDoneCount = septemberGames.filter(g => g.isDone).length
   const julyDoneCount = julyGames.filter(g => g.isDone).length
   const augustDoneCount = augustGames.filter(g => g.isDone).length
 
@@ -498,7 +507,7 @@ function parseDateForSort(dateStr: string): number {
           onClick={() => setActiveSubTab('arcade_track')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.85rem' }}
         >
-          <Gamepad2 size={16} /> Arcade Track ({completedGameMap.size}/13)
+          <Gamepad2 size={16} /> Arcade Track ({completedGameMap.size}/19)
         </button>
 
         <button
@@ -533,7 +542,7 @@ function parseDateForSort(dateStr: string): number {
         <div className="bento-card col-span-12" style={{ marginBottom: '32px' }}>
           <div className="card-header-flex">
             <h3 className="card-title-arcade" style={{ color: 'var(--neon-yellow)' }}>
-              <Gamepad2 size={20} /> ARCADE TRACK ({completedGameMap.size} / 13 ARCADE GAMES COMPLETED)
+              <Gamepad2 size={20} /> ARCADE TRACK ({completedGameMap.size} / 19 ARCADE GAMES COMPLETED)
             </h3>
             <span className="badge-tag badge-tag-warning">BOBOT: 1.0 PTS / GAME</span>
           </div>
@@ -542,28 +551,28 @@ function parseDateForSort(dateStr: string): number {
             Arcade Game dirilis bulanan. Game bulan lalu sudah ditutup untuk pengerjaan baru, tetapi <strong>game yang diselesaikan dalam periode program tetap dihitung poinnya</strong>.
           </p>
 
-          {/* --- AGUSTUS --- */}
-          <div style={{ marginBottom: '20px', border: '1px solid var(--neon-yellow)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+          {/* --- SEPTEMBER 2026 --- */}
+          <div style={{ marginBottom: '20px', border: '1px solid var(--neon-cyan)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
             <div
-              onClick={() => toggleMonth('2026-08')}
+              onClick={() => toggleMonth('2026-09')}
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: '12px 16px',
-                background: 'rgba(255, 214, 0, 0.12)',
+                background: 'rgba(0, 240, 255, 0.12)',
                 cursor: 'pointer'
               }}
             >
-              <strong style={{ fontSize: '0.95rem', color: 'var(--neon-yellow)' }}>
-                {openMonths['2026-08'] ? '▾' : '▸'} Agustus 2026
+              <strong style={{ fontSize: '0.95rem', color: 'var(--neon-cyan)' }}>
+                {openMonths['2026-09'] ? '▾' : '▸'} September 2026
               </strong>
               <span className="badge-tag badge-tag-done">
-                {augustDoneCount} / {augustGames.length} Selesai — AKTIF
+                {septemberDoneCount} / {septemberGames.length} Selesai — AKTIF
               </span>
             </div>
 
-            {openMonths['2026-08'] && (
+            {openMonths['2026-09'] && (
               <div className="arcade-table-wrapper" style={{ borderTop: '1px solid var(--border)' }}>
                 <table className="arcade-table">
                   <thead>
@@ -575,7 +584,7 @@ function parseDateForSort(dateStr: string): number {
                     </tr>
                   </thead>
                   <tbody>
-                    {augustGames.map(game => (
+                    {septemberGames.map(game => (
                       <tr key={game.id} className={game.isDone ? 'row-active-highlight' : ''}>
                         <td>
                           {game.isDone ? (
@@ -591,7 +600,7 @@ function parseDateForSort(dateStr: string): number {
                         <td style={{ fontWeight: 700 }}>{game.name}</td>
                         <td>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <code style={{ background: 'var(--bg-base)', padding: '2px 6px', borderRadius: 'var(--radius)', color: 'var(--neon-yellow)' }}>
+                            <code style={{ background: 'var(--bg-base)', padding: '2px 6px', borderRadius: 'var(--radius)', color: 'var(--neon-cyan)' }}>
                               {game.accessCode}
                             </code>
                             <button
@@ -632,8 +641,98 @@ function parseDateForSort(dateStr: string): number {
             )}
           </div>
 
+          {/* --- AGUSTUS --- */}
+          <div style={{ marginBottom: '20px', border: '1px solid var(--neon-yellow)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+            <div
+              onClick={() => toggleMonth('2026-08')}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '12px 16px',
+                background: 'rgba(255, 214, 0, 0.12)',
+                cursor: 'pointer'
+              }}
+            >
+              <strong style={{ fontSize: '0.95rem', color: 'var(--neon-yellow)' }}>
+                {openMonths['2026-08'] ? '▾' : '▸'} Agustus 2026 — {augustDoneCount}/{augustGames.length} Selesai
+              </strong>
+              <span className="badge-tag badge-tag-done">
+                TUTUP UNTUK BARU
+              </span>
+            </div>
+
+            {openMonths['2026-08'] && (
+              <div className="arcade-table-wrapper" style={{ borderTop: '1px solid var(--border)' }}>
+                <table className="arcade-table">
+                  <thead>
+                    <tr>
+                      <th>STATUS</th>
+                      <th>NAMA GAME</th>
+                      <th>ACCESS CODE</th>
+                      <th>AKSI / LINK</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {augustGames.map(game => (
+                      <tr key={game.id} className={game.isDone ? 'row-active-highlight' : ''}>
+                        <td>
+                          {game.isDone ? (
+                            <span className="badge-tag badge-tag-done">
+                              ✓ SELESAI {game.earnedDate ? `(${game.earnedDate})` : ''}
+                            </span>
+                          ) : (
+                            <span className="badge-tag badge-tag-pending">
+                              TUTUP
+                            </span>
+                          )}
+                        </td>
+                        <td style={{ fontWeight: 700 }}>{game.name}</td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <code style={{ background: 'var(--bg-base)', padding: '2px 6px', borderRadius: 'var(--radius)', color: 'var(--neon-yellow)' }}>
+                              {game.accessCode}
+                            </code>
+                            <button
+                              type="button"
+                              onClick={() => copyCode(game.accessCode)}
+                              style={{ background: 'none', border: 'none', color: 'var(--neon-cyan)', cursor: 'pointer', fontSize: '0.78rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              {copiedCode === game.accessCode ? <Check size={14} /> : <Copy size={14} />}
+                              {copiedCode === game.accessCode ? 'Copied' : 'Copy'}
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            <button
+                              onClick={() => handleOpenGameModal(game.name, game.accessCode, game.url)}
+                              className="btn-arcade btn-arcade-primary"
+                              style={{ padding: '6px 12px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              <Play size={12} /> Solusi & Detail Game
+                            </button>
+                            <a
+                              href={game.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`btn-arcade ${game.isDone ? 'btn-arcade-outline' : 'btn-arcade-primary'}`}
+                              style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              {game.isDone ? 'Buka Game' : 'Buka Link Game'} <ExternalLink size={12} />
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
           {/* --- JULI --- */}
-          <div style={{ marginBottom: '20px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+          <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
             <div
               onClick={() => toggleMonth('2026-07')}
               style={{
@@ -691,34 +790,6 @@ function parseDateForSort(dateStr: string): number {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            )}
-          </div>
-
-          {/* --- SEPTEMBER --- */}
-          <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
-            <div
-              onClick={() => toggleMonth('2026-09')}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '12px 16px',
-                background: 'rgba(106, 106, 128, 0.1)',
-                cursor: 'pointer'
-              }}
-            >
-              <strong style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
-                {openMonths['2026-09'] ? '▾' : '▸'} September 2026
-              </strong>
-              <span className="badge-tag badge-tag-pending">
-                BELUM DIRILIS
-              </span>
-            </div>
-
-            {openMonths['2026-09'] && (
-              <div style={{ padding: '20px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-                Game September belum dirilis. Akses akan dibuka saat masa pengerjaan September dimulai.
               </div>
             )}
           </div>

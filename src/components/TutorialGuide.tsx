@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import {
   JULY_ARCADE_GAMES,
   AUGUST_ARCADE_GAMES,
+  SEPTEMBER_ARCADE_GAMES,
   CATALOG_SKILL_BADGES,
   CatalogSkillBadge,
   CatalogArcadeGame,
@@ -162,7 +163,7 @@ export default function TutorialGuide() {
     })
   }, [searchQuery, tierFilter])
 
-  const allArcadeGames = useMemo(() => [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES], [])
+  const allArcadeGames = useMemo(() => [...JULY_ARCADE_GAMES, ...AUGUST_ARCADE_GAMES, ...SEPTEMBER_ARCADE_GAMES], [])
 
   return (
     <div style={{ marginTop: '24px', marginBottom: '40px' }}>

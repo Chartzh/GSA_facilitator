@@ -62,6 +62,13 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   { id: 7398, name: 'Arcade Voyage (Agustus)', accessCode: '1q-sheets-29185', url: 'https://www.skills.google/games/7398', month: '2026-08', points: 1, match: (t) => t.includes('voyage') && (t.includes('sheets') || t.includes('august') || t.includes('agustus')) },
   { id: 7399, name: 'Arcade Special Game (Agustus)', accessCode: '1q-schema-27083', url: 'https://www.skills.google/games/7399', month: '2026-08', points: 1, match: (t) => t.includes('spans and plans') || t.includes('special game') || (t.includes('special') && t.includes('arcade')) },
   { id: 7426, name: 'Arcade Re-Trail: Vaults & Vectors (Agustus)', accessCode: '1q-vaults-39213', url: 'https://www.skills.google/games/7426', month: '2026-08', points: 1, match: (t) => t.includes('re-trail') || t.includes('re trail') || t.includes('vaults & vectors') || t.includes('vaults and vectors') },
+  // --- 2026-09 ---
+  { id: 7443, name: 'Arcade Trail: Data Engineering and Security (September)', accessCode: '1q-vpcpeering-3469', url: 'https://www.skills.google/games/7443', month: '2026-09', points: 1, match: (t) => t.includes('trail') && (t.includes('data engineering') || t.includes('vpcpeering') || t.includes('security')) },
+  { id: 7445, name: 'Arcade Simulator: DevOps Engineer (September)', accessCode: '1q-devops-065131', url: 'https://www.skills.google/games/7445', month: '2026-09', points: 1, match: (t) => t.includes('simulator') && (t.includes('devops') || t.includes('devops engineer')) },
+  { id: 7446, name: 'Pitch Perfect (September)', accessCode: '1q-analysis-5026', url: 'https://www.skills.google/games/7446', month: '2026-09', points: 1, match: (t) => t.includes('pitch perfect') || t.includes('pitch') },
+  { id: 7442, name: 'Arcade Voyage: App Modernization (September)', accessCode: '1q-microservice-9210', url: 'https://www.skills.google/games/7442', month: '2026-09', points: 1, match: (t) => t.includes('voyage') && (t.includes('app modernization') || t.includes('microservice')) },
+  { id: 7444, name: 'Arcade Base Camp September 2026 (September)', accessCode: '1q-basecamp-09304', url: 'https://www.skills.google/games/7444', month: '2026-09', points: 1, match: (t) => t.includes('base camp') && (t.includes('september') || t.includes('sept')) },
+  { id: 7441, name: 'Arcade Adventure: Modern Cloud Architecture (September)', accessCode: '1q-architecture-01381', url: 'https://www.skills.google/games/7441', month: '2026-09', points: 1, match: (t) => t.includes('adventure') && (t.includes('cloud architecture') || t.includes('modern cloud architecture') || t.includes('architecture')) },
 ]
 
 // ---- WAJIB DI-EXCLUDE: game Jan-Jun 2026 (di luar periode program) ----
@@ -218,6 +225,6 @@ export const TOTALS = {
   skillBadges: 51,
   totalLabs: 221,
   totalCredits: 378,
-  gamesAvailable: 13, // Juli + Agustus (September +6)
+  gamesAvailable: 19, // Juli (6) + Agustus (7) + September (6)
   gamesNeededForUltimate: 12,
 } as const
