@@ -49,7 +49,7 @@ export async function getTop10(dateParam) {
         }
       })
       countsMap.forEach((count, dateStr) => {
-        if (count >= 200) completeDateSet.add(dateStr)
+        if (count >= 240) completeDateSet.add(dateStr)
       })
     }
 

@@ -19,7 +19,7 @@ async function mapConcurrent(items, concurrency, fn) {
 }
 
 export async function processChunkInternal(offset, limit, jobIdInput) {
-  const effectiveLimit = Math.min(Math.max(1, limit || 20), 25)
+  const effectiveLimit = Math.min(Math.max(1, limit || 20), 50)
   const jobId = jobIdInput || Date.now()
 
   const { participants, totalParticipants, dbReady } = await getParticipantsSlice(offset, effectiveLimit)
@@ -37,7 +37,7 @@ export async function processChunkInternal(offset, limit, jobIdInput) {
     }
   }
 
-  const CONCURRENCY_LIMIT = 8
+  const CONCURRENCY_LIMIT = 15
   const TIMEOUT_MS = 10000
 
   const results = await mapConcurrent(participants, CONCURRENCY_LIMIT, async (p) => {

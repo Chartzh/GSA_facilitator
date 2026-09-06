@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return
   }
 
-  const limit = Number(req.query.limit || req.body?.limit || 20)
+  const limit = Number(req.query.limit || req.body?.limit || 40)
   const todayDate = new Date().toISOString().slice(0, 10)
   const jobId = `cron_${todayDate}_${Date.now()}`
 
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       currentOffset = chunkResult.nextOffset
 
       if (currentOffset !== null) {
-        await new Promise(r => setTimeout(r, 400))
+        await new Promise(r => setTimeout(r, 100))
       }
     }
 
