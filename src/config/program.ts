@@ -149,6 +149,8 @@ export const SKILL_BADGES: SkillBadge[] = [
 ]
 
 export const EXTRA_BADGES_ALLOWED = [
+  "Use Agent Skills with Multi-Agent Systems",
+  "Design and Implement Network Security in Google Cloud",
   "Claim Skill Badge: Organize and Manage Data with Dataplex",
   "Get Started with Sensitive Data Protection",
   "Get Started with App Development using Gemini Code Assist",

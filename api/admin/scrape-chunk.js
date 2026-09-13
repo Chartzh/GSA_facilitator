@@ -78,7 +78,7 @@ export async function processChunkInternal(offset, limit, jobIdInput) {
         success: true,
         points: parsed.basePoints,
         games: parsed.validGames.length,
-        skillBadges: parsed.validSyllabusBadges.length + parsed.validExtraBadges.length
+        skillBadges: parsed.totalSkillBadgesCount
       }
     } catch (err) {
       return {

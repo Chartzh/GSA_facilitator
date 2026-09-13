@@ -109,13 +109,13 @@ export async function getTop10(dateParam) {
       const bonusB = Number(b.bonus_points) || 0
       if (bonusB !== bonusA) return bonusB - bonusA
 
-      const badgesA = Number(a.skill_badges) || 0
-      const badgesB = Number(b.skill_badges) || 0
-      if (badgesB !== badgesA) return badgesB - badgesA
-
       const gamesA = Number(a.games) || 0
       const gamesB = Number(b.games) || 0
       if (gamesB !== gamesA) return gamesB - gamesA
+
+      const badgesA = Number(a.skill_badges) || 0
+      const badgesB = Number(b.skill_badges) || 0
+      if (badgesB !== badgesA) return badgesB - badgesA
 
       return String(a.participant_id || '').localeCompare(String(b.participant_id || ''))
     }).slice(0, 10)
@@ -225,27 +225,50 @@ export async function saveSnapshotChunk(results, snapshotDateInput) {
   const snapshotDate = snapshotDateInput || new Date().toISOString().slice(0, 10)
 
   try {
-    const snapshotsPayload = results
-      .filter(r => r.success)
-      .map(r => {
-        const bp = assertHalfStep(basePoints(r.games, r.skillBadges), `Poin Dasar ${r.nama}`)
-        const mb = assertInt(milestoneBonus(r.games, r.skillBadges), `Bonus Milestone ${r.nama}`)
-        const mObj = currentMilestone(r.games, r.skillBadges)
-
-        return {
-          participant_id: r.participantId,
-          snapshot_date: snapshotDate,
-          points: bp,
-          bonus_points: mb,
-          milestone: mObj ? mObj.label : null,
-          games: r.games,
-          skill_badges: r.skillBadges
-        }
-      })
-
-    if (snapshotsPayload.length === 0) {
+    const validResults = results.filter(r => r.success)
+    if (validResults.length === 0) {
       return { savedCount: 0, dbUsed: true }
     }
+
+    const participantIds = validResults.map(r => r.participantId)
+
+    // Monotonic non-decreasing protection: fetch max games & skill_badges previously saved across all snapshots
+    const { data: existingSnapshots } = await supabase
+      .from('snapshots')
+      .select('participant_id, games, skill_badges')
+      .in('participant_id', participantIds)
+
+    const maxStatsMap = new Map()
+    if (existingSnapshots && existingSnapshots.length > 0) {
+      existingSnapshots.forEach(s => {
+        const pId = s.participant_id
+        const prev = maxStatsMap.get(pId) || { games: 0, skill_badges: 0 }
+        maxStatsMap.set(pId, {
+          games: Math.max(prev.games, Number(s.games) || 0),
+          skill_badges: Math.max(prev.skill_badges, Number(s.skill_badges) || 0)
+        })
+      })
+    }
+
+    const snapshotsPayload = validResults.map(r => {
+      const prevStats = maxStatsMap.get(r.participantId) || { games: 0, skill_badges: 0 }
+      const finalGames = Math.max(prevStats.games, Number(r.games) || 0)
+      const finalBadges = Math.max(prevStats.skill_badges, Number(r.skillBadges) || 0)
+
+      const bp = assertHalfStep(basePoints(finalGames, finalBadges), `Poin Dasar ${r.nama}`)
+      const mb = assertInt(milestoneBonus(finalGames, finalBadges), `Bonus Milestone ${r.nama}`)
+      const mObj = currentMilestone(finalGames, finalBadges)
+
+      return {
+        participant_id: r.participantId,
+        snapshot_date: snapshotDate,
+        points: bp,
+        bonus_points: mb,
+        milestone: mObj ? mObj.label : null,
+        games: finalGames,
+        skill_badges: finalBadges
+      }
+    })
 
     const { error } = await supabase
       .from('snapshots')

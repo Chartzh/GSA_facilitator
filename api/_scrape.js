@@ -456,7 +456,7 @@ export function parseProfileHtml(html, profileUrl) {
     matchedCatalogCount = matchedSet.size
   }
 
-  const totalBadgesCount = Math.min(93, matchedCatalogCount > 0 ? matchedCatalogCount : (uniqueSyllabusBadges.length + uniqueExtraBadges.length))
+  const totalBadgesCount = Math.min(95, matchedCatalogCount > 0 ? matchedCatalogCount : (uniqueSyllabusBadges.length + uniqueExtraBadges.length))
 
   const baseP = calcBasePoints(uniqueGames.length, totalBadgesCount)
   const milestone = calcCurrentMilestone(uniqueGames.length, totalBadgesCount)
