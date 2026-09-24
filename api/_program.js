@@ -7,7 +7,8 @@ export const PROGRAM = {
   name: 'Google Skills Arcade Facilitator 2026',
   facilitatorCode: 'GCAF26-ID-UAQ-MFC',
   startDate: '2026-07-13T00:00:00+07:00',
-  endDate:   '2026-09-14T23:59:59+07:00',
+  milestoneCutoffDate: '2026-09-29T23:59:59+07:00',
+  endDate:   '2026-12-31T23:59:59+07:00',
   timezone:  'Asia/Jakarta',
 }
 
@@ -32,7 +33,7 @@ export const TIERS = [
 
 export const ARCADE_GAMES = [
   // --- 2026-07 ---
-  { id: 7313, name: 'Arcade Base Camp (Juli)', accessCode: '1q-basecamp-07511', url: 'https://www.skills.google/games/7313', month: '2026-07', points: 1, match: (t) => t.includes('base camp') && (t.includes('july') || t.includes('juli') || (!t.includes('august') && !t.includes('agustus'))) },
+  { id: 7313, name: 'Arcade Base Camp (Juli)', accessCode: '1q-basecamp-07511', url: 'https://www.skills.google/games/7313', month: '2026-07', points: 1, match: (t) => t.includes('base camp') && (t.includes('july') || t.includes('juli') || (!t.includes('august') && !t.includes('agustus') && !t.includes('september') && !t.includes('sept'))) },
   { id: 7314, name: 'Arcade Adventure (Juli)', accessCode: '1q-lowcode-92316', url: 'https://www.skills.google/games/7314', month: '2026-07', points: 1, match: (t) => t.includes('adventure') && (t.includes('low code') || t.includes('july') || t.includes('juli')) },
   { id: 7315, name: 'Arcade Voyage (Juli)', accessCode: '1q-bucket-58231', url: 'https://www.skills.google/games/7315', month: '2026-07', points: 1, match: (t) => t.includes('voyage') && (t.includes('cloud storage') || t.includes('governance') || t.includes('july') || t.includes('juli')) },
   { id: 7316, name: 'Arcade Trail (Juli)', accessCode: '1q-workspace-31069', url: 'https://www.skills.google/games/7316', month: '2026-07', points: 1, match: (t) => t.includes('trail') && (t.includes('workspace') || t.includes('july') || t.includes('juli')) },

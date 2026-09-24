@@ -299,8 +299,8 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       if (raw.parsedDate > pEndDate) {
         excludedItems.push({
           title: raw.title,
-          dateStr: raw.earnedDateRaw || 'Setelah 14 Sep 2026',
-          reason: 'Diperoleh setelah 14 September 2026 (di luar periode program)',
+          dateStr: raw.earnedDateRaw || 'Setelah periode program',
+          reason: 'Diperoleh setelah periode program',
           imageUrl: raw.imageUrl
         })
         continue
@@ -420,7 +420,6 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
   const allEarnedMap = new Map()
   validSyllabusBadges.forEach(b => allEarnedMap.set(normNoSpace(b.name), b.earnedDate || 'Selesai'))
   validExtraBadges.forEach(b => allEarnedMap.set(normNoSpace(b.name), b.earnedDate || 'Selesai'))
-  extractedBadges.forEach(b => allEarnedMap.set(normNoSpace(b.title), b.earnedDateRaw || 'Selesai'))
 
   const catalogAliases = new Map([
     ["get started with sensitive data protection", ["implement sensitive data protection on google cloud", "discover and protect sensitive data across your ecosystem"]],
@@ -448,7 +447,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
       let found = allEarnedMap.has(cNorm)
       if (!found) {
         for (const [key] of allEarnedMap.entries()) {
-          if (key.includes(cNorm) || cNorm.includes(key) || (cNorm.length > 12 && key.slice(0, 15) === cNorm.slice(0, 15))) {
+          if (key === cNorm || key.includes(cNorm) || cNorm.includes(key)) {
             found = true
             break
           }
@@ -462,7 +461,7 @@ export function parseProfileHtml(html: string, profileUrl: string): ParsedProfil
           found = allEarnedMap.has(alNorm)
           if (!found) {
             for (const [key] of allEarnedMap.entries()) {
-              if (key.includes(alNorm) || alNorm.includes(key) || (alNorm.length > 12 && key.slice(0, 15) === alNorm.slice(0, 15))) {
+              if (key === alNorm || key.includes(alNorm) || alNorm.includes(key)) {
                 found = true
                 break
               }
